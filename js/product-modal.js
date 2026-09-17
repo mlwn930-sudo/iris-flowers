@@ -1,0 +1,170 @@
+/* ============================================================
+   פרחי איריס — חלון מוצר מורחב (Quick View)
+   נבנה פעם אחת ומוזרק ל-body בלחיצה הראשונה על כרטיס מוצר.
+   ============================================================ */
+
+let pmProduct = null;
+let pmSize = DEFAULT_SIZE;
+let pmTab = "care";
+
+function pmEnsureDOM() {
+  let el = document.getElementById("pmOverlay");
+  if (el) return el;
+
+  el = document.createElement("div");
+  el.className = "pm-overlay";
+  el.id = "pmOverlay";
+  el.innerHTML = `
+    <div class="pm" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+      <div class="pm-media">
+        <img class="pm-photo" id="pmImg" src="" alt="" />
+        <div id="pmBadges"></div>
+        <img class="pm-seal" src="assets/brand/logo-mark.png" alt="" />
+      </div>
+      <button class="pm-close" onclick="closeProductModal()" aria-label="סגור">✕</button>
+      <div class="pm-body">
+        <span class="pm-tag" id="pmTag"></span>
+        <h3 id="pmTitle"></h3>
+        <p class="pm-botanical" id="pmBotanical"></p>
+        <div class="pm-stems">🌿 <span id="pmStems"></span></div>
+
+        <div class="pm-price-row">
+          <span class="pm-price" id="pmPrice">₪0</span>
+          <span class="pm-price-note" id="pmPriceNote"></span>
+        </div>
+
+        <div class="size-label">בחירת גודל הזר</div>
+        <div class="size-picker" id="pmSizes"></div>
+        <p class="size-note" id="pmSizeNote"></p>
+
+        <div class="pm-tabs">
+          <button class="pm-tab" data-tab="care" onclick="pmSwitchTab('care')">המלצות לשזירה וטיפול באגרטל</button>
+          <button class="pm-tab" data-tab="delivery" onclick="pmSwitchTab('delivery')">פרטי משלוח והגעה</button>
+        </div>
+        <div class="pm-panel" id="pmPanelCare"></div>
+        <div class="pm-panel" id="pmPanelDelivery"></div>
+
+        <div class="pm-added" id="pmAdded"></div>
+        <div class="pm-actions">
+          <button class="btn btn-ghost" onclick="pmAddToCart()">הוסף לסל</button>
+          <button class="btn btn-gold" onclick="pmQuickBuy()">רכישה מהירה</button>
+        </div>
+      </div>
+    </div>`;
+
+  el.addEventListener("click", (e) => {
+    if (e.target === el) closeProductModal();
+  });
+  document.body.appendChild(el);
+  return el;
+}
+
+function openProductModal(id) {
+  const product = findProduct(id);
+  if (!product) return;
+  pmProduct = product;
+  pmSize = DEFAULT_SIZE;
+  pmTab = "care";
+
+  const el = pmEnsureDOM();
+  const img = document.getElementById("pmImg");
+  img.src = product.img;
+  img.alt = product.name;
+
+  document.getElementById("pmBadges").innerHTML = badgesHTML(product);
+
+  const tagEl = document.getElementById("pmTag");
+  tagEl.textContent = product.tag || "בוטיק פרחי איריס";
+  document.getElementById("pmTitle").textContent = product.name;
+  document.getElementById("pmBotanical").textContent = product.botanical;
+
+  document.getElementById("pmPanelCare").innerHTML = `
+    <ul>${product.care.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>
+    <p style="margin-top:12px"><strong>אגרטל מומלץ:</strong> ${esc(product.vase)}</p>`;
+
+  document.getElementById("pmPanelDelivery").innerHTML = `
+    <ul>
+      <li>קריית אתא — משלוח באותו יום בהזמנה עד 14:00.</li>
+      <li>חיפה, קריית ביאליק, מוצקין, חיים ונשר — באותו יום בהזמנה עד 13:00.</li>
+      <li>קריית ים, טירת כרמל, עכו ויגור — משלוח למחרת.</li>
+      <li>בעמוד התשלום אפשר לבחור תאריך ושעת הגעה מועדפים.</li>
+      <li>הזר נשזר ביום המשלוח — לא מראש, ולא מהמקרר.</li>
+    </ul>
+    <p style="margin-top:12px">לא בטוחים שאנחנו מגיעים אליכם? בדקו בבודק אזור החלוקה בעמוד הבית, או שאלו את מיכל בצ'אט.</p>`;
+
+  pmRenderSizes();
+  pmSwitchTab("care");
+  document.getElementById("pmAdded").classList.remove("show");
+
+  el.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", pmEscHandler);
+}
+
+function closeProductModal() {
+  document.getElementById("pmOverlay")?.classList.remove("open");
+  document.body.style.overflow = "";
+  document.removeEventListener("keydown", pmEscHandler);
+}
+
+function pmEscHandler(e) {
+  if (e.key === "Escape") closeProductModal();
+}
+
+function pmRenderSizes() {
+  document.getElementById("pmSizes").innerHTML = SIZES.map(
+    (s) => `
+    <button type="button" class="size-opt ${s.id === pmSize ? "active" : ""}" data-size="${s.id}" onclick="pmSelectSize('${s.id}')">
+      <span class="s-name">${esc(s.label)}</span>
+      <span class="s-price">₪${priceFor(pmProduct, s.id)}</span>
+    </button>`
+  ).join("");
+  pmRenderPrice(false);
+}
+
+function pmSelectSize(sizeId) {
+  pmSize = sizeId;
+  document.querySelectorAll(".size-opt").forEach((b) => b.classList.toggle("active", b.dataset.size === sizeId));
+  pmRenderPrice();
+  document.getElementById("pmAdded").classList.remove("show");
+}
+
+function pmRenderPrice(animate = true) {
+  const size = findSize(pmSize);
+  const priceEl = document.getElementById("pmPrice");
+  const write = () => {
+    priceEl.textContent = `₪${priceFor(pmProduct, pmSize)}`;
+    priceEl.classList.remove("flash");
+  };
+  if (animate) {
+    priceEl.classList.add("flash");
+    setTimeout(write, 120);
+  } else {
+    write();
+  }
+
+  const note = document.getElementById("pmPriceNote");
+  note.textContent = size.mult > 1 ? `מחיר בסיס ₪${pmProduct.price} · ${size.label} (+${Math.round((size.mult - 1) * 100)}%)` : "מחיר בסיס";
+
+  document.getElementById("pmStems").textContent = `${size.label} · ${size.stems}`;
+  document.getElementById("pmSizeNote").textContent = size.note;
+}
+
+function pmSwitchTab(name) {
+  pmTab = name;
+  document.querySelectorAll(".pm-tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
+  document.getElementById("pmPanelCare").classList.toggle("active", name === "care");
+  document.getElementById("pmPanelDelivery").classList.toggle("active", name === "delivery");
+}
+
+function pmAddToCart() {
+  addToCart(pmProduct.id, pmSize);
+  const el = document.getElementById("pmAdded");
+  el.textContent = `✓ ${pmProduct.name} בגודל ${findSize(pmSize).label} נוסף לסל — ₪${priceFor(pmProduct, pmSize)}`;
+  el.classList.add("show");
+}
+
+function pmQuickBuy() {
+  addToCart(pmProduct.id, pmSize);
+  window.location.href = "checkout.html";
+}
