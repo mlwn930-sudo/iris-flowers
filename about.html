@@ -5,337 +5,306 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>אודות המותג — פרחי איריס</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --iris-deep:#2C1B47;
+  --iris-deep:#2D124D;
+  --iris-night:#180A28;
   --iris-mid:#5B3A87;
-  --iris-light:#C9B8DE;
-  --blush:#E9D9E8;
-  --gold:#AE8A3F;
-  --gold-light:#D9BE83;
-  --cream:#F7F3EC;
-  --ink:#221934;
-  --white:#ffffff;
-  --shadow:0 20px 45px rgba(34,20,58,.18);
-  --radius:22px;
+  --iris-soft:#F3EEF8;
+  --gold:#C5A059;
+  --gold-soft:#E3CFA5;
+  --cream:#FAF7F2;
+  --line:#E6E1DA;
+  --input-line:#CCC5B9;
+  --muted:#8C7A6B;
+  --ink:#241B2E;
+  --white:#fff;
+  --radius:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{
-  font-family:'Assistant',sans-serif;
-  background:var(--cream);
-  color:var(--ink);
-  line-height:1.6;
-  overflow-x:hidden;
-}
-h1,h2,h3,.serif{font-family:'Frank Ruhl Libre',serif;}
+body{font-family:'Assistant',sans-serif;background:var(--cream);color:var(--ink);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,.serif{font-family:'Frank Ruhl Libre',serif;font-weight:600;}
 a{color:inherit;text-decoration:none;}
 img{max-width:100%;display:block;}
-.container{max-width:1180px;margin:0 auto;padding:0 24px;}
-button{font-family:inherit;cursor:pointer;border:none;}
+.container{max-width:1200px;margin:0 auto;padding:0 28px;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 /* ---------- NAV ---------- */
-.nav{
-  position:sticky;top:0;z-index:50;
-  background:rgba(251,247,242,.9);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(75,46,131,.08);
-}
-.nav .container{display:flex;align-items:center;justify-content:space-between;height:78px;}
-.brand{display:flex;align-items:center;gap:10px;font-size:1.5rem;font-weight:700;color:var(--iris-deep);}
-.brand svg{width:34px;height:34px;}
-.nav-links{display:flex;gap:32px;font-weight:600;}
-.nav-links a{position:relative;padding:6px 0;transition:color .2s;}
-.nav-links a:hover{color:var(--iris-mid);}
-.nav-links a::after{content:"";position:absolute;right:0;bottom:0;width:0;height:2px;background:var(--gold);transition:width .25s;}
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,247,242,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+.nav .container{display:flex;align-items:center;justify-content:space-between;height:84px;gap:24px;}
+.brand{display:flex;align-items:center;}
+.brand svg{width:190px;height:44px;}
+.nav-links{display:flex;gap:34px;font-weight:600;font-size:.94rem;}
+.nav-links a{position:relative;padding:4px 0;color:#42354F;transition:color .2s;}
+.nav-links a:hover{color:var(--iris-deep);}
+.nav-links a::after{content:"";position:absolute;right:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .25s;}
 .nav-links a:hover::after{width:100%;}
-.nav-actions{display:flex;align-items:center;gap:18px;}
-.cart-btn{position:relative;display:flex;align-items:center;gap:8px;background:var(--iris-deep);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;}
-.cart-badge{position:absolute;top:-8px;left:-8px;background:var(--gold);color:var(--iris-deep);font-size:.72rem;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;}
-.burger{display:none;}
+.cart-btn{position:relative;display:flex;align-items:center;gap:8px;background:var(--iris-deep);color:#fff;padding:11px 22px;border-radius:999px;font-weight:600;font-size:.9rem;transition:background .2s;}
+.cart-btn:hover{background:var(--iris-night);}
+.cart-badge{position:absolute;top:-6px;left:-6px;background:var(--gold);color:var(--iris-night);font-size:.7rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* ---------- BUTTONS ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 30px;border-radius:999px;font-weight:600;font-size:.95rem;transition:all .25s;letter-spacing:.01em;}
+.btn-gold{background:var(--gold);color:#fff;}
+.btn-gold:hover{background:#B18E48;}
+.btn-outline{border:1px solid rgba(255,255,255,.55);color:#fff;}
+.btn-outline:hover{background:rgba(255,255,255,.1);border-color:#fff;}
+.btn-deep{background:var(--iris-deep);color:#fff;}
+.btn-deep:hover{background:var(--iris-night);}
+.btn-ghost{border:1px solid var(--input-line);color:var(--iris-deep);}
+.btn-ghost:hover{border-color:var(--iris-deep);}
 
 /* ---------- HERO ---------- */
-.hero{
-  position:relative;
-  background:
-    linear-gradient(135deg,rgba(44,27,71,.94) 0%,rgba(91,58,135,.9) 60%,rgba(44,27,71,.85) 100%),
-    url('https://images.pexels.com/photos/193039/pexels-photo-193039.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover;
-  color:#fff;
-  padding:90px 0 120px;
-  clip-path:polygon(0 0,100% 0,100% 92%,0 100%);
-  overflow:hidden;
-}
-.hero .container{display:flex;align-items:center;gap:48px;position:relative;z-index:2;}
-.hero-text{flex:1;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.03em;margin-bottom:22px;}
-.hero-eyebrow span.dot{width:8px;height:8px;border-radius:50%;background:var(--gold);}
-.hero h1{font-size:3.4rem;line-height:1.15;margin-bottom:20px;}
-.hero h1 em{font-style:normal;color:var(--gold);}
-.hero p{font-size:1.15rem;max-width:520px;opacity:.92;margin-bottom:34px;}
-.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:999px;font-weight:800;font-size:1rem;transition:transform .2s,box-shadow .2s;}
-.btn:hover{transform:translateY(-3px);}
-.btn-gold{background:var(--gold);color:var(--iris-deep);box-shadow:0 10px 24px rgba(201,162,75,.4);}
-.btn-outline{border:2px solid rgba(255,255,255,.7);color:#fff;}
-.btn-outline:hover{background:rgba(255,255,255,.12);}
-.btn-deep{background:var(--iris-deep);color:#fff;}
+.hero{position:relative;background:linear-gradient(120deg,#2D124D 0%,#3E1C63 55%,#4A2472 100%);color:#fff;padding:84px 0 96px;overflow:hidden;}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(197,160,89,.18),transparent 60%);pointer-events:none;}
+.hero .container{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:64px;position:relative;z-index:2;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(197,160,89,.5);padding:7px 18px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:.08em;margin-bottom:26px;color:var(--gold-soft);}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.hero h1{font-size:3.5rem;line-height:1.18;margin-bottom:22px;font-weight:600;}
+.hero h1 em{font-style:normal;color:var(--gold-soft);}
+.hero p{font-size:1.08rem;max-width:480px;opacity:.86;margin-bottom:32px;font-weight:300;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
 
-.hero-art{flex:1;display:flex;justify-content:center;position:relative;}
-.hero-art svg{width:100%;max-width:420px;filter:drop-shadow(0 20px 40px rgba(0,0,0,.25));}
-.petal-float{position:absolute;opacity:.35;animation:float 7s ease-in-out infinite;}
-.petal-float.p2{animation-delay:1.5s;top:60%;right:-10px;}
-.petal-float.p3{animation-delay:3s;top:10%;left:0;}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-22px) rotate(8deg);}}
+.hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px;padding-top:26px;border-top:1px solid rgba(255,255,255,.14);}
+.hero-tag{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:8px 18px;font-size:.82rem;}
+.hero-tag strong{color:var(--gold-soft);font-weight:700;letter-spacing:.02em;}
+.hero-tag span{opacity:.78;}
 
-.hero-emblem{
-  position:absolute;top:-18px;left:-18px;width:120px;max-width:120px;
-  filter:drop-shadow(0 10px 22px rgba(0,0,0,.35));
-  animation:none;
-}
-@media(max-width:960px){.hero-emblem{top:-10px;left:calc(50% - 190px);width:96px;}}
-@media(max-width:560px){.hero-emblem{display:none;}}
-.hero-emblem-standalone{
-  position:static;width:100%;max-width:300px;
-  filter:drop-shadow(0 25px 50px rgba(0,0,0,.4));
-}
-@media(max-width:960px){.hero-emblem-standalone{max-width:220px;margin:0 auto;}}
+.hero-photo{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;max-height:520px;box-shadow:0 30px 60px rgba(0,0,0,.35);}
+.hero-photo img{width:100%;height:100%;object-fit:cover;}
+.hero-photo::after{content:"";position:absolute;inset:0;border:1px solid rgba(197,160,89,.35);border-radius:var(--radius);pointer-events:none;}
 
-/* ---------- PRODUCT PHOTOGRAPHY ---------- */
-.product-art{background:none !important;}
-.product-art img,.icon-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
-.product-card:hover .product-art img{transform:scale(1.08);}
-.cat-card .icon-wrap{overflow:hidden;background:none !important;}
-.cat-card .icon-wrap img{border-radius:50%;}
-.badge-stack{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;z-index:2;}
-.badge-stack .badge{background:rgba(34,25,52,.82);backdrop-filter:blur(4px);color:var(--gold-light);font-size:.68rem;font-weight:700;padding:5px 12px;border-radius:999px;white-space:nowrap;border:1px solid rgba(174,138,63,.5);}
-.badge-stack .badge.bestseller{background:var(--gold);color:var(--iris-deep);border-color:var(--gold);}
-
-/* ---------- DELIVERY CHECKER ---------- */
-.delivery-checker{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px 40px;display:flex;align-items:center;gap:26px;flex-wrap:wrap;border:1px solid rgba(174,138,63,.25);}
-.delivery-checker .dc-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--iris-mid),var(--iris-deep));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
-.delivery-checker .dc-text{flex:1;min-width:220px;}
-.delivery-checker h4{color:var(--iris-deep);font-size:1.15rem;margin-bottom:4px;}
-.delivery-checker p{color:#6b5f7a;font-size:.88rem;}
-.delivery-form{display:flex;gap:10px;flex-wrap:wrap;flex:1;min-width:260px;}
-.delivery-form input{flex:1;min-width:180px;padding:13px 16px;border:1px solid #e2d9ee;border-radius:12px;font-family:inherit;font-size:.92rem;}
-.dc-result{width:100%;margin-top:14px;padding:12px 16px;border-radius:12px;font-size:.88rem;font-weight:700;display:none;}
-.dc-result.ok{display:block;background:#EAF6EC;color:#2F7A44;}
-.dc-result.no{display:block;background:#FCEFEF;color:#B84962;}
-
-/* ---------- CHECKOUT STEPS ---------- */
-.checkout-progress{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:44px;}
-.checkout-progress .step{display:flex;align-items:center;gap:10px;}
-.checkout-progress .circle{width:36px;height:36px;border-radius:50%;background:#EFE7F5;color:#9385a3;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .3s;}
-.checkout-progress .label{font-size:.85rem;font-weight:700;color:#9385a3;transition:color .3s;}
-.checkout-progress .line{width:60px;height:2px;background:#EFE7F5;}
-.checkout-progress .step.active .circle{background:var(--iris-deep);color:#fff;}
-.checkout-progress .step.active .label{color:var(--iris-deep);}
-.checkout-progress .step.done .circle{background:var(--gold);color:var(--iris-deep);}
-.checkout-progress .step.done .label{color:var(--gold);}
-@media(max-width:640px){.checkout-progress .label{display:none;}.checkout-progress .line{width:30px;}}
-
-.step-panel{display:none;}
-.step-panel.active{display:block;}
-.tone-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
-.tone-btn{padding:10px 18px;border-radius:999px;background:var(--cream);border:1px solid rgba(174,138,63,.35);font-weight:700;font-size:.85rem;color:var(--iris-deep);transition:all .2s;}
-.tone-btn:hover{background:var(--iris-deep);color:#fff;}
-.tone-btn.loading{opacity:.6;pointer-events:none;}
-.greeting-card{background:linear-gradient(135deg,#fff,#F7F3EC);border:1px solid rgba(174,138,63,.3);border-radius:16px;padding:20px;position:relative;}
-.greeting-card textarea{width:100%;min-height:120px;border:none;background:none;font-family:'Frank Ruhl Libre',serif;font-size:1.05rem;color:var(--iris-deep);resize:vertical;line-height:1.7;}
-.greeting-card textarea:focus{outline:none;}
-.step-nav{display:flex;justify-content:space-between;margin-top:28px;gap:14px;}
-
-/* ---------- SIGNATURE STRIP ---------- */
-.signature{margin-top:-70px;position:relative;z-index:3;}
-.signature-card{
-  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
-  display:flex;align-items:center;justify-content:space-between;gap:30px;padding:34px 40px;
-  border:2px solid var(--gold);
-}
-.signature-card .tag{background:var(--gold);color:var(--iris-deep);font-weight:800;padding:6px 14px;border-radius:999px;font-size:.8rem;display:inline-block;margin-bottom:10px;}
-.signature-card h3{font-size:1.6rem;color:var(--iris-deep);}
-.signature-card p{color:#6b5f7a;max-width:480px;}
-.signature-price{font-size:2rem;font-weight:800;color:var(--iris-deep);white-space:nowrap;}
-.signature-price small{font-size:.9rem;font-weight:600;color:#8a7a9c;}
+/* ---------- SIGNATURE ---------- */
+.signature{margin-top:-46px;position:relative;z-index:3;}
+.signature-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);display:flex;align-items:center;justify-content:space-between;gap:30px;padding:30px 38px;box-shadow:0 8px 30px rgba(45,18,77,.07);}
+.signature-card .tag{display:inline-block;border:1px solid var(--gold);color:var(--gold);font-weight:600;padding:4px 14px;border-radius:999px;font-size:.72rem;letter-spacing:.06em;margin-bottom:10px;}
+.signature-card h3{font-size:1.45rem;color:var(--iris-deep);margin-bottom:4px;}
+.signature-card p{color:var(--muted);max-width:460px;font-size:.92rem;}
+.signature-price{font-size:1.9rem;font-weight:700;color:var(--iris-deep);white-space:nowrap;font-family:'Frank Ruhl Libre',serif;}
 
 /* ---------- SECTIONS ---------- */
-section{padding:90px 0;}
-.section-head{text-align:center;max-width:640px;margin:0 auto 50px;}
-.section-head .kicker{color:var(--iris-mid);font-weight:800;letter-spacing:.05em;font-size:.85rem;text-transform:uppercase;}
-.section-head h2{font-size:2.3rem;color:var(--iris-deep);margin:10px 0 14px;}
-.section-head p{color:#6b5f7a;}
+section{padding:84px 0;}
+.section-head{text-align:center;max-width:620px;margin:0 auto 46px;}
+.section-head .kicker{color:var(--gold);font-weight:600;letter-spacing:.14em;font-size:.74rem;text-transform:uppercase;}
+.section-head h2{font-size:2.15rem;color:var(--iris-deep);margin:12px 0 12px;}
+.section-head p{color:var(--muted);font-size:.95rem;}
 
-/* categories */
-.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;}
-.cat-card{
-  background:var(--white);border-radius:20px;padding:28px 16px;text-align:center;
-  box-shadow:0 6px 18px rgba(75,46,131,.08);transition:transform .25s,box-shadow .25s;
-  border:1px solid rgba(75,46,131,.06);
-}
-.cat-card:hover{transform:translateY(-8px);box-shadow:var(--shadow);}
-.cat-card .icon-wrap{width:74px;height:74px;margin:0 auto 16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.cat-card svg{width:38px;height:38px;}
-.cat-card h4{font-size:1rem;font-weight:700;color:var(--iris-deep);}
-.cat-card.featured{border:2px solid var(--gold);position:relative;}
-.cat-card.featured::before{content:"חתימת המותג";position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--iris-deep);font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:999px;white-space:nowrap;}
+/* ---------- CATEGORIES ---------- */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+.cat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .25s,transform .25s;display:block;}
+.cat-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.cat-card .cat-img{height:220px;width:100%;overflow:hidden;}
+.cat-card .cat-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+.cat-card:hover .cat-img img{transform:scale(1.05);}
+.cat-card h4{font-size:1.02rem;font-weight:600;color:var(--iris-deep);padding:18px 20px;text-align:center;font-family:'Frank Ruhl Libre',serif;}
+.cat-card.featured{border-color:var(--gold);position:relative;}
+.cat-card.featured::before{content:"חתימת המותג";position:absolute;top:14px;right:14px;z-index:2;background:rgba(24,10,40,.82);backdrop-filter:blur(4px);color:var(--gold-soft);font-size:.68rem;font-weight:600;padding:5px 13px;border-radius:999px;letter-spacing:.04em;}
 
-/* products */
-.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
-.product-card{
-  background:var(--white);border-radius:var(--radius);overflow:hidden;
-  box-shadow:0 6px 18px rgba(75,46,131,.08);transition:transform .25s,box-shadow .25s;
-  display:flex;flex-direction:column;
-}
-.product-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
-.product-art{height:190px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.product-art svg{width:70%;height:70%;}
-.product-badge{position:absolute;top:12px;right:12px;background:var(--gold);color:var(--iris-deep);font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px;}
-.product-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:8px;}
-.product-body h4{font-size:1.1rem;color:var(--iris-deep);}
-.product-body p{font-size:.88rem;color:#7a6d8c;flex:1;}
-.product-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
-.price{font-weight:800;font-size:1.2rem;color:var(--iris-deep);}
-.add-btn{background:var(--iris-deep);color:#fff;padding:9px 16px;border-radius:999px;font-weight:700;font-size:.85rem;transition:background .2s;}
-.add-btn:hover{background:var(--iris-mid);}
+/* ---------- PRODUCTS ---------- */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.product-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .25s,transform .25s;display:flex;flex-direction:column;}
+.product-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.product-art{height:250px;position:relative;overflow:hidden;background:var(--iris-soft);}
+.product-art img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+.product-card:hover .product-art img{transform:scale(1.05);}
+.badge-stack{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;z-index:2;}
+.badge-stack .badge{background:rgba(24,10,40,.78);backdrop-filter:blur(5px);color:var(--gold-soft);font-size:.66rem;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap;letter-spacing:.02em;}
+.badge-stack .badge.bestseller{background:var(--gold);color:#fff;}
+.product-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:7px;}
+.product-body h4{font-size:1.05rem;color:var(--iris-deep);font-family:'Frank Ruhl Libre',serif;}
+.product-body p{font-size:.85rem;color:var(--muted);flex:1;line-height:1.6;}
+.product-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+.price{font-weight:700;font-size:1.12rem;color:var(--iris-deep);font-family:'Frank Ruhl Libre',serif;}
+.add-btn{border:1px solid var(--input-line);color:var(--iris-deep);padding:8px 18px;border-radius:999px;font-weight:600;font-size:.82rem;transition:all .2s;}
+.add-btn:hover{background:var(--iris-deep);color:#fff;border-color:var(--iris-deep);}
 
-.cat-filters{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px;}
-.cat-filters button{padding:10px 20px;border-radius:999px;background:var(--white);border:1px solid rgba(75,46,131,.15);font-weight:700;color:var(--iris-deep);}
-.cat-filters button.active{background:var(--iris-deep);color:#fff;}
+.cat-filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:42px;}
+.cat-filters button{padding:9px 20px;border-radius:999px;background:transparent;border:1px solid var(--line);font-weight:600;font-size:.86rem;color:var(--muted);transition:all .2s;}
+.cat-filters button:hover{border-color:var(--gold);color:var(--iris-deep);}
+.cat-filters button.active{background:var(--iris-deep);color:#fff;border-color:var(--iris-deep);}
 
-/* about / story */
-.story{background:var(--white);}
-.story .container{display:flex;align-items:center;gap:60px;}
-.story-art{flex:1;display:flex;justify-content:center;}
-.story-art svg{width:100%;max-width:340px;}
-.story-text{flex:1;}
-.story-text .kicker{color:var(--iris-mid);font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;}
-.story-text h2{font-size:2.1rem;color:var(--iris-deep);margin:12px 0 18px;}
-.story-text p{color:#5b4f6e;margin-bottom:14px;}
-.story-badges{display:flex;gap:26px;margin-top:26px;flex-wrap:wrap;}
-.story-badges div{text-align:center;}
-.story-badges strong{display:block;font-size:1.6rem;color:var(--iris-deep);font-family:'Frank Ruhl Libre',serif;}
-.story-badges span{font-size:.8rem;color:#8a7a9c;}
+/* ---------- DELIVERY CHECKER (thin horizontal) ---------- */
+.delivery-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;background:transparent;}
+.delivery-strip .container{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.delivery-strip .dc-label{display:flex;align-items:center;gap:11px;font-weight:600;color:var(--iris-deep);font-size:.95rem;white-space:nowrap;}
+.delivery-strip .dc-label small{display:block;font-weight:400;color:var(--muted);font-size:.8rem;}
+.delivery-form{display:flex;gap:10px;flex:1;min-width:280px;}
+.delivery-form input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--input-line);padding:10px 4px;font-family:inherit;font-size:.92rem;color:var(--ink);transition:border-color .2s;}
+.delivery-form input:focus{outline:none;border-bottom-color:var(--gold);}
+.delivery-form button{background:var(--gold);color:#fff;padding:11px 26px;border-radius:999px;font-weight:600;font-size:.86rem;white-space:nowrap;transition:background .2s;}
+.delivery-form button:hover{background:#B18E48;}
+.dc-result{width:100%;font-size:.88rem;font-weight:600;display:none;padding-top:4px;}
+.dc-result.ok{display:block;color:#3E7A50;}
+.dc-result.no{display:block;color:#A8515F;}
 
-/* concierge / AI teaser */
-.concierge{background:linear-gradient(135deg,#2E1F4D,var(--iris-deep));color:#fff;border-radius:32px;margin:0 24px;padding:70px 50px;position:relative;overflow:hidden;}
-.concierge .container{padding:0;display:flex;align-items:center;justify-content:space-between;gap:40px;}
-.concierge h2{font-size:2rem;margin-bottom:14px;}
-.concierge p{opacity:.9;max-width:480px;}
-.concierge-bubble{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:22px 26px;min-width:280px;}
-.concierge-bubble .who{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:10px;}
-.concierge-bubble .who .avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--iris-deep);font-weight:900;}
+/* ---------- STORY ---------- */
+.story{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.story .container{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:64px;}
+.story-photo{border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;max-height:420px;}
+.story-photo img{width:100%;height:100%;object-fit:cover;}
+.story-text .kicker{color:var(--gold);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;}
+.story-text h2{font-size:2rem;color:var(--iris-deep);margin:12px 0 18px;}
+.story-text p{color:#5C5064;margin-bottom:14px;font-size:.96rem;}
 
-/* footer */
-footer{background:#221735;color:#e7dcf7;padding:70px 0 30px;}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:40px;margin-bottom:50px;}
-.footer-brand{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:14px;}
-.footer-brand svg{width:28px;height:28px;}
-footer h5{color:#fff;margin-bottom:16px;font-size:.95rem;letter-spacing:.03em;}
+/* ---------- CONCIERGE ---------- */
+.concierge{background:var(--iris-night);color:#fff;border-radius:var(--radius);padding:62px 52px;border:1px solid rgba(197,160,89,.25);}
+.concierge-inner{display:flex;align-items:center;justify-content:space-between;gap:44px;flex-wrap:wrap;}
+.concierge h2{font-size:1.85rem;margin-bottom:12px;}
+.concierge h2 em{font-style:normal;color:var(--gold-soft);}
+.concierge p{opacity:.8;max-width:460px;font-size:.95rem;font-weight:300;}
+.concierge-bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:22px 26px;max-width:320px;}
+.concierge-bubble .who{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:10px;font-size:.9rem;}
+.concierge-bubble .who .avatar{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;}
+.concierge-bubble p{font-size:.88rem;opacity:.82;font-weight:300;}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--iris-night);color:#CFC4DA;padding:64px 0 28px;}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:44px;margin-bottom:44px;}
+.footer-brand svg{width:200px;height:46px;margin-bottom:14px;}
+.footer-grid p{opacity:.6;max-width:290px;font-size:.88rem;font-weight:300;}
+footer h5{color:#fff;margin-bottom:16px;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
 footer ul{list-style:none;}
-footer li{margin-bottom:10px;opacity:.85;}
-footer a:hover{color:var(--gold);}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;text-align:center;font-size:.82rem;opacity:.65;}
+footer li{margin-bottom:10px;opacity:.65;font-size:.9rem;}
+footer a:hover{color:var(--gold-soft);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:22px;text-align:center;font-size:.78rem;opacity:.45;}
 
 /* ---------- CART DRAWER ---------- */
-.overlay{position:fixed;inset:0;background:rgba(36,27,46,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:80;}
+.overlay{position:fixed;inset:0;background:rgba(24,10,40,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:80;}
 .overlay.open{opacity:1;pointer-events:auto;}
-.cart-drawer{
-  position:fixed;top:0;left:0;height:100%;width:400px;max-width:92vw;background:#fff;
-  box-shadow:20px 0 50px rgba(0,0,0,.2);transform:translateX(-100%);transition:transform .35s;z-index:90;
-  display:flex;flex-direction:column;
-}
+.cart-drawer{position:fixed;top:0;left:0;height:100%;width:400px;max-width:92vw;background:#fff;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:90;display:flex;flex-direction:column;}
 .cart-drawer.open{transform:translateX(0);}
-.cart-head{padding:24px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;}
-.cart-head h3{color:var(--iris-deep);}
-.cart-close{font-size:1.4rem;color:#8a7a9c;background:none;}
-.cart-items{flex:1;overflow-y:auto;padding:16px 24px;}
-.cart-row{display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid #f3eef8;}
-.cart-row .thumb{width:56px;height:56px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.cart-row .thumb svg{width:32px;height:32px;}
+.cart-head{padding:24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.cart-head h3{color:var(--iris-deep);font-size:1.1rem;}
+.cart-close{font-size:1.3rem;color:var(--muted);}
+.cart-items{flex:1;overflow-y:auto;padding:10px 24px;}
+.cart-row{display:flex;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);}
+.cart-row .thumb{width:62px;height:62px;border-radius:10px;flex-shrink:0;overflow:hidden;}
+.cart-row .thumb img{width:100%;height:100%;object-fit:cover;}
 .cart-row .info{flex:1;}
-.cart-row .info h5{font-size:.95rem;color:var(--iris-deep);}
-.cart-row .qty{display:flex;align-items:center;gap:8px;margin-top:6px;}
-.cart-row .qty button{width:26px;height:26px;border-radius:50%;background:#f3eef8;color:var(--iris-deep);font-weight:800;}
-.cart-row .remove{color:#c0576b;font-size:.78rem;background:none;margin-top:4px;}
-.cart-foot{padding:22px 24px;border-top:1px solid #eee;}
-.cart-total{display:flex;justify-content:space-between;font-weight:800;font-size:1.2rem;color:var(--iris-deep);margin-bottom:16px;}
-.cart-empty{text-align:center;padding:60px 20px;color:#8a7a9c;}
+.cart-row .info h5{font-size:.92rem;color:var(--iris-deep);font-weight:600;}
+.cart-row .qty{display:flex;align-items:center;gap:10px;margin-top:6px;}
+.cart-row .qty button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);color:var(--iris-deep);font-weight:600;line-height:1;}
+.cart-row .remove{color:#A8515F;font-size:.76rem;margin-top:5px;}
+.cart-foot{padding:22px 24px;border-top:1px solid var(--line);}
+.cart-total{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;color:var(--iris-deep);margin-bottom:16px;}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:.92rem;}
 
-/* ---------- CHAT WIDGET ---------- */
-.chat-launcher{
-  position:fixed;bottom:26px;left:26px;z-index:95;
-  width:64px;height:64px;border-radius:50%;
-  background:linear-gradient(135deg,var(--iris-mid),var(--iris-deep));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 12px 28px rgba(75,46,131,.4);
-  animation:pulse 3s ease-in-out infinite;
-}
-.chat-launcher svg{width:30px;height:30px;color:#fff;}
-@keyframes pulse{0%,100%{box-shadow:0 12px 28px rgba(75,46,131,.4);}50%{box-shadow:0 12px 40px rgba(201,162,75,.55);}}
-.chat-panel{
-  position:fixed;bottom:104px;left:26px;width:360px;max-width:90vw;height:480px;max-height:70vh;
-  background:#fff;border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.25);
-  display:flex;flex-direction:column;overflow:hidden;z-index:96;
-  transform:translateY(20px) scale(.96);opacity:0;pointer-events:none;transition:all .25s;
-}
+/* ---------- CHAT ---------- */
+.chat-launcher{position:fixed;bottom:26px;left:26px;z-index:95;width:58px;height:58px;border-radius:50%;background:var(--iris-deep);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(45,18,77,.35);transition:transform .25s;}
+.chat-launcher:hover{transform:scale(1.06);}
+.chat-launcher svg{width:26px;height:26px;color:#fff;}
+.chat-panel{position:fixed;bottom:98px;left:26px;width:370px;max-width:90vw;height:520px;max-height:72vh;background:#fff;border-radius:var(--radius);box-shadow:0 26px 60px rgba(24,10,40,.3);display:flex;flex-direction:column;overflow:hidden;z-index:96;transform:translateY(16px) scale(.97);opacity:0;pointer-events:none;transition:all .25s;}
 .chat-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
-.chat-head{background:linear-gradient(135deg,var(--iris-deep),var(--iris-mid));color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
-.chat-head .avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--iris-deep);display:flex;align-items:center;justify-content:center;font-weight:900;}
-.chat-head h4{font-size:.95rem;}
-.chat-head span{font-size:.75rem;opacity:.85;}
-.chat-close{margin-right:auto;background:none;color:#fff;font-size:1.2rem;opacity:.8;}
-.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fbf7f2;}
-.msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.5;}
-.msg.bot{background:#fff;color:var(--ink);border:1px solid #eee;align-self:flex-start;border-bottom-left-radius:4px;}
+.chat-head{background:var(--iris-deep);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.chat-head .avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.chat-head h4{font-size:.92rem;font-weight:600;}
+.chat-head span{font-size:.72rem;opacity:.7;}
+.chat-close{margin-right:auto;color:#fff;font-size:1.1rem;opacity:.7;}
+.chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--cream);}
+.msg{max-width:82%;padding:11px 15px;border-radius:14px;font-size:.88rem;line-height:1.6;}
+.msg.bot{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px;}
 .msg.user{background:var(--iris-deep);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
-.chat-input-row{display:flex;gap:8px;padding:14px;border-top:1px solid #eee;background:#fff;}
-.chat-input-row input{flex:1;border:1px solid #e2d9ee;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:.88rem;}
-.chat-input-row input:focus{outline:2px solid var(--iris-light);}
-.chat-input-row button{background:var(--iris-deep);color:#fff;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.chat-input-row button svg{width:18px;height:18px;}
-.typing{display:flex;gap:4px;padding:10px 14px;}
-.typing span{width:6px;height:6px;border-radius:50%;background:#b9a6d0;animation:blink 1.2s infinite;}
+.chat-input-row{display:flex;gap:8px;padding:14px;border-top:1px solid var(--line);background:#fff;}
+.chat-input-row input{flex:1;border:1px solid var(--input-line);border-radius:999px;padding:11px 18px;font-family:inherit;font-size:.88rem;}
+.chat-input-row input:focus{outline:none;border-color:var(--gold);}
+.chat-input-row button{background:var(--iris-deep);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chat-input-row button svg{width:17px;height:17px;}
+.typing{display:flex;gap:4px;}
+.typing span{width:6px;height:6px;border-radius:50%;background:#B9A6D0;animation:blink 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:.2s;}
 .typing span:nth-child(3){animation-delay:.4s;}
 @keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
 
 /* ---------- CHECKOUT ---------- */
-.checkout-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start;}
-.panel{background:#fff;border-radius:var(--radius);padding:32px;box-shadow:0 6px 18px rgba(75,46,131,.08);}
-.panel h3{color:var(--iris-deep);margin-bottom:20px;}
-.field{margin-bottom:18px;}
-.field label{display:block;font-weight:700;font-size:.85rem;color:#5b4f6e;margin-bottom:6px;}
-.field input,.field select{width:100%;padding:12px 14px;border:1px solid #e2d9ee;border-radius:12px;font-family:inherit;font-size:.92rem;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.demo-flag{background:#FFF4D6;border:1px solid var(--gold);color:#8a6d1f;padding:12px 16px;border-radius:12px;font-size:.85rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.order-line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f3eef8;font-size:.92rem;}
-.order-total{display:flex;justify-content:space-between;font-weight:800;font-size:1.3rem;color:var(--iris-deep);margin-top:16px;}
-.success-screen{text-align:center;padding:80px 20px;}
-.success-screen .check{width:90px;height:90px;border-radius:50%;background:#e6f7ec;color:#2f9e5c;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
-.success-screen .check svg{width:46px;height:46px;}
-.success-screen h2{color:var(--iris-deep);margin-bottom:12px;}
-.success-screen p{color:#6b5f7a;margin-bottom:6px;}
+.checkout-shell{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:grid;grid-template-columns:1.35fr 1fr;background:#fff;min-height:560px;}
+.checkout-main{padding:38px 40px;}
+.checkout-aside{background:var(--iris-night);color:#fff;padding:38px 34px;}
+.checkout-aside h3{color:#fff;font-size:1.05rem;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.12);letter-spacing:.02em;}
+.checkout-aside .order-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.88rem;color:#D6CBE0;}
+.checkout-aside .order-line span:last-child{color:var(--gold-soft);font-weight:600;white-space:nowrap;}
+.checkout-aside .order-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;padding-top:18px;border-top:1px solid rgba(197,160,89,.3);}
+.checkout-aside .order-total span:first-child{font-size:.9rem;opacity:.75;}
+.checkout-aside .order-total span:last-child{font-size:1.6rem;font-weight:700;color:var(--gold-soft);font-family:'Frank Ruhl Libre',serif;}
+.checkout-aside .aside-note{margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:.8rem;opacity:.55;line-height:1.7;font-weight:300;}
+.checkout-empty{color:rgba(255,255,255,.5);font-size:.88rem;}
+.checkout-empty a{color:var(--gold-soft);text-decoration:underline;}
 
-@media(max-width:960px){
-  .hero .container{flex-direction:column;text-align:center;}
-  .hero p{margin-left:auto;margin-right:auto;}
-  .hero-ctas{justify-content:center;}
-  .cat-grid{grid-template-columns:repeat(3,1fr);}
+.checkout-progress{display:flex;align-items:center;margin-bottom:34px;}
+.checkout-progress .step{display:flex;align-items:center;gap:10px;}
+.checkout-progress .circle{width:30px;height:30px;border-radius:50%;border:1px solid var(--input-line);color:var(--muted);font-weight:600;display:flex;align-items:center;justify-content:center;font-size:.82rem;transition:all .3s;flex-shrink:0;}
+.checkout-progress .label{font-size:.82rem;font-weight:600;color:var(--muted);transition:color .3s;white-space:nowrap;}
+.checkout-progress .line{flex:1;height:1px;background:var(--line);margin:0 16px;}
+.checkout-progress .step.active .circle{background:var(--iris-deep);border-color:var(--iris-deep);color:#fff;}
+.checkout-progress .step.active .label{color:var(--iris-deep);}
+.checkout-progress .step.done .circle{background:var(--gold);border-color:var(--gold);color:#fff;}
+.checkout-progress .step.done .label{color:var(--gold);}
+@media(max-width:700px){.checkout-progress .label{display:none;}}
+
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+.checkout-main h3{color:var(--iris-deep);font-size:1.15rem;margin-bottom:6px;}
+.checkout-main .sub{color:var(--muted);font-size:.86rem;margin-bottom:24px;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-weight:600;font-size:.78rem;color:var(--muted);margin-bottom:7px;letter-spacing:.02em;}
+.field input,.field textarea{width:100%;padding:12px 14px;border:1px solid var(--input-line);border-radius:8px;font-family:inherit;font-size:.92rem;color:var(--ink);background:#fff;transition:border-color .2s;}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--gold);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.demo-flag{border:1px solid var(--gold);background:rgba(197,160,89,.07);color:#8A6B2E;padding:11px 15px;border-radius:8px;font-size:.82rem;font-weight:600;margin-bottom:22px;}
+
+.tone-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tone-btn{padding:9px 17px;border-radius:999px;border:1px solid var(--input-line);font-weight:600;font-size:.82rem;color:var(--iris-deep);transition:all .2s;}
+.tone-btn:hover{border-color:var(--gold);background:rgba(197,160,89,.08);}
+.tone-btn.active{background:var(--iris-deep);color:#fff;border-color:var(--iris-deep);}
+.tone-btn.loading{opacity:.5;pointer-events:none;}
+.greeting-card{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:20px;}
+.greeting-card textarea{width:100%;min-height:110px;border:none;background:none;font-family:'Frank Ruhl Libre',serif;font-size:1.02rem;color:var(--iris-deep);resize:vertical;line-height:1.75;padding:0;}
+.greeting-card textarea:focus{outline:none;}
+.regen-row{display:flex;justify-content:flex-end;margin-top:10px;}
+.regen-btn{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:6px;transition:color .2s;}
+.regen-btn:hover{color:var(--gold);}
+.step-nav{display:flex;justify-content:space-between;margin-top:28px;gap:14px;}
+
+.success-screen{text-align:center;padding:90px 20px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);}
+.success-screen .check{width:76px;height:76px;border-radius:50%;background:rgba(197,160,89,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
+.success-screen .check svg{width:38px;height:38px;}
+.success-screen h2{color:var(--iris-deep);margin-bottom:12px;}
+.success-screen p{color:var(--muted);margin-bottom:6px;font-size:.92rem;}
+
+/* ---------- PAGE HEADER (about / policy) ---------- */
+.page-head{background:var(--iris-deep);color:#fff;padding:70px 0;text-align:center;}
+.page-head h1{font-size:2.4rem;margin-bottom:12px;}
+.page-head h1 em{font-style:normal;color:var(--gold-soft);}
+.page-head p{opacity:.75;max-width:560px;margin:0 auto;font-weight:300;}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:38px;}
+.panel h3{color:var(--iris-deep);margin-bottom:16px;font-size:1.15rem;}
+.panel p{color:#5C5064;font-size:.95rem;margin-bottom:14px;}
+.policy-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:start;}
+.order-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:.9rem;color:#5C5064;}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:980px){
+  .hero .container{grid-template-columns:1fr;text-align:center;}
+  .hero p{margin-inline:auto;}
+  .hero-ctas,.hero-tags{justify-content:center;}
+  .hero-photo{max-height:380px;order:-1;}
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
   .product-grid{grid-template-columns:repeat(2,1fr);}
   .footer-grid{grid-template-columns:1fr 1fr;}
-  .story .container{flex-direction:column;}
-  .concierge .container{flex-direction:column;text-align:center;}
-  .checkout-wrap{grid-template-columns:1fr;}
+  .story .container{grid-template-columns:1fr;}
+  .checkout-shell{grid-template-columns:1fr;}
+  .policy-grid{grid-template-columns:1fr;}
   .nav-links{display:none;}
+  .concierge-inner{flex-direction:column;text-align:center;}
 }
 @media(max-width:560px){
   .hero h1{font-size:2.3rem;}
-  .cat-grid{grid-template-columns:repeat(2,1fr);}
-  .product-grid{grid-template-columns:1fr;}
-  .footer-grid{grid-template-columns:1fr;}
+  .cat-grid,.product-grid,.footer-grid{grid-template-columns:1fr;}
   .chat-panel{width:94vw;left:3vw;}
   .signature-card{flex-direction:column;text-align:center;}
+  .checkout-main,.checkout-aside{padding:28px 22px;}
+  .brand svg{width:150px;}
 }
 
 </style>
@@ -345,8 +314,16 @@ footer a:hover{color:var(--gold);}
 <nav class="nav">
   <div class="container">
     <a href="index.html" class="brand">
-      <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#2C1B47"/><path d="M50 55C50 55 20 52 10 38C5 30 9 21 18 19C27 17 35 24 40 34C44 42 50 55 50 55Z" fill="#5B3A87"/><path d="M50 55C50 55 80 52 90 38C95 30 91 21 82 19C73 17 65 24 60 34C56 42 50 55 50 55Z" fill="#5B3A87"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#AE8A3F"/></svg>
-      פרחי איריס
+      <svg viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(370, 12)" fill="none" stroke="#2D124D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M35 15 C30 28 25 40 35 65 C45 40 40 28 35 15 Z"/>
+          <path d="M35 40 C20 45 10 55 18 68 C28 65 32 52 35 40 Z"/>
+          <path d="M35 40 C50 45 60 55 52 68 C42 65 38 52 35 40 Z"/>
+          <line x1="35" y1="65" x2="35" y2="82" stroke="#2D124D" stroke-width="1.5"/>
+        </g>
+        <text x="350" y="52" text-anchor="end" font-family="'Frank Ruhl Libre',serif" font-size="34" font-weight="600" fill="#2D124D" letter-spacing="1">פרחי איריס</text>
+        <text x="350" y="76" text-anchor="end" font-family="'Assistant',sans-serif" font-size="11" font-weight="500" fill="#8C7A6B" letter-spacing="4">HAUTE FLORAL STUDIO</text>
+      </svg>
     </a>
     <div class="nav-links">
       <a href="index.html">בית</a>
@@ -354,50 +331,52 @@ footer a:hover{color:var(--gold);}
       <a href="about.html">אודות המותג</a>
       <a href="policy.html">מדיניות ואספקת משלוחים</a>
     </div>
-    <div class="nav-actions">
-      <button class="cart-btn" onclick="openCart()">
-        🛒 עגלה <span class="cart-badge" style="display:none">0</span>
-      </button>
-    </div>
+    <button class="cart-btn" onclick="openCart()">עגלה <span class="cart-badge" style="display:none">0</span></button>
   </div>
 </nav>
 
-<header class="hero" style="padding:70px 0 100px">
-  <div class="container" style="justify-content:center;text-align:center">
-    <div class="hero-text" style="flex:none;max-width:700px;margin:0 auto">
-      <div class="hero-eyebrow" style="margin-inline:auto"><span class="dot"></span> הסיפור שלנו</div>
-      <h1 style="font-size:2.6rem">מקריית אתא, <em>באהבה</em></h1>
-      <p style="margin-inline:auto">איך פרח קטן הפך למותג — ולמה אנחנו עדיין מרכיבים כל זר ביד, אחד אחד.</p>
-    </div>
+<header class="page-head">
+  <div class="container">
+    <h1>מקריית אתא, <em>באהבה</em></h1>
+    <p>איך פרח אחד הפך למותג — ולמה אנחנו עדיין מרכיבים כל זר ביד</p>
   </div>
 </header>
 
 <section>
-  <div class="container" style="max-width:820px">
-    <div class="panel" style="padding:44px">
-      <h3 style="margin-bottom:16px">איך הכל התחיל</h3>
-      <p style="color:#5b4f6e;margin-bottom:16px">פרחי איריס נולד מתוך אהבה לפרח האירוס הסגול — הפרח שנתן למותג את השם, ואת הצבע שמלווה כל זר שיוצא מהחנות. התחלנו כחנות שכונתית קטנה בקריית אתא, מתוך רצון אחד פשוט: לגרום לאנשים להרגיש משהו כשהם מקבלים זר פרחים.</p>
-      <p style="color:#5b4f6e;margin-bottom:16px">היום אנחנו משרתים את כל אזור קריית אתא ומפרץ חיפה, אבל הגישה נשארה אותו דבר — כל הזמנה מתקבלת באופן אישי, וכל זר נבנה ביד, פרח אחר פרח, לפי ההזמנה הספציפית שלכם.</p>
-      <h3 style="margin:32px 0 16px">למה אירוס?</h3>
-      <p style="color:#5b4f6e;margin-bottom:16px">האירוס הוא פרח שמסמל אמונה, תקווה ותקשורת — בדיוק מה שאנחנו רוצים שכל זר יעביר. זר האירוס הסגול הוא חתימת המותג שלנו, ומככב כמעט בכל שילוב שאנחנו מרכיבים.</p>
-      <div class="story-badges" style="margin-top:30px">
-        <div><strong>100%</strong><span>פרחים טריים</span></div>
-        <div><strong>24/7</strong><span>סוכנת AI זמינה</span></div>
-        <div><strong>מקומי</strong><span>קריית אתא ומפרץ חיפה</span></div>
+  <div class="container">
+    <div class="story" style="background:none;border:none;padding:0">
+      <div class="container" style="padding:0">
+        <div class="story-photo">
+          <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=85" alt="סטודיו שזירה" />
+        </div>
+        <div class="story-text">
+          <span class="kicker">איך הכל התחיל</span>
+          <h2>פרח אחד, והשאר היסטוריה</h2>
+          <p>פרחי איריס נולד מתוך אהבה לפרח האירוס הסגול — הפרח שנתן למותג את השם, ואת הצבע שמלווה כל זר שיוצא מהדלת שלנו.</p>
+          <p>התחלנו כחנות שכונתית קטנה בקריית אתא, מתוך רצון פשוט אחד: שאנשים ירגישו משהו כשהם מקבלים זר פרחים. לא סתם מתנה — רגע.</p>
+          <p>היום אנחנו משרתים את כל אזור קריית אתא ומפרץ חיפה, אבל הגישה לא השתנתה. כל הזמנה מתקבלת באופן אישי, וכל זר נבנה ביד לפי ההזמנה.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section>
+<section style="padding-top:0">
   <div class="container">
-    <div class="concierge">
-      <div class="container">
-        <div>
-          <h2>רוצים להכיר אותנו יותר?</h2>
-          <p>מיכל, הסוכנת הדיגיטלית שלנו, תשמח לספר עוד על המותג, הערכים שלנו, ולעזור לכם למצוא את הזר המושלם.</p>
-          <button class="btn btn-gold" style="margin-top:22px" onclick="toggleChat()">דברו עם מיכל</button>
-        </div>
+    <div class="policy-grid">
+      <div class="panel">
+        <h3>למה דווקא אירוס?</h3>
+        <p>האירוס מסמל אמונה, תקווה ותקשורת — בדיוק מה שאנחנו רוצים שכל זר יעביר. זר האירוס הסגול הוא חתימת המותג שלנו, והוא מככב כמעט בכל שילוב שאנחנו מרכיבים.</p>
+        <h3 style="margin-top:28px">איך אנחנו עובדים</h3>
+        <p>הפרחים נבחרים בבוקר, הזרים נשזרים ביום ההזמנה, והמשלוח יוצא באותו יום כשאפשר. אנחנו לא מוציאים מהחנות זר שלא היינו שולחים למישהו קרוב.</p>
+      </div>
+      <div class="panel">
+        <h3>הבטחת הבוטיק</h3>
+        <div class="order-line"><span>פרחים טריים</span><span>100%</span></div>
+        <div class="order-line"><span>שזירה ידנית</span><span>כל זר</span></div>
+        <div class="order-line"><span>אזור חלוקה</span><span>קריית אתא ומפרץ חיפה</span></div>
+        <div class="order-line"><span>מענה דיגיטלי</span><span>24/7</span></div>
+        <a href="catalog.html" class="btn btn-deep" style="width:100%;margin-top:22px">לקטלוג המלא</a>
       </div>
     </div>
   </div>
@@ -408,10 +387,18 @@ footer a:hover{color:var(--gold);}
     <div class="footer-grid">
       <div>
         <div class="footer-brand">
-          <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#C9B8DE"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#AE8A3F"/></svg>
-          פרחי איריס
+          <svg viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(370, 12)" fill="none" stroke="#E3CFA5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M35 15 C30 28 25 40 35 65 C45 40 40 28 35 15 Z"/>
+              <path d="M35 40 C20 45 10 55 18 68 C28 65 32 52 35 40 Z"/>
+              <path d="M35 40 C50 45 60 55 52 68 C42 65 38 52 35 40 Z"/>
+              <line x1="35" y1="65" x2="35" y2="82" stroke="#E3CFA5" stroke-width="1.5"/>
+            </g>
+            <text x="350" y="52" text-anchor="end" font-family="'Frank Ruhl Libre',serif" font-size="34" font-weight="600" fill="#ffffff" letter-spacing="1">פרחי איריס</text>
+            <text x="350" y="76" text-anchor="end" font-family="'Assistant',sans-serif" font-size="11" font-weight="500" fill="#A99BB5" letter-spacing="4">HAUTE FLORAL STUDIO</text>
+          </svg>
         </div>
-        <p style="opacity:.75;max-width:280px">חנות פרחים בוטיקית בקריית אתא. זרים טריים, עיצוב אישי, ומשלוחים לכל האזור.</p>
+        <p>בוטיק פרחים בקריית אתא. זרים בעבודת יד, עיצוב אישי, ומשלוחים לכל האזור.</p>
       </div>
       <div>
         <h5>ניווט</h5>
@@ -419,7 +406,7 @@ footer a:hover{color:var(--gold);}
           <li><a href="index.html">בית</a></li>
           <li><a href="catalog.html">המוצרים שלנו</a></li>
           <li><a href="about.html">אודות המותג</a></li>
-          <li><a href="policy.html">מדיניות ואספקת משלוחים</a></li>
+          <li><a href="policy.html">מדיניות ואספקה</a></li>
         </ul>
       </div>
       <div>
@@ -428,18 +415,19 @@ footer a:hover{color:var(--gold);}
           <li><a href="catalog.html#signature">אירוסים</a></li>
           <li><a href="catalog.html#roses">ורדים</a></li>
           <li><a href="catalog.html#events">אירועים</a></li>
+          <li><a href="catalog.html#plants">עציצים</a></li>
         </ul>
       </div>
       <div>
         <h5>יצירת קשר</h5>
         <ul>
-          <li>📍 קריית אתא (כתובת מדויקת — להשלמה)</li>
-          <li>📞 טלפון — להשלמה</li>
-          <li>🕒 שעות פתיחה — להשלמה</li>
+          <li>קריית אתא — כתובת להשלמה</li>
+          <li>טלפון — להשלמה</li>
+          <li>שעות פתיחה — להשלמה</li>
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — כל התוכן לצורכי מצגת</div>
+    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — התוכן לצורכי מצגת</div>
   </div>
 </footer>
 
@@ -449,11 +437,11 @@ footer a:hover{color:var(--gold);}
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
-    <a href="checkout.html" class="btn btn-deep" style="width:100%;justify-content:center">מעבר לתשלום</a>
+    <a href="checkout.html" class="btn btn-deep" style="width:100%">מעבר לתשלום</a>
   </div>
 </div>
 
-<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט עם מיכל">
+<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.75c0 2.62 1.36 4.96 3.5 6.53V22l4.02-2.2c.8.15 1.62.23 2.48.23 5.52 0 10-3.94 10-8.75S17.52 2 12 2z"/></svg>
 </button>
 <div class="chat-panel" id="chatPanel">
@@ -470,93 +458,19 @@ footer a:hover{color:var(--gold);}
 </div>
 
 <script>
-/* פרחי איריס — קטלוג מוצרים (תוכן דוגמה להדגמה. להחלפה בתמונות/מחירים אמיתיים מבעלת העסק) */
+/* פרחי איריס — קטלוג מוצרים (תמונות דוגמה — להחלפה בצילומים אמיתיים של החנות) */
 
-const FLOWER_ICONS = {
-  iris: `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="irisPetal" cx="35%" cy="25%" r="80%">
-        <stop offset="0%" stop-color="#E8D6F7"/>
-        <stop offset="55%" stop-color="#9B6FD6"/>
-        <stop offset="100%" stop-color="#4B2E83"/>
-      </radialGradient>
-      <linearGradient id="irisStem" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#7FAE6E"/>
-        <stop offset="100%" stop-color="#3F7A45"/>
-      </linearGradient>
-    </defs>
-    <path d="M50 60C50 60 47 82 50 100C52 88 53 74 50 60Z" fill="url(#irisStem)"/>
-    <path d="M40 66C34 78 30 92 32 100C40 92 44 78 40 66Z" fill="#5B9A55" opacity=".85"/>
-    <path d="M60 66C66 78 70 92 68 100C60 92 56 78 60 66Z" fill="#3F7A45" opacity=".85"/>
-    <path d="M50 62C50 62 22 58 12 42C7 33 12 23 22 21C32 19 40 27 45 38C48 46 50 62 50 62Z" fill="url(#irisPetal)" opacity=".9"/>
-    <path d="M50 62C50 62 78 58 88 42C93 33 88 23 78 21C68 19 60 27 55 38C52 46 50 62 50 62Z" fill="url(#irisPetal)" opacity=".9"/>
-    <path d="M50 62C50 62 33 44 34 24C35 12 43 5 50 5C57 5 65 12 66 24C67 44 50 62 50 62Z" fill="url(#irisPetal)"/>
-    <path d="M50 62C50 62 40 50 41 36C42 28 46 24 50 24C54 24 58 28 59 36C60 50 50 62 50 62Z" fill="#C9A24B" opacity=".55"/>
-    <circle cx="50" cy="60" r="4.5" fill="#F5E7A3"/>
-  </svg>`,
-  rose: `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="rosePetal" cx="40%" cy="30%" r="75%">
-        <stop offset="0%" stop-color="#FBDCE6"/>
-        <stop offset="55%" stop-color="#E0637E"/>
-        <stop offset="100%" stop-color="#A8324B"/>
-      </radialGradient>
-      <linearGradient id="roseStem" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#7FAE6E"/>
-        <stop offset="100%" stop-color="#3F7A45"/>
-      </linearGradient>
-    </defs>
-    <path d="M50 66C50 66 47 86 50 102C52 90 53 78 50 66Z" fill="url(#roseStem)"/>
-    <path d="M42 74C36 82 33 90 35 96C41 90 44 82 42 74Z" fill="#5B9A55" opacity=".85"/>
-    <circle cx="50" cy="44" r="27" fill="url(#rosePetal)" opacity=".35"/>
-    <path d="M50 18C62 22 70 32 70 44C70 56 60 64 50 64C40 64 30 56 30 44C30 32 38 22 50 18Z" fill="url(#rosePetal)"/>
-    <path d="M50 27C57 30 61 36 61 43C61 50 56 55 50 55C44 55 39 50 39 43C39 36 43 30 50 27Z" fill="#F6AFC0" opacity=".9"/>
-    <path d="M50 33C54 35 56 39 56 43C56 47 53 50 50 50C47 50 44 47 44 43C44 39 46 35 50 33Z" fill="#FDEAEF"/>
-  </svg>`,
-  orchid: `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="orchidPetal" cx="45%" cy="30%" r="80%">
-        <stop offset="0%" stop-color="#F3E2FB"/>
-        <stop offset="60%" stop-color="#C084E0"/>
-        <stop offset="100%" stop-color="#7C4DBE"/>
-      </radialGradient>
-    </defs>
-    <path d="M50 66C50 66 46 84 50 100C53 86 54 78 50 66Z" fill="#3F7A45"/>
-    <path d="M50 60C50 60 36 42 43 24C46 15 56 15 60 24C67 42 50 60 50 60Z" fill="url(#orchidPetal)"/>
-    <path d="M50 60C38 52 16 52 9 40C4 31 12 22 22 25C34 28 44 44 50 60Z" fill="url(#orchidPetal)" opacity=".85"/>
-    <path d="M50 60C62 52 84 52 91 40C96 31 88 22 78 25C66 28 56 44 50 60Z" fill="url(#orchidPetal)" opacity=".85"/>
-    <ellipse cx="50" cy="63" rx="9" ry="12" fill="#F6E27A"/>
-    <path d="M50 55C47 60 47 66 50 70C54 66 54 60 50 55Z" fill="#A8324B" opacity=".8"/>
-  </svg>`,
-  bouquet: `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="bq1" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#F6E27A"/><stop offset="100%" stop-color="#C9A24B"/></radialGradient>
-      <radialGradient id="bq2" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#FBDCE6"/><stop offset="100%" stop-color="#D9607D"/></radialGradient>
-      <radialGradient id="bq3" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#E8D6F7"/><stop offset="100%" stop-color="#7C4DBE"/></radialGradient>
-      <linearGradient id="bqWrap" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E9E2F2"/></linearGradient>
-    </defs>
-    <path d="M32 66L20 104H80L68 66Z" fill="url(#bqWrap)" stroke="#C9A24B" stroke-width="1.5"/>
-    <path d="M50 70L38 104M50 70L50 106M50 70L62 104" stroke="#C9A24B" stroke-width="2" stroke-linecap="round" opacity=".7"/>
-    <circle cx="33" cy="38" r="14" fill="url(#bq3)"/>
-    <circle cx="58" cy="28" r="16" fill="url(#bq1)"/>
-    <circle cx="72" cy="46" r="12" fill="url(#bq2)"/>
-    <circle cx="46" cy="52" r="14" fill="url(#bq2)"/>
-    <circle cx="62" cy="52" r="10" fill="url(#bq3)"/>
-    <path d="M20 62C26 56 34 56 38 62" stroke="#5B9A55" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M80 62C74 56 66 56 62 62" stroke="#5B9A55" stroke-width="3" fill="none" stroke-linecap="round"/>
-  </svg>`,
-  plant: `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="plantPot" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9B6FD6"/><stop offset="100%" stop-color="#4B2E83"/></linearGradient>
-      <radialGradient id="plantBloom" cx="40%" cy="30%" r="75%"><stop offset="0%" stop-color="#F3E2FB"/><stop offset="100%" stop-color="#9B6FD6"/></radialGradient>
-    </defs>
-    <path d="M30 78H70L64 104H36L30 78Z" fill="url(#plantPot)"/>
-    <rect x="28" y="72" width="44" height="9" rx="4" fill="#C9A24B"/>
-    <path d="M50 74C50 74 30 64 32 44C33 32 43 26 50 32C57 26 67 32 68 44C70 64 50 74 50 74Z" fill="#3F7A45"/>
-    <path d="M50 74C50 74 40 56 50 38C60 56 50 74 50 74Z" fill="#5B9A55"/>
-    <ellipse cx="50" cy="30" rx="11" ry="14" fill="url(#plantBloom)"/>
-    <ellipse cx="50" cy="30" rx="4" ry="5" fill="#C9A24B"/>
-  </svg>`,
+const IMG = {
+  iris: "https://images.pexels.com/photos/193039/pexels-photo-193039.jpeg?auto=compress&cs=tinysrgb&w=900",
+  irisWhite: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=900&q=80",
+  redRoses: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=900&q=80",
+  pastelRoses: "https://images.unsplash.com/photo-1487070183336-b863922373d4?auto=format&fit=crop&w=900&q=80",
+  seasonal: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=900&q=80",
+  event: "https://images.unsplash.com/photo-1521520368710-3ab197656d60?auto=format&fit=crop&w=900&q=80",
+  thanks: "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=900&q=80",
+  sympathy: "https://images.unsplash.com/photo-1455659817273-f96807779a8a?auto=format&fit=crop&w=900&q=80",
+  orchid: "https://images.unsplash.com/photo-1618080578815-335456280012?auto=format&fit=crop&w=900&q=80",
+  studio: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=85",
 };
 
 const PRODUCTS = [
@@ -568,10 +482,8 @@ const PRODUCTS = [
     desc: "הזר שעליו נבנה המותג — אירוסים סגולים טריים, עטופים בעדינות עם ירק טבעי.",
     price: 189,
     oldPrice: null,
-    icon: "iris",
-    hue: "bg-1",
-    img: "https://images.pexels.com/photos/193039/pexels-photo-193039.jpeg?auto=compress&cs=tinysrgb&w=800",
-    badges: ["הכי נמכר", "פרחים טריים מהבוקר"],
+    img: IMG.iris,
+    badges: ["הכי נמכר", "טרי מהבוקר"],
   },
   {
     id: "iris-white-rose",
@@ -581,10 +493,8 @@ const PRODUCTS = [
     desc: "שילוב עדין של אירוסים סגולים וורדים לבנים — קלאסי ומרגש.",
     price: 219,
     oldPrice: 249,
-    icon: "iris",
-    hue: "bg-2",
-    img: "https://images.pexels.com/photos/24821967/pexels-photo-24821967.jpeg?auto=compress&cs=tinysrgb&w=800",
-    badges: ["פרחים טריים מהבוקר"],
+    img: IMG.irisWhite,
+    badges: ["טרי מהבוקר"],
   },
   {
     id: "red-roses-classic",
@@ -594,9 +504,7 @@ const PRODUCTS = [
     desc: "12 ורדים אדומים טריים, זר מושלם לרגעים רומנטיים.",
     price: 159,
     oldPrice: null,
-    icon: "rose",
-    hue: "bg-3",
-    img: "https://images.pexels.com/photos/5547/pexels-photo-5547.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.redRoses,
     badges: ["הכי נמכר"],
   },
   {
@@ -607,9 +515,7 @@ const PRODUCTS = [
     desc: "ורדים בגווני אפרסק וורוד רך, עדינים ומלאי אור.",
     price: 169,
     oldPrice: null,
-    icon: "rose",
-    hue: "bg-4",
-    img: "https://images.pexels.com/photos/68570/pexels-photo-68570.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.pastelRoses,
     badges: [],
   },
   {
@@ -620,10 +526,8 @@ const PRODUCTS = [
     desc: "מבחר הפרחים הטריים ביותר של השבוע — כל זר קצת שונה, כולם קסומים.",
     price: 139,
     oldPrice: null,
-    icon: "bouquet",
-    hue: "bg-5",
-    img: "https://images.pexels.com/photos/5310588/pexels-photo-5310588.jpeg?auto=compress&cs=tinysrgb&w=800",
-    badges: ["פרחים טריים מהבוקר", "משלוח מהיר"],
+    img: IMG.seasonal,
+    badges: ["טרי מהבוקר", "משלוח מהיר"],
   },
   {
     id: "event-luxury",
@@ -633,9 +537,7 @@ const PRODUCTS = [
     desc: "זר גדול ומרשים לחתונות, ימי הולדת עגולים ואירועים מיוחדים.",
     price: 349,
     oldPrice: 390,
-    icon: "bouquet",
-    hue: "bg-1",
-    img: "https://images.pexels.com/photos/226145/pexels-photo-226145.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.event,
     badges: [],
   },
   {
@@ -643,12 +545,10 @@ const PRODUCTS = [
     name: 'זר "תודה" עדין',
     tag: null,
     category: "thanks",
-    desc: "זר קטן וקסום שאומר תודה בול בדיוק כמו שצריך.",
+    desc: "זר קטן וקסום שאומר תודה בדיוק כמו שצריך.",
     price: 99,
     oldPrice: null,
-    icon: "rose",
-    hue: "bg-5",
-    img: "https://images.pexels.com/photos/3392982/pexels-photo-3392982.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.thanks,
     badges: ["משלוח מהיר"],
   },
   {
@@ -659,9 +559,7 @@ const PRODUCTS = [
     desc: "זר רגוע ומכבד, לבן וסגול, לרגעים של תמיכה ואהבה.",
     price: 179,
     oldPrice: null,
-    icon: "iris",
-    hue: "bg-2",
-    img: "https://images.pexels.com/photos/17840068/pexels-photo-17840068.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.sympathy,
     badges: [],
   },
   {
@@ -672,39 +570,42 @@ const PRODUCTS = [
     desc: "סחלב מרשים בעציץ מעוצב — מתנה שנשארת ופורחת שוב ושוב.",
     price: 129,
     oldPrice: null,
-    icon: "orchid",
-    hue: "bg-3",
-    img: "https://images.pexels.com/photos/5714450/pexels-photo-5714450.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: IMG.orchid,
     badges: [],
   },
 ];
 
 const CATEGORIES = [
-  { id: "signature", name: "אירוסים · חתימה", icon: "iris", featured: true, img: "https://images.pexels.com/photos/193039/pexels-photo-193039.jpeg?auto=compress&cs=tinysrgb&w=400" },
-  { id: "roses", name: "ורדים", icon: "rose", img: "https://images.pexels.com/photos/5547/pexels-photo-5547.jpeg?auto=compress&cs=tinysrgb&w=400" },
-  { id: "seasonal", name: "עונתי", icon: "bouquet", img: "https://images.pexels.com/photos/5310588/pexels-photo-5310588.jpeg?auto=compress&cs=tinysrgb&w=400" },
-  { id: "events", name: "אירועים", icon: "bouquet", img: "https://images.pexels.com/photos/226145/pexels-photo-226145.jpeg?auto=compress&cs=tinysrgb&w=400" },
-  { id: "sympathy", name: "ניחומים", icon: "iris", img: "https://images.pexels.com/photos/17840068/pexels-photo-17840068.jpeg?auto=compress&cs=tinysrgb&w=400" },
-  { id: "plants", name: "עציצים", icon: "plant", img: "https://images.pexels.com/photos/5714450/pexels-photo-5714450.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { id: "signature", name: "אירוסים · חתימת המותג", featured: true, img: IMG.iris },
+  { id: "roses", name: "ורדים", img: IMG.redRoses },
+  { id: "seasonal", name: "זרים עונתיים", img: IMG.seasonal },
+  { id: "events", name: "אירועים וחתונות", img: IMG.event },
+  { id: "sympathy", name: "ניחומים", img: IMG.sympathy },
+  { id: "plants", name: "עציצים וסחלבים", img: IMG.orchid },
 ];
 
 const DELIVERY_AREAS = {
-  "קריית אתא": "משלוח באותו יום (הזמנה עד 14:00)",
-  "חיפה": "משלוח באותו יום (הזמנה עד 13:00)",
-  "קריית ביאליק": "משלוח באותו יום (הזמנה עד 13:00)",
-  "קריית מוצקין": "משלוח באותו יום (הזמנה עד 13:00)",
+  "קריית אתא": "משלוח באותו יום — הזמנה עד 14:00",
+  "חיפה": "משלוח באותו יום — הזמנה עד 13:00",
+  "קריית ביאליק": "משלוח באותו יום — הזמנה עד 13:00",
+  "קריית מוצקין": "משלוח באותו יום — הזמנה עד 13:00",
   "קריית ים": "משלוח למחרת",
-  "נשר": "משלוח באותו יום (הזמנה עד 13:00)",
+  "קריית חיים": "משלוח באותו יום — הזמנה עד 13:00",
+  "נשר": "משלוח באותו יום — הזמנה עד 13:00",
   "טירת כרמל": "משלוח למחרת",
   "עכו": "משלוח למחרת",
+  "יגור": "משלוח למחרת",
 };
 
 const GREETING_TONES = [
-  { id: "romantic", label: "רומנטי", emoji: "💜" },
-  { id: "birthday", label: "יום הולדת", emoji: "🎉" },
-  { id: "touching", label: "מרגש", emoji: "🥹" },
-  { id: "funny", label: "מצחיק", emoji: "😄" },
-  { id: "sympathy", label: "ניחומים", emoji: "🤍" },
+  { id: "romantic", label: "רומנטי" },
+  { id: "birthday", label: "יום הולדת" },
+  { id: "touching", label: "מרגש" },
+  { id: "funny", label: "מצחיק" },
+  { id: "congrats", label: "מזל טוב" },
+  { id: "thanks", label: "תודה" },
+  { id: "recovery", label: "החלמה" },
+  { id: "sympathy", label: "ניחומים" },
 ];
 
 function findProduct(id) {
@@ -717,13 +618,13 @@ function productCardHTML(p) {
     <div class="product-card">
       <div class="product-art">
         <img src="${p.img}" alt="${p.name}" loading="lazy" />
-        ${badges.length ? `<div class="badge-stack">${badges.map(b => `<span class="badge ${b === 'הכי נמכר' ? 'bestseller' : ''}">${b}</span>`).join("")}</div>` : ""}
+        ${badges.length ? `<div class="badge-stack">${badges.map((b) => `<span class="badge ${b === "הכי נמכר" ? "bestseller" : ""}">${b}</span>`).join("")}</div>` : ""}
       </div>
       <div class="product-body">
         <h4>${p.name}</h4>
         <p>${p.desc}</p>
         <div class="product-foot">
-          <span class="price">₪${p.price}${p.oldPrice ? ` <s style="color:#b3a6c2;font-size:.8rem">₪${p.oldPrice}</s>` : ""}</span>
+          <span class="price">₪${p.price}${p.oldPrice ? ` <s style="color:#B5AEA4;font-size:.78rem">₪${p.oldPrice}</s>` : ""}</span>
           <button class="add-btn" onclick="addToCart('${p.id}')">הוסף לסל</button>
         </div>
       </div>
@@ -732,14 +633,15 @@ function productCardHTML(p) {
 
 function categoryCardHTML(c) {
   return `
-    <a href="catalog.html#${c.id}" class="cat-card ${c.featured ? 'featured' : ''}">
-      <div class="icon-wrap"><img src="${c.img}" alt="${c.name}" loading="lazy" /></div>
+    <a href="catalog.html#${c.id}" class="cat-card ${c.featured ? "featured" : ""}">
+      <div class="cat-img"><img src="${c.img}" alt="${c.name}" loading="lazy" /></div>
       <h4>${c.name}</h4>
     </a>`;
 }
 
 function checkDeliveryArea(query) {
   const q = (query || "").trim();
+  if (!q) return null;
   const match = Object.keys(DELIVERY_AREAS).find((area) => area.includes(q) || q.includes(area));
   return match ? { area: match, info: DELIVERY_AREAS[match] } : null;
 }
@@ -834,7 +736,7 @@ function renderCartDrawer() {
       .map(
         (l) => `
       <div class="cart-row" data-id="${l.id}">
-        <div class="thumb ${l.product.hue}" style="color:var(--iris-deep)">${FLOWER_ICONS[l.product.icon]}</div>
+        <div class="thumb"><img src="${l.product.img}" alt="${l.product.name}" /></div>
         <div class="info">
           <h5>${l.product.name}</h5>
           <div class="qty">
@@ -866,96 +768,131 @@ document.addEventListener("DOMContentLoaded", updateCartBadge);
 
 </script>
 <script>
-/* פרחי איריס — מיכל, הסוכנת הדיגיטלית (רצה במלואה בדפדפן, ללא שרת) */
+/* פרחי איריס — מיכל, הסוכנת הדיגיטלית (רצה בדפדפן, ללא שרת) */
 
 let chatHistory = [];
+let lastIntent = null;
+const usedReplies = new Set();
 
 const INTENTS = [
   {
     name: "greeting",
-    keywords: ["היי", "שלום", "הי ", "בוקר טוב", "ערב טוב", "מה נשמע", "הלו", "אהלן"],
+    keywords: ["היי", "הי ", "שלום", "אהלן", "בוקר טוב", "ערב טוב", "מה נשמע", "מה קורה", "הלו", "יו "],
     replies: [
-      "היי! 🌸 שמחה שפנית. מחפש/ת זר למישהו מיוחד, או סתם מסתכל/ת?",
-      "שלום שלום! אני מיכל, כאן כדי לעזור לך למצוא בדיוק את הזר הנכון. מה קורה?",
+      "היי! 🌸 אני מיכל. מחפש/ת זר למישהו מסוים, או בא/ה להסתכל קצת?",
+      "אהלן! כיף שנכנסת. לאיזה אירוע אנחנו מחפשים היום?",
+      "שלום שלום! ספר/י לי למי הזר מיועד ואני כבר אדע לכוון אותך.",
+      "היי, נעים מאוד! אני יכולה לעזור בבחירת זר, בשאלות משלוח, או פשוט להמליץ. מה מעניין אותך?",
     ],
   },
   {
     name: "delivery",
-    keywords: ["משלוח", "לשלוח", "מתי מגיע", "זמן אספקה", "עד מתי", "שליח"],
+    keywords: ["משלוח", "לשלוח", "מתי מגיע", "זמן אספקה", "שליח", "עד מתי", "היום", "מחר", "לשלח"],
     replies: [
-      "אנחנו מגיעים לקריית אתא ולכל מפרץ חיפה, ואם ההזמנה נסגרת עד 14:00 אפשר גם משלוח באותו יום 🌸 לאן צריך להגיע?",
-      "בדרך כלל מספקים באותו יום אם מזמינים מוקדם, ולמחרת אם ההזמנה מאוחרת. יש תאריך מסוים בראש?",
+      "אנחנו מחלקים בקריית אתא ובכל מפרץ חיפה. הזמנה שנסגרת עד 14:00 יוצאת עוד באותו יום 🌸 לאן צריך שיגיע?",
+      "משלוחים יוצאים כל יום. באזור קריית אתא זה אפילו באותו יום אם מזמינים לפני 14:00. יש תאריך שאת/ה מכוון/ת אליו?",
+      "בדרך כלל אנחנו מגיעים תוך יום. תגיד/י לי לאיזו עיר וזה יהיה מדויק יותר — יש לנו בודק אזורים גם בעמוד הבית.",
+      "אפשר לבחור בקופה תאריך ושעת הגעה מועדפים, כדי שהזר יגיע בדיוק ברגע הנכון. לאן שולחים?",
     ],
   },
   {
     name: "price",
-    keywords: ["כמה עולה", "מחיר", "עלות", "כמה זה", "יקר", "זול"],
+    keywords: ["כמה עולה", "מחיר", "מחירים", "עלות", "כמה זה", "יקר", "זול", "תקציב"],
     replies: [
-      'המחירים שלנו נעים בין 99 ש"ח לזר "תודה" עדין ועד 349 ש"ח לזר אירוע מפואר. זר החתימה שלנו עולה 189. יש לך תקציב בראש שאתאים אליו המלצה?',
+      'הטווח שלנו הוא 99–349 ש"ח. זר החתימה, זר האירוס הסגול, עומד על 189. יש סכום שנוח לך שאתאים אליו?',
+      'יש לנו משהו כמעט בכל תקציב — מזר "תודה" קטן ב-99 ועד זר אירוע מפואר ב-349. מה בערך התקציב שלך?',
+      'תלוי בגודל ובסוג. הכי פופולרי אצלנו זה הטווח 139–219 ש"ח. תגיד/י לי מספר ואמליץ בול.',
     ],
   },
   {
     name: "birthday",
-    keywords: ["יום הולדת", "הולדת", "יומולדת"],
+    keywords: ["יום הולדת", "יומולדת", "הולדת", "חוגג", "חוגגת"],
     replies: [
-      'ליום הולדת הכי אהוב עלינו הוא הזר הצבעוני העונתי (139 ש"ח) — שמח ומלא חיים. אם רוצים לעשות רושם גדול, זר האירוע המפואר (349 ש"ח) 🌸',
+      'ליום הולדת אני הכי אוהבת את הזר הצבעוני העונתי (139 ש"ח) — שמח, מלא חיים ותמיד עושה חיוך.',
+      'תלוי כמה גדול הרגע 🙂 לזר יומיומי-שמח — העונתי ב-139. למשהו שעושה "וואו" בכניסה — זר האירוע המפואר ב-349.',
+      'לימי הולדת אנשים לוקחים אצלנו בעיקר את העונתי הצבעוני. אם זה יום הולדת עגול, הייתי הולכת על משהו גדול יותר. מה האירוע?',
     ],
   },
   {
     name: "romantic",
-    keywords: ["רומנטי", "אהבה", "בת זוג", "בן זוג", "אישה שלי", "בעל שלי", "נישואין", "דייט", "התנצלות"],
+    keywords: ["רומנטי", "אהבה", "בת זוג", "בן זוג", "אישה שלי", "בעל שלי", "חברה שלי", "חבר שלי", "נישואין", "דייט", "התנצלות", "לפייס"],
     replies: [
-      'לרגעים רומנטיים אני הכי אוהבת את זר הוורדים האדומים הקלאסי (159 ש"ח), או אם רוצים משהו קצת אחר — אירוסים וורדים לבנים (219 ש"ח), מרגש לא פחות.',
+      'לרגעים רומנטיים הקלאסיקה מנצחת: זר ורדים אדומים (159 ש"ח). ואם רוצים משהו קצת פחות צפוי — אירוסים וורדים לבנים (219) ממש מרגש.',
+      'ורדים אדומים זה תמיד בטוח, אבל אם את/ה רוצה שזה ייראה אישי יותר — האירוסים הסגולים שלנו עושים רושם אחר לגמרי.',
+      'מניסיון, מה שבאמת עובד זה זר יפה עם ברכה אישית טובה. את הזר אני אעזור לבחור, ואת הברכה אפשר לכתוב יחד בשלב התשלום.',
     ],
   },
   {
     name: "sympathy",
-    keywords: ["אבל", "ניחומים", "לוויה", "שבעה", "פטירה", "נפטר", "השתתפות בצער"],
+    keywords: ["אבל", "ניחומים", "לוויה", "שבעה", "פטירה", "נפטר", "נפטרה", "השתתפות בצער", "מת ל"],
     replies: [
-      'מצטערת לשמוע. יש לנו זר ניחומים לבן וסגול (179 ש"ח) שנבנה במיוחד ברגישות לרגעים כאלה — רגוע ומכבד. רוצה שאעזור להזמין?',
+      'משתתפת בצער. הזר שלנו לרגעים כאלה הוא הלבן-סגול (179 ש"ח) — רגוע, מכובד, בלי צבעים צועקים.',
+      'מצטערת לשמוע. יש לנו זר ניחומים שנבנה בדיוק לרגישות הזו. אם תרצה/י, אפשר גם לצרף אליו ברכה מכובדת ואני אעזור לנסח.',
+      'בזמנים כאלה חשוב שהזר יהיה עדין ומכבד — הלבן-סגול שלנו בדיוק לזה. אפשר גם לתאם שיגיע בשעה מסוימת.',
     ],
   },
   {
     name: "thanks_gift",
-    keywords: ["תודה ל", "להודות", "מתנת תודה", "להגיד תודה"],
+    keywords: ["תודה ל", "להודות", "מתנת תודה", "להגיד תודה", "מורה", "מטפלת", "רופא"],
     replies: [
-      'בשביל להגיד תודה יש לנו זר עדין וקטן ב-99 ש"ח — פשוט ומדויק בדיוק לרגע כזה 🌸',
+      'ל"תודה" יש לנו זר קטן ועדין ב-99 ש"ח — בדיוק במידה, לא מוגזם ולא קמצני.',
+      'זר התודה שלנו (99 ש"ח) הוא הכי מבוקש למתנות כאלה. עם ברכה קצרה ואישית זה ממש קולע.',
     ],
   },
   {
     name: "signature",
-    keywords: ["למה אירוס", "מה זה איריס", "שם המותג", "למה קוראים", "הסיפור שלכם"],
+    keywords: ["למה אירוס", "מה זה איריס", "שם המותג", "למה קוראים", "הסיפור שלכם", "מי אתם"],
     replies: [
-      "השם שלנו הגיע מפרח האירוס הסגול — הפרח שעליו נבנה המותג. זר האירוס הסגול הוא חתימת החנות, והוא מופיע כמעט בכל שילוב שאנחנו מרכיבים 🌸",
+      "השם הגיע מפרח האירוס הסגול — הוא נותן לנו את הצבע ואת החתימה. תמצא/י אותו כמעט בכל זר שאנחנו מרכיבים 🌸",
+      "אנחנו בוטיק קטן בקריית אתא. כל זר נבנה ידנית לפי ההזמנה, ולא מוציאים כלום שלא היינו שולחים למישהו קרוב.",
     ],
   },
   {
     name: "payment",
-    keywords: ["תשלום", "אשראי", "לשלם", "כרטיס", "חיוב", "ביט"],
+    keywords: ["תשלום", "אשראי", "לשלם", "כרטיס", "חיוב", "ביט", "מזומן", "חשבונית"],
     replies: [
-      "כרגע האתר במצב הדגמה, כך שלא מתבצע חיוב אמיתי — זה כדי שתוכל/י להתרשם מאיך המערכת עובדת. בגרסה הסופית התשלום יהיה מאובטח ואמיתי.",
+      "כרגע האתר במצב הדגמה, כך שלא מתבצע חיוב אמיתי — זה כדי שתוכל/י לעבור על התהליך בנוחות. בגרסה הסופית התשלום יהיה מאובטח לגמרי.",
+      "התשלום בשלב הזה הוא הדגמה בלבד, בלי חיוב. כשהחנות תעלה רשמית, נעבוד עם סליקה מאובטחת ומאושרת.",
     ],
   },
   {
     name: "complaint",
-    keywords: ["בעיה", "לא מרוצה", "מקולקל", "התאכזבתי", "מאוחר", "לא הגיע", "תלונה", "גרוע", "נבל"],
+    keywords: ["בעיה", "לא מרוצה", "מקולקל", "התאכזבתי", "מאוחר", "לא הגיע", "תלונה", "גרוע", "נבל", "כמוש"],
     replies: [
-      "אני ממש מצטערת לשמוע, ומבינה שזה מתסכל. ספר/י לי בדיוק מה קרה ואני אעשה כל שאפשר כדי לסדר את זה — ואם צריך נעביר ישירות לבעלת החנות.",
+      "אני ממש מצטערת, וזה לגמרי לא הסטנדרט שלנו. ספר/י לי בדיוק מה קרה ואני אדאג שזה יטופל — ואם צריך, נעביר ישירות לבעלת החנות.",
+      "זה מתסכל ואני מבינה אותך לגמרי. תן/י לי את הפרטים ונמצא פתרון — החלפה או זיכוי, מה שנכון יותר.",
     ],
   },
   {
     name: "human",
-    keywords: ["בנאדם", "לדבר עם מישהו", "מנהל", "בעלים", "טלפון", "להתקשר"],
+    keywords: ["בנאדם", "לדבר עם מישהו", "מנהל", "בעלים", "טלפון", "להתקשר", "נציג"],
     replies: [
-      "בכיף! אפשר ליצור קשר טלפוני ישירות עם החנות דרך הפרטים בתחתית האתר — נשמח לעזור באופן אישי.",
+      "בכיף — פרטי הקשר הטלפוניים מופיעים בתחתית האתר, ושם תקבל/י מענה אישי.",
+      "אפשר להתקשר ישירות לחנות, הפרטים למטה בעמוד. אם בינתיים יש משהו שאני יכולה לעזור בו, אני כאן.",
+    ],
+  },
+  {
+    name: "hours",
+    keywords: ["שעות", "פתוח", "סגור", "שבת", "מתי אתם"],
+    replies: [
+      "שעות הפעילות המדויקות מתעדכנות בתחתית האתר — הכי בטוח לבדוק שם או להתקשר. הזמנות באתר אפשר לבצע מסביב לשעון.",
+    ],
+  },
+  {
+    name: "wedding",
+    keywords: ["חתונה", "אירוע", "בר מצווה", "בת מצווה", "ברית", "כנס", "עיצוב אולם"],
+    replies: [
+      'לאירועים יש לנו את הזר המפואר (349 ש"ח), ואפשר גם לתאם הזמנה מיוחדת בכמויות. מתי האירוע?',
+      "אירועים זה משהו שאנחנו אוהבים במיוחד — אפשר להתאים גם צבעים וסגנון. שווה ליצור קשר טלפוני כדי לתכנן יחד.",
     ],
   },
   {
     name: "thanks",
-    keywords: ["תודה רבה", "מעולה", "אחלה", "יופי", "סבבה", "מושלם", "תודה"],
+    keywords: ["תודה רבה", "מעולה", "אחלה", "יופי", "סבבה", "מושלם", "תודה", "אלוף", "מלכה"],
     replies: [
-      "בשמחה! 🌸 אם יש עוד משהו, אני כאן.",
-      "כיף לעזור! שיהיה לך יום נהדר 🌸",
+      "בשמחה! 🌸 אם צריך עוד משהו, אני כאן.",
+      "כיף לעזור! שיהיה לך יום מהמם.",
+      "תמיד! מקווה שהזר יעשה בדיוק את הרושם שרצית.",
     ],
   },
 ];
@@ -965,15 +902,31 @@ const EVENT_CATEGORY_MAP = {
   romantic: "roses",
   sympathy: "sympathy",
   thanks_gift: "thanks",
+  wedding: "events",
 };
 
 const CHAT_FALLBACK = [
-  "רוצה שאעזור לבחור לפי אירוע (יום הולדת, רומנטי, תודה, ניחומים), או שתעדיף/י לעיין בקטלוג? אני כאן לכל שאלה 🌸",
-  "ספר/י לי קצת יותר — למי הזר מיועד ולאיזו הזדמנות? ככה אוכל להמליץ בול על הזר הנכון.",
+  "אשמח לכוון אותך — למי הזר מיועד ולאיזו הזדמנות?",
+  "תן/י לי קצת הקשר: אירוע, תקציב, או למי זה הולך — ואני אמליץ בול.",
+  "לא בטוחה שהבנתי במדויק 🙂 רוצה שאמליץ לפי אירוע, או שנלך לפי תקציב?",
+  "אפשר לעזור בבחירת זר, במשלוחים, בברכות ובתשלום. מה מהם רלוונטי לך עכשיו?",
 ];
 
-function chatPick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+const FOLLOW_UPS = [
+  "רוצה שאראה לך אותו בקטלוג?",
+  "שאוסיף אותו לעגלה?",
+  "יש משהו נוסף שחשוב לך שיהיה בזר?",
+];
+
+function pickFresh(arr, key) {
+  const fresh = arr.filter((t) => !usedReplies.has(key + "|" + t));
+  const pool = fresh.length ? fresh : arr;
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  if (!fresh.length) {
+    arr.forEach((t) => usedReplies.delete(key + "|" + t));
+  }
+  usedReplies.add(key + "|" + choice);
+  return choice;
 }
 
 function chatDetectIntent(message) {
@@ -984,7 +937,7 @@ function chatDetectIntent(message) {
 function chatBudgetReply(message, intent) {
   const match = (message || "").match(/(\d{2,4})/);
   const budget = match ? parseInt(match[1], 10) : null;
-  if (!budget || budget < 30) return null;
+  if (!budget || budget < 40 || budget > 5000) return null;
 
   const preferred = intent && EVENT_CATEGORY_MAP[intent.name];
   let candidates = PRODUCTS.filter((p) => p.price <= budget);
@@ -994,19 +947,31 @@ function chatBudgetReply(message, intent) {
   }
   if (!candidates.length) {
     const cheapest = PRODUCTS.reduce((a, b) => (a.price < b.price ? a : b));
-    return `בתקציב של עד ${budget} ש"ח קצת קשה — הזר הכי משתלם אצלנו הוא ${cheapest.name} ב-${cheapest.price} ש"ח. רוצה לראות אותו?`;
+    return `בתקציב הזה קצת צר — הכי משתלם אצלנו הוא ${cheapest.name} ב-${cheapest.price} ש"ח. רוצה לראות אותו?`;
   }
   candidates.sort((a, b) => b.price - a.price);
-  const list = candidates.slice(0, 2).map((p) => `${p.name} (${p.price} ש"ח)`).join(" או ");
-  return `בתקציב של עד ${budget} ש"ח הייתי ממליצה על ${list} 🌸 רוצה שאוסיף לעגלה?`;
+  const top = candidates.slice(0, 2);
+  const list = top.map((p) => `${p.name} (${p.price} ש"ח)`).join(", או ");
+  return `בתקציב של עד ${budget} ש"ח הייתי הולכת על ${list}. ${FOLLOW_UPS[Math.floor(Math.random() * FOLLOW_UPS.length)]}`;
 }
 
 function michalReply(message) {
   const intent = chatDetectIntent(message);
   const budgetReply = chatBudgetReply(message, intent);
-  if (budgetReply) return budgetReply;
-  if (intent) return chatPick(intent.replies);
-  return chatPick(CHAT_FALLBACK);
+  if (budgetReply) {
+    lastIntent = intent ? intent.name : "budget";
+    return budgetReply;
+  }
+  if (intent) {
+    let reply = pickFresh(intent.replies, intent.name);
+    if (intent.name === lastIntent && Math.random() > 0.5) {
+      reply += " " + FOLLOW_UPS[Math.floor(Math.random() * FOLLOW_UPS.length)];
+    }
+    lastIntent = intent.name;
+    return reply;
+  }
+  lastIntent = null;
+  return pickFresh(CHAT_FALLBACK, "fallback");
 }
 
 /* ---------- ממשק ---------- */
@@ -1016,7 +981,7 @@ function toggleChat() {
   const isOpen = panel.classList.toggle("open");
   if (isOpen && chatHistory.length === 0) {
     addBotMessage(
-      "היי, אני מיכל 🌸 הסוכנת הדיגיטלית של פרחי איריס. אפשר לעזור לך לבחור זר, לענות על שאלות משלוח, או להמליץ לפי אירוע ותקציב. במה אפשר לעזור?"
+      "היי, אני מיכל 🌸 הסוכנת הדיגיטלית של פרחי איריס. אפשר לעזור לבחור זר לפי אירוע ותקציב, לענות על שאלות משלוח, או לעזור בניסוח ברכה. במה נתחיל?"
     );
   }
 }
@@ -1058,11 +1023,10 @@ function sendChat(event) {
   chatHistory.push({ role: "user", content: text });
   input.value = "";
   showTyping();
-
   setTimeout(() => {
     hideTyping();
     addBotMessage(michalReply(text));
-  }, 600 + Math.random() * 500);
+  }, 550 + Math.random() * 600);
 }
 
 </script>
