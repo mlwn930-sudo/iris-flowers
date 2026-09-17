@@ -111,10 +111,10 @@ function renderOrderSummary() {
           .map(
             (l) => `
         <div class="aside-row">
-          <div class="thumb"><img src="${l.product.img}" alt="${esc(l.product.name)}" /></div>
+          <div class="thumb"><img src="${imageFor(l.product, l.size)}" onerror="this.onerror=null;this.src='${l.product.img}'" alt="${esc(l.product.name)}" /></div>
           <div class="meta">
             <h6>${esc(l.product.name)}</h6>
-            <span class="sz">${esc(l.sizeDef.label)} · ${esc(l.sizeDef.stems)}</span>
+            <span class="sz">${esc(l.sizeDef.label)} · ${esc(stemLabel(l.product, l.size))}</span>
             <div class="qty">כמות ${l.qty} × ₪${l.unit}</div>
           </div>
           <div class="amt">₪${l.total}</div>

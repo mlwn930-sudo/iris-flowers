@@ -1,6 +1,8 @@
 /* ============================================================
    פרחי איריס — חלון מוצר מורחב (Quick View)
    נבנה פעם אחת ומוזרק ל-body בלחיצה הראשונה על כרטיס מוצר.
+   מעבר בין גדלים מחליף את התמונה עצמה (לא מגדיל אותה)
+   ומעדכן את פירוט ההרכב.
    ============================================================ */
 
 let pmProduct = null;
@@ -19,6 +21,7 @@ function pmEnsureDOM() {
       <div class="pm-media">
         <img class="pm-photo" id="pmImg" src="" alt="" />
         <div id="pmBadges"></div>
+        <span class="pm-size-flag" id="pmSizeFlag"></span>
         <img class="pm-seal" src="assets/brand/logo-mark.png" alt="" />
       </div>
       <button class="pm-close" onclick="closeProductModal()" aria-label="סגור">✕</button>
@@ -26,7 +29,6 @@ function pmEnsureDOM() {
         <span class="pm-tag" id="pmTag"></span>
         <h3 id="pmTitle"></h3>
         <p class="pm-botanical" id="pmBotanical"></p>
-        <div class="pm-stems">🌿 <span id="pmStems"></span></div>
 
         <div class="pm-price-row">
           <span class="pm-price" id="pmPrice">₪0</span>
@@ -36,6 +38,14 @@ function pmEnsureDOM() {
         <div class="size-label">בחירת גודל הזר</div>
         <div class="size-picker" id="pmSizes"></div>
         <p class="size-note" id="pmSizeNote"></p>
+
+        <div class="comp-card">
+          <div class="comp-head">
+            <span>מה בדיוק יש בזר</span>
+            <span class="comp-total" id="pmStemTotal"></span>
+          </div>
+          <ul class="comp-list" id="pmComposition"></ul>
+        </div>
 
         <div class="pm-tabs">
           <button class="pm-tab" data-tab="care" onclick="pmSwitchTab('care')">המלצות לשזירה וטיפול באגרטל</button>
@@ -67,14 +77,10 @@ function openProductModal(id) {
   pmTab = "care";
 
   const el = pmEnsureDOM();
-  const img = document.getElementById("pmImg");
-  img.src = product.img;
-  img.alt = product.name;
-
+  document.getElementById("pmImg").alt = product.name;
   document.getElementById("pmBadges").innerHTML = badgesHTML(product);
 
-  const tagEl = document.getElementById("pmTag");
-  tagEl.textContent = product.tag || "בוטיק פרחי איריס";
+  document.getElementById("pmTag").textContent = product.tag || "בוטיק פרחי איריס";
   document.getElementById("pmTitle").textContent = product.name;
   document.getElementById("pmBotanical").textContent = product.botanical;
 
@@ -93,6 +99,7 @@ function openProductModal(id) {
     <p style="margin-top:12px">לא בטוחים שאנחנו מגיעים אליכם? בדקו בבודק אזור החלוקה בעמוד הבית, או שאלו את מיכל בצ'אט.</p>`;
 
   pmRenderSizes();
+  pmSetImage(pmSize, true);
   pmSwitchTab("care");
   document.getElementById("pmAdded").classList.remove("show");
 
@@ -111,21 +118,48 @@ function pmEscHandler(e) {
   if (e.key === "Escape") closeProductModal();
 }
 
+/* ---------- תמונה לפי גודל ---------- */
+function pmSetImage(sizeId, instant) {
+  const el = document.getElementById("pmImg");
+  const target = imageFor(pmProduct, sizeId);
+  const apply = (src) => {
+    el.src = src;
+    el.classList.remove("fading");
+  };
+  const pre = new Image();
+  pre.onload = () => apply(target);
+  pre.onerror = () => apply(pmProduct.img); // אין עדיין קובץ לגודל הזה — נופלים לתמונה הראשית
+  if (instant) {
+    pre.src = target;
+    return;
+  }
+  el.classList.add("fading");
+  setTimeout(() => {
+    pre.src = target;
+  }, 170);
+}
+
+/* ---------- גדלים ---------- */
 function pmRenderSizes() {
   document.getElementById("pmSizes").innerHTML = SIZES.map(
     (s) => `
     <button type="button" class="size-opt ${s.id === pmSize ? "active" : ""}" data-size="${s.id}" onclick="pmSelectSize('${s.id}')">
       <span class="s-name">${esc(s.label)}</span>
+      <span class="s-stems">${stemCount(pmProduct, s.id)} ${esc(pmProduct.unitLabel || "גבעולים")}</span>
       <span class="s-price">₪${priceFor(pmProduct, s.id)}</span>
     </button>`
   ).join("");
   pmRenderPrice(false);
+  pmRenderComposition();
 }
 
 function pmSelectSize(sizeId) {
+  if (sizeId === pmSize) return;
   pmSize = sizeId;
   document.querySelectorAll(".size-opt").forEach((b) => b.classList.toggle("active", b.dataset.size === sizeId));
+  pmSetImage(sizeId, false);
   pmRenderPrice();
+  pmRenderComposition();
   document.getElementById("pmAdded").classList.remove("show");
 }
 
@@ -143,11 +177,26 @@ function pmRenderPrice(animate = true) {
     write();
   }
 
-  const note = document.getElementById("pmPriceNote");
-  note.textContent = size.mult > 1 ? `מחיר בסיס ₪${pmProduct.price} · ${size.label} (+${Math.round((size.mult - 1) * 100)}%)` : "מחיר בסיס";
+  document.getElementById("pmPriceNote").textContent =
+    size.mult > 1
+      ? `מחיר בסיס ₪${pmProduct.price} · ${size.label} (+${Math.round((size.mult - 1) * 100)}%)`
+      : "מחיר בסיס";
 
-  document.getElementById("pmStems").textContent = `${size.label} · ${size.stems}`;
+  document.getElementById("pmSizeFlag").textContent = `${size.label} · ${stemLabel(pmProduct, pmSize)}`;
   document.getElementById("pmSizeNote").textContent = size.note;
+}
+
+/* ---------- פירוט ההרכב ---------- */
+function pmRenderComposition() {
+  const items = compositionFor(pmProduct, pmSize);
+  const list = document.getElementById("pmComposition");
+  list.innerHTML = items
+    .map(([name, qty]) => `<li><span class="c-name">${esc(name)}</span><span class="c-qty">${qty}</span></li>`)
+    .join("");
+  list.classList.remove("pop");
+  void list.offsetWidth;
+  list.classList.add("pop");
+  document.getElementById("pmStemTotal").textContent = `סה״כ ${stemLabel(pmProduct, pmSize)}`;
 }
 
 function pmSwitchTab(name) {
@@ -160,7 +209,7 @@ function pmSwitchTab(name) {
 function pmAddToCart() {
   addToCart(pmProduct.id, pmSize);
   const el = document.getElementById("pmAdded");
-  el.textContent = `✓ ${pmProduct.name} בגודל ${findSize(pmSize).label} נוסף לסל — ₪${priceFor(pmProduct, pmSize)}`;
+  el.textContent = `✓ ${pmProduct.name} בגודל ${findSize(pmSize).label} (${stemLabel(pmProduct, pmSize)}) נוסף לסל — ₪${priceFor(pmProduct, pmSize)}`;
   el.classList.add("show");
 }
 
