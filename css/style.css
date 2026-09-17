@@ -522,3 +522,307 @@ body.checkout-page{background:var(--iris-ink);}
   .field-row{grid-template-columns:1fr;}
   section{padding:58px 0;}
 }
+
+
+/* ============================================================
+   ערכת לילה — דורסת את הערכה הבהירה שמעליה.
+   כל שטח לבן באתר הופך לזכוכית כהה על רקע אירוס קבוע.
+   ============================================================ */
+
+:root{
+  --glass:rgba(24,10,40,.75);
+  --glass-soft:rgba(24,10,40,.55);
+  --glass-line:rgba(197,160,89,.3);
+  --glass-line-soft:rgba(255,255,255,.1);
+  --text-cream:#FAF7F2;
+  --text-dim:rgba(250,247,242,.68);
+  --text-faint:rgba(250,247,242,.45);
+}
+
+body{
+  background:var(--iris-ink) url('../assets/brand/body-bg.jpg') center center/cover no-repeat;
+  color:var(--text-cream);
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% 0%,rgba(91,58,135,.3),transparent 72%),
+    radial-gradient(ellipse 50% 40% at 88% 60%,rgba(197,160,89,.1),transparent 70%),
+    linear-gradient(180deg,rgba(18,7,32,.6) 0%,rgba(16,6,28,.78) 40%,rgba(12,4,22,.9) 100%);
+}
+@media(min-width:900px){ body{background-attachment:fixed;} }
+
+h1,h2,h3,h4,h5{color:var(--text-cream);}
+
+/* ---------- סקשנים שהיו בהירים ---------- */
+.story{background:transparent;border-top:1px solid var(--glass-line-soft);border-bottom:1px solid var(--glass-line-soft);}
+.story-text h2{color:var(--text-cream);}
+.story-text p{color:var(--text-dim);}
+.story-text .kicker,.section-head .kicker{color:var(--gold);}
+.section-head h2{color:var(--text-cream);}
+.section-head p{color:var(--text-dim);}
+
+.delivery-strip{background:var(--glass-soft);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--glass-line);border-bottom:1px solid var(--glass-line);}
+.delivery-strip .dc-label{color:var(--text-cream);}
+.delivery-strip .dc-label small{color:var(--text-dim);}
+.delivery-form input{color:var(--text-cream);border-bottom-color:rgba(255,255,255,.28);}
+.delivery-form input::placeholder{color:var(--text-faint);}
+.dc-result.ok{color:#8FD9A8;}
+.dc-result.no{color:#F0A0AC;}
+
+/* ---------- כרטיסי זכוכית ---------- */
+.signature-card,
+.cat-card,
+.product-card,
+.panel,
+.greeting-card{
+  background:var(--glass);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line);
+  box-shadow:0 14px 40px rgba(0,0,0,.35);
+}
+.signature-card h3{color:var(--text-cream);}
+.signature-card p{color:var(--text-dim);}
+.signature-price{color:var(--gold-soft);}
+.signature-card .tag{color:var(--gold-soft);border-color:var(--gold);}
+
+.cat-card h4{color:var(--text-cream);}
+.cat-card:hover{border-color:var(--gold);box-shadow:0 20px 48px rgba(0,0,0,.45);}
+
+.product-card:hover{box-shadow:0 22px 50px rgba(0,0,0,.5);}
+.product-body h4{color:var(--text-cream);}
+.product-body p{color:var(--text-dim);}
+.product-foot{border-top-color:var(--glass-line-soft);}
+.price{color:var(--gold-soft);}
+.price small{color:var(--text-faint);}
+.price s{color:var(--text-faint);}
+.add-btn{border-color:rgba(197,160,89,.45);color:var(--gold-soft);}
+.add-btn:hover{background:var(--gold);color:#241B2E;border-color:var(--gold);}
+.product-art{background:rgba(255,255,255,.04);}
+
+.cat-filters button{border-color:var(--glass-line-soft);color:var(--text-dim);}
+.cat-filters button:hover{border-color:var(--gold);color:var(--gold-soft);}
+.cat-filters button.active{background:var(--gold-grad);color:#241B2E;border-color:transparent;font-weight:700;}
+
+.panel h3{color:var(--text-cream);}
+.panel p{color:var(--text-dim);}
+.order-line{color:var(--text-dim);border-bottom-color:var(--glass-line-soft);}
+.page-head p{color:var(--text-dim);}
+
+.btn-ghost{border-color:rgba(197,160,89,.45);color:var(--gold-soft);}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(197,160,89,.12);color:var(--gold-soft);}
+
+/* ---------- טפסים ---------- */
+.field label{color:var(--text-faint);}
+.field input,.field textarea{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:var(--text-cream);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-faint);}
+.field input:focus,.field textarea:focus{background:rgba(255,255,255,.1);border-color:var(--gold);}
+.greeting-card textarea{color:var(--gold-soft);background:none;}
+.tone-btn{border-color:var(--glass-line-soft);color:var(--text-dim);}
+.tone-btn:hover{border-color:var(--gold);background:rgba(197,160,89,.12);color:var(--gold-soft);}
+.tone-btn.active{background:var(--gold-grad);color:#241B2E;border-color:transparent;font-weight:700;}
+.regen-btn{color:var(--text-faint);}
+.regen-btn:hover{color:var(--gold-soft);}
+.demo-flag{background:rgba(197,160,89,.12);color:var(--gold-soft);border-color:var(--gold);}
+
+/* ---------- קופה ---------- */
+.checkout-main{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
+.checkout-main h3{color:var(--text-cream);}
+.checkout-main .sub{color:var(--text-dim);}
+.checkout-progress .circle{border-color:rgba(255,255,255,.22);color:var(--text-faint);}
+.checkout-progress .label{color:var(--text-faint);}
+.checkout-progress .line{background:rgba(255,255,255,.14);}
+.checkout-progress .step.active .circle{background:var(--gold);border-color:var(--gold);color:#241B2E;}
+.checkout-progress .step.active .label{color:var(--gold-soft);}
+.checkout-progress .step.done .circle{background:rgba(197,160,89,.35);border-color:var(--gold);color:var(--gold-soft);}
+.checkout-progress .step.done .label{color:var(--gold-soft);}
+.success-screen{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:var(--glass-line);}
+.success-screen h2{color:var(--text-cream);}
+.success-screen p{color:var(--text-dim);}
+.success-screen .order-no{color:var(--gold-soft);}
+
+/* ---------- מגירת עגלה ---------- */
+.cart-drawer{background:linear-gradient(180deg,#1C0B2E 0%,#120720 100%);border-inline-end:1px solid var(--glass-line);}
+.cart-head{border-bottom-color:var(--glass-line-soft);}
+.cart-head h3{color:var(--text-cream);}
+.cart-close{color:var(--text-dim);}
+.cart-row{border-bottom-color:var(--glass-line-soft);}
+.cart-row .thumb{border-color:var(--glass-line);}
+.cart-row .info h5{color:var(--text-cream);}
+.cart-row .qty button{border-color:rgba(255,255,255,.2);color:var(--text-cream);}
+.cart-row .qty button:hover{border-color:var(--gold);background:rgba(197,160,89,.15);}
+.cart-row .price{color:var(--gold-soft);}
+.cart-foot{border-top-color:var(--glass-line-soft);}
+.cart-total{color:var(--text-cream);}
+.cart-empty{color:var(--text-dim);}
+
+/* ---------- חלון מוצר ---------- */
+.pm{background:linear-gradient(170deg,#1E0C33 0%,#140825 100%);border-color:var(--glass-line);}
+.pm-body h3,#pmTitle{color:var(--text-cream);}
+.pm-botanical{color:var(--text-dim);}
+.pm-price-row{border-color:var(--glass-line-soft);}
+.pm-price{color:var(--gold-soft);}
+.pm-price-note{color:var(--text-faint);}
+.size-label{color:var(--text-faint);}
+.size-opt{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16);}
+.size-opt .s-name{color:var(--text-cream);}
+.size-opt .s-stems,.size-opt .s-price{color:var(--text-dim);}
+.size-opt:hover{border-color:var(--gold);background:rgba(197,160,89,.12);}
+.size-opt.active{background:rgba(197,160,89,.18);border-color:var(--gold);}
+.size-opt.active .s-price,.size-opt.active .s-stems{color:var(--gold-soft);}
+.size-note{color:var(--text-faint);}
+.comp-card{background:rgba(255,255,255,.05);border-color:var(--glass-line);}
+.comp-head{border-bottom-color:var(--glass-line-soft);}
+.comp-head>span:first-child{color:var(--text-faint);}
+.comp-total{color:var(--gold-soft);}
+.comp-list li{border-bottom-color:rgba(255,255,255,.08);}
+.comp-list .c-name{color:var(--text-dim);}
+.comp-list .c-qty{background:rgba(197,160,89,.18);color:var(--gold-soft);}
+.pm-tabs{border-bottom-color:var(--glass-line-soft);}
+.pm-tab{color:var(--text-faint);}
+.pm-tab:hover{color:var(--text-cream);}
+.pm-tab.active{color:var(--gold-soft);border-bottom-color:var(--gold);}
+.pm-panel{color:var(--text-dim);}
+.pm-tag{color:var(--gold-soft);border-color:var(--gold);}
+
+/* ---------- צ'אט ---------- */
+.chat-panel{background:linear-gradient(180deg,#1C0B2E 0%,#120720 100%);border-color:var(--glass-line);}
+.chat-body{background:transparent;}
+.msg.bot{background:rgba(255,255,255,.07);border-color:var(--glass-line-soft);color:var(--text-cream);}
+.chat-input-row{background:rgba(0,0,0,.25);border-top-color:var(--glass-line-soft);}
+.chat-input-row input{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:var(--text-cream);}
+.chat-input-row input::placeholder{color:var(--text-faint);}
+.chat-menu button,.chat-chips button{background:rgba(255,255,255,.07);border-color:var(--glass-line-soft);color:var(--text-cream);}
+.chat-menu button:hover,.chat-chips button:hover{background:rgba(197,160,89,.16);border-color:var(--gold);color:var(--gold-soft);}
+
+/* ---------- רשת צפופה יותר בנייד: שתי קוביות בשורה ---------- */
+@media(max-width:620px){
+  .cat-grid,.product-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .product-art{height:152px;}
+  .cat-card .cat-img{height:118px;}
+  .product-body{padding:11px 12px 13px;gap:4px;}
+  .product-body h4{font-size:.84rem;line-height:1.35;}
+  .product-body p{display:none;}
+  .product-foot{margin-top:9px;padding-top:9px;flex-direction:column;align-items:stretch;gap:8px;}
+  .price{font-size:.98rem;text-align:center;}
+  .price small{display:block;font-size:.66rem;}
+  .add-btn{width:100%;padding:7px 10px;font-size:.76rem;}
+  .quick-view{display:none;}
+  .cat-card h4{font-size:.84rem;padding:11px 8px;}
+  .badge-stack .badge{font-size:.58rem;padding:3px 8px;}
+  .section-head{margin-bottom:28px;}
+  .section-head h2{font-size:1.6rem;}
+}
+
+/* ============================================================
+   מיכאל — סוכן התמיכה בצד ימין
+   ============================================================ */
+.support-launcher{position:fixed;bottom:26px;right:26px;z-index:95;width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(140deg,#1F4D6B,#0E2A3D);border:1px solid rgba(120,190,230,.45);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(8,22,34,.5);transition:transform .25s;}
+.support-launcher:hover{transform:scale(1.07);}
+.support-launcher svg{width:27px;height:27px;color:#BFE3F5;}
+.support-launcher .dot{position:absolute;top:4px;left:4px;width:11px;height:11px;border-radius:50%;background:var(--wa);border:2px solid #0E2A3D;}
+
+.support-panel{position:fixed;bottom:100px;right:26px;width:378px;max-width:92vw;height:560px;max-height:76vh;
+  background:linear-gradient(180deg,#132A3A 0%,#0C1C28 100%);border-radius:var(--radius-lg);
+  box-shadow:0 30px 70px rgba(6,16,26,.55);display:flex;flex-direction:column;overflow:hidden;z-index:96;
+  transform:translateY(18px) scale(.97);opacity:0;pointer-events:none;
+  transition:all .28s cubic-bezier(.22,1,.36,1);border:1px solid rgba(120,190,230,.28);}
+.support-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
+.support-panel .chat-head{background:linear-gradient(135deg,#1F4D6B,#0E2A3D);border-bottom:1px solid rgba(120,190,230,.24);}
+.support-panel .chat-head .avatar-seal{width:40px;height:40px;border-radius:50%;background:rgba(191,227,245,.15);
+  display:flex;align-items:center;justify-content:center;font-size:1.15rem;}
+.support-panel .msg.user{background:#1F4D6B;}
+.support-panel .msg.bot{background:rgba(255,255,255,.07);border-color:rgba(120,190,230,.2);}
+.support-panel .chat-menu button:hover,.support-panel .chat-chips button:hover{background:rgba(120,190,230,.16);border-color:rgba(120,190,230,.6);color:#BFE3F5;}
+.support-panel .chat-input-row button{background:#1F4D6B;}
+.support-panel .chat-input-row button:hover{background:#2A6A92;}
+.support-panel .chat-input-row input:focus{border-color:rgba(120,190,230,.6);}
+
+/* ---------- פינת העזרה ---------- */
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.help-card{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line);border-radius:var(--radius-lg);padding:30px 28px;display:flex;flex-direction:column;gap:12px;}
+.help-card .who{display:flex;align-items:center;gap:13px;}
+.help-card .who img,.help-card .who .ico{width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.help-card .who .ico{background:linear-gradient(140deg,#1F4D6B,#0E2A3D);border:1px solid rgba(120,190,230,.45);}
+.help-card h4{font-family:'Frank Ruhl Libre',serif;font-size:1.22rem;color:var(--gold-soft);}
+.help-card .role{font-size:.76rem;letter-spacing:.08em;color:var(--text-faint);text-transform:uppercase;font-weight:700;}
+.help-card p{font-size:.92rem;color:var(--text-dim);line-height:1.75;flex:1;}
+.help-card ul{list-style:none;display:flex;flex-direction:column;gap:7px;font-size:.87rem;color:var(--text-dim);}
+.help-card li{padding-inline-start:20px;position:relative;}
+.help-card li::before{content:"";position:absolute;inset-inline-start:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.7;}
+.help-card .btn{margin-top:6px;}
+.help-card.support h4{color:#BFE3F5;}
+.help-card.support li::before{background:#7FBEDC;}
+.help-card.support{border-color:rgba(120,190,230,.3);}
+
+/* ---------- דירוגים ---------- */
+.rating-wrap{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line);border-radius:var(--radius-lg);padding:34px;}
+.rating-top{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:26px;
+  padding-bottom:22px;border-bottom:1px solid var(--glass-line-soft);}
+.rating-score{display:flex;align-items:center;gap:16px;}
+.rating-score .num{font-family:'Frank Ruhl Libre',serif;font-size:3.2rem;font-weight:700;color:var(--gold-soft);line-height:1;}
+.rating-score .meta{font-size:.85rem;color:var(--text-dim);}
+.stars{display:flex;gap:3px;direction:ltr;}
+.stars svg{width:19px;height:19px;fill:var(--gold);}
+.stars svg.empty{fill:rgba(255,255,255,.18);}
+.rate-me{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.rate-me span{font-size:.86rem;color:var(--text-dim);}
+.rate-stars{display:flex;gap:5px;direction:ltr;}
+.rate-stars button{padding:2px;line-height:0;}
+.rate-stars svg{width:28px;height:28px;fill:rgba(255,255,255,.22);transition:fill .15s,transform .15s;}
+.rate-stars button:hover svg,.rate-stars button.lit svg{fill:var(--gold);transform:scale(1.12);}
+.rate-thanks{font-size:.86rem;color:#8FD9A8;display:none;}
+.rate-thanks.show{display:block;}
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.review{background:rgba(255,255,255,.05);border:1px solid var(--glass-line-soft);border-radius:14px;padding:20px;}
+.review .stars{margin-bottom:10px;}
+.review p{font-size:.89rem;color:var(--text-dim);line-height:1.7;margin-bottom:12px;}
+.review .by{font-size:.8rem;color:var(--gold-soft);font-weight:700;}
+.review .by small{display:block;color:var(--text-faint);font-weight:400;margin-top:2px;}
+
+/* ---------- איך מגיעים ---------- */
+.visit-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:stretch;}
+.visit-card{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line);border-radius:var(--radius-lg);padding:32px;}
+.visit-card h3{font-size:1.3rem;color:var(--gold-soft);margin-bottom:6px;}
+.visit-card .addr{font-family:'Frank Ruhl Libre',serif;font-size:1.5rem;color:var(--text-cream);margin:14px 0 8px;}
+.visit-card p{color:var(--text-dim);font-size:.92rem;margin-bottom:8px;}
+.visit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.visit-map{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--glass-line);min-height:280px;}
+.visit-map iframe{width:100%;height:100%;min-height:280px;border:0;display:block;filter:grayscale(.25) contrast(1.05);}
+.contact-rows{display:flex;flex-direction:column;gap:2px;margin-top:18px;}
+.contact-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--glass-line-soft);font-size:.92rem;color:var(--text-dim);}
+.contact-row:last-child{border-bottom:none;}
+.contact-row .ico{width:34px;height:34px;border-radius:50%;background:rgba(197,160,89,.16);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-row a{color:var(--gold-soft);}
+.contact-row a:hover{text-decoration:underline;}
+
+@media(max-width:980px){
+  .help-grid,.visit-grid{grid-template-columns:1fr;}
+  .reviews{grid-template-columns:1fr;}
+}
+@media(max-width:620px){
+  .support-launcher{width:54px;height:54px;bottom:18px;right:18px;}
+  .support-panel{width:94vw;right:3vw;bottom:92px;height:70vh;}
+  .rating-wrap,.visit-card,.help-card{padding:22px 18px;}
+  .rating-score .num{font-size:2.4rem;}
+}
+
+/* ---------- מסך סיום הזמנה ---------- */
+.success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px;}
+.wa-send{background:var(--wa);color:#fff;font-weight:700;padding:15px 30px;box-shadow:0 10px 26px rgba(37,211,102,.3);}
+.wa-send:hover{background:#1DB954;transform:translateY(-2px);}
+.wa-send svg{width:20px;height:20px;fill:currentColor;}
+.copy-msg{min-height:22px;margin-top:12px;font-size:.86rem;color:#8FD9A8;font-weight:600;}
+.success-note{margin-top:18px;padding-top:18px;border-top:1px solid var(--glass-line-soft);
+  font-size:.84rem;color:var(--text-faint);line-height:1.8;}
+.success-note strong{color:var(--gold-soft);}
+.mail-status{min-height:20px;margin-top:6px;font-size:.84rem;font-weight:600;color:var(--text-faint);}
+.mail-status.ok{color:#8FD9A8;}
+.mail-status.no{color:#F0A0AC;}

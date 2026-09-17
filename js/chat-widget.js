@@ -1,21 +1,109 @@
 /* ============================================================
-   פרחי איריס — מיכל, הסוכנת הדיגיטלית
-   רצה בדפדפן, ללא שרת. שני מסלולים: ייעוץ זר, ומעקב הזמנות.
+   פרחי איריס — שני סוכנים דיגיטליים
+   אגם   (צד שמאל)  — ייעוץ והתאמת זר אישי
+   מיכאל (צד ימין)  — תמיכה טכנית, משלוחים ומעקב הזמנות
+   שניהם רצים בדפדפן בלבד, ללא שרת.
    ============================================================ */
 
 /* ------------------------------------------------------------
    הגדרות חנות — להחלפה בפרטים האמיתיים לפני עלייה לאוויר
    ------------------------------------------------------------ */
-const SHOP_WHATSAPP = "972500000000"; // ← מספר דמה. להחליף במספר הוואטסאפ האמיתי של החנות (פורמט בינלאומי, בלי +)
-const WA_DEFAULT_TEXT = "היי פרחי איריס! הגעתי מהאתר ואשמח לעזרה 🌸";
+const SHOP_WHATSAPP = "972500000000"; // ← מספר דמה! להחליף במספר הוואטסאפ האמיתי (פורמט בינלאומי, בלי +)
+const SHOP_PHONE = "04-0000000"; // ← להשלמה
+const SHOP_EMAIL = "hello@iris-flowers.co.il"; // ← להשלמה
+const SHOP_INSTAGRAM = "https://instagram.com/"; // ← להשלמה
+const SHOP_ADDRESS = "רחוב איינשטיין 20, קריית אתא";
 
-let chatHistory = [];
-let chatMode = null; // null | "advice" | "track"
-let lastIntent = null;
-let lastOrderNumber = null;
+/* ============================================================
+   מנוע משותף
+   ============================================================ */
+const AGENTS = {
+  agam: { panel: "chatPanel", body: "chatBody", input: "chatInput", name: "אגם", history: [], mode: null, lastIntent: null },
+  michael: { panel: "supportPanel", body: "supportBody", input: "supportInput", name: "מיכאל", history: [], mode: null, lastOrder: null },
+};
+
 const usedReplies = new Set();
 
-/* ---------- מנוע כוונות (מסלול ייעוץ) ---------- */
+function pickFresh(arr, key) {
+  const fresh = arr.filter((t) => !usedReplies.has(key + "|" + t));
+  const pool = fresh.length ? fresh : arr;
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  if (!fresh.length) arr.forEach((t) => usedReplies.delete(key + "|" + t));
+  usedReplies.add(key + "|" + choice);
+  return choice;
+}
+
+function agentBody(key) {
+  return document.getElementById(AGENTS[key].body);
+}
+
+function agentScroll(key) {
+  const b = agentBody(key);
+  if (b) b.scrollTop = b.scrollHeight;
+}
+
+function agentAdd(key, text, role) {
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  agentBody(key).appendChild(div);
+  agentScroll(key);
+}
+
+function agentSay(key, text) {
+  agentAdd(key, text, "bot");
+  AGENTS[key].history.push({ role: "assistant", content: text });
+}
+
+function agentClearWidgets(key) {
+  agentBody(key).querySelectorAll(".chat-menu, .chat-chips").forEach((el) => el.remove());
+}
+
+function agentMenu(key, items) {
+  agentClearWidgets(key);
+  const box = document.createElement("div");
+  box.className = "chat-menu";
+  box.innerHTML = items
+    .map((i) => `<button onclick="${i.action}"><span class="ico">${i.icon}</span> ${esc(i.label)}</button>`)
+    .join("");
+  agentBody(key).appendChild(box);
+  agentScroll(key);
+}
+
+function agentChips(key, items) {
+  agentClearWidgets(key);
+  const box = document.createElement("div");
+  box.className = "chat-chips";
+  box.innerHTML = items.map((i) => `<button onclick="${i.action}">${esc(i.label)}</button>`).join("");
+  agentBody(key).appendChild(box);
+  agentScroll(key);
+}
+
+function agentTyping(key, on) {
+  if (!on) {
+    document.getElementById("typing-" + key)?.remove();
+    return;
+  }
+  const div = document.createElement("div");
+  div.className = "msg bot";
+  div.id = "typing-" + key;
+  div.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+  agentBody(key).appendChild(div);
+  agentScroll(key);
+}
+
+function agentTogglePanel(key) {
+  const a = AGENTS[key];
+  const panel = document.getElementById(a.panel);
+  if (!panel) return false;
+  const open = panel.classList.toggle("open");
+  if (open) setTimeout(() => document.getElementById(a.input)?.focus(), 260);
+  return open;
+}
+
+/* ============================================================
+   אגם — ייעוץ והתאמת זר
+   ============================================================ */
 const INTENTS = [
   {
     name: "greeting",
@@ -27,46 +115,35 @@ const INTENTS = [
     ],
   },
   {
-    name: "delivery",
-    keywords: ["משלוח", "לשלוח", "מתי מגיע", "זמן אספקה", "שליח", "עד מתי", "היום", "מחר", "לשלח"],
-    replies: [
-      "אנחנו מחלקים בקריית אתא ובכל מפרץ חיפה. הזמנה שנסגרת עד 14:00 יוצאת עוד באותו יום 🌸 לאן צריך שיגיע?",
-      "משלוחים יוצאים כל יום. באזור קריית אתא זה אפילו באותו יום אם מזמינים לפני 14:00. יש תאריך שאת/ה מכוון/ת אליו?",
-      "אפשר לבחור בקופה תאריך ושעת הגעה מועדפים, כדי שהזר יגיע בדיוק ברגע הנכון. לאן שולחים?",
-    ],
-  },
-  {
     name: "price",
     keywords: ["כמה עולה", "מחיר", "מחירים", "עלות", "כמה זה", "יקר", "זול", "תקציב"],
     replies: [
       'הטווח שלנו הוא 99–349 ש"ח בגודל הקלאסי. זר החתימה, זר האירוס הסגול, עומד על 189. יש סכום שנוח לך שאתאים אליו?',
-      'לכל זר יש שלושה גדלים — קלאסי, מורחב (+25%) ושופע (+50%). ככה אפשר להתאים כמעט לכל תקציב. מה בערך התקציב שלך?',
-      'תלוי בגודל ובסוג. הכי פופולרי אצלנו זה הטווח 139–219 ש"ח. תגיד/י לי מספר ואמליץ בול.',
+      "לכל זר יש שלושה גדלים — קלאסי, מורחב (+25%) ושופע (+50%). ככה אפשר להתאים כמעט לכל תקציב. מה בערך התקציב שלך?",
     ],
   },
   {
     name: "size",
     keywords: ["גודל", "גדול יותר", "קטן", "שופע", "מורחב", "קלאסי", "כמה פרחים", "גבעולים"],
     replies: [
-      "לכל זר יש שלוש מידות: קלאסי (כ-12 גבעולים), מורחב (כ-18, ‎+25% למחיר) ושופע (כ-26, ‎+50%). אפשר לראות ולהשוות בלחיצה על כל זר בקטלוג.",
-      "המורחב הוא הבחירה הכי נפוצה למתנה — הוא נראה נדיב בלי לקפוץ במחיר. השופע שמור לאירועים ולרגעים הגדולים.",
+      "לכל זר יש שלוש מידות: קלאסי, מורחב (‎+25%) ושופע (‎+50%). בלחיצה על כל זר בקטלוג רואים בדיוק כמה פרחים יש בכל מידה.",
+      "המורחב הוא הבחירה הכי נפוצה למתנה — נראה נדיב בלי לקפוץ במחיר. השופע שמור לאירועים ולרגעים הגדולים.",
     ],
   },
   {
     name: "birthday",
     keywords: ["יום הולדת", "יומולדת", "הולדת", "חוגג", "חוגגת"],
     replies: [
-      'ליום הולדת אני הכי אוהבת את הזר הצבעוני העונתי (139 ש"ח) או את זר החמניות (149) — שמחים, מלאי חיים ותמיד עושים חיוך.',
-      'תלוי כמה גדול הרגע 🙂 לזר יומיומי-שמח — העונתי ב-139. למשהו שעושה "וואו" בכניסה — זר האירוע המפואר ב-349, או העונתי בגודל שופע.',
+      'ליום הולדת אני הכי אוהבת את הזר הצבעוני העונתי (139 ש"ח) או את זר החמניות (149) — שמחים ותמיד עושים חיוך.',
+      'למשהו שעושה "וואו" בכניסה — זר האירוע המפואר ב-349, או העונתי בגודל שופע.',
     ],
   },
   {
     name: "romantic",
     keywords: ["רומנטי", "אהבה", "בת זוג", "בן זוג", "אישה שלי", "בעל שלי", "חברה שלי", "חבר שלי", "נישואין", "דייט", "התנצלות", "לפייס"],
     replies: [
-      'לרגעים רומנטיים הקלאסיקה מנצחת: זר ורדים אדומים (159 ש"ח). ואם רוצים משהו קצת פחות צפוי — אירוסים וורדים לבנים (219) ממש מרגש.',
-      'ורדים אדומים זה תמיד בטוח, אבל אם את/ה רוצה שזה ייראה אישי יותר — האירוסים הסגולים שלנו עושים רושם אחר לגמרי.',
-      'מניסיון, מה שבאמת עובד זה זר יפה עם ברכה אישית טובה. את הזר אני אעזור לבחור, ואת הברכה אפשר לכתוב יחד בשלב התשלום.',
+      'לרגעים רומנטיים הקלאסיקה מנצחת: זר ורדים אדומים (159 ש"ח). ואם רוצים משהו פחות צפוי — אירוסים וורדים לבנים (219) ממש מרגש.',
+      "ורדים אדומים זה תמיד בטוח, אבל אם את/ה רוצה שזה ייראה אישי יותר — האירוסים הסגולים שלנו עושים רושם אחר לגמרי.",
     ],
   },
   {
@@ -74,7 +151,7 @@ const INTENTS = [
     keywords: ["ניחומים", "לוויה", "שבעה", "פטירה", "נפטר", "נפטרה", "השתתפות בצער"],
     replies: [
       'משתתפת בצער. הזר שלנו לרגעים כאלה הוא הלבן-סגול (179 ש"ח) — רגוע, מכובד, בלי צבעים צועקים ובלי ריח חזק.',
-      'מצטערת לשמוע. יש לנו זר ניחומים שנבנה בדיוק לרגישות הזו. אם תרצה/י, אפשר לצרף אליו ברכה מכובדת ואני אעזור לנסח.',
+      "מצטערת לשמוע. יש לנו זר ניחומים שנבנה בדיוק לרגישות הזו, ואפשר לצרף אליו ברכה מכובדת.",
     ],
   },
   {
@@ -82,7 +159,23 @@ const INTENTS = [
     keywords: ["תודה ל", "להודות", "מתנת תודה", "להגיד תודה", "מורה", "מטפלת", "רופא"],
     replies: [
       'ל"תודה" יש לנו זר קטן ועדין ב-99 ש"ח — בדיוק במידה, לא מוגזם ולא קמצני.',
-      'זר התודה שלנו (99 ש"ח) הוא הכי מבוקש למתנות כאלה. עם ברכה קצרה ואישית זה ממש קולע.',
+      "זר התודה שלנו הוא הכי מבוקש למתנות כאלה. עם ברכה קצרה ואישית זה ממש קולע.",
+    ],
+  },
+  {
+    name: "wedding",
+    keywords: ["חתונה", "אירוע", "בר מצווה", "בת מצווה", "ברית", "כנס", "עיצוב אולם"],
+    replies: [
+      'לאירועים יש לנו את הזר המפואר (349 ש"ח), ובגודל שופע הוא באמת עושה רושם. מתי האירוע?',
+      "אירועים זה משהו שאנחנו אוהבים במיוחד — אפשר להתאים צבעים וסגנון. לתכנון מלא שווה לעבור למיכאל שיחבר אתכם לוואטסאפ.",
+    ],
+  },
+  {
+    name: "care",
+    keywords: ["כמה זמן מחזיק", "לטפל", "טיפול", "אגרטל", "להחזיק", "נובל", "מים"],
+    replies: [
+      "בכל עמוד מוצר יש לשונית 'המלצות לשזירה וטיפול באגרטל' עם הוראות לזר הספציפי. הכלל הכי חשוב: חיתוך אלכסוני והחלפת מים כל יומיים.",
+      "רוב הזרים שלנו מחזיקים 7–12 יום עם טיפול נכון. הסוד הוא מים נקיים והרחקה משמש ישירה ומפירות מבשילים.",
     ],
   },
   {
@@ -90,60 +183,13 @@ const INTENTS = [
     keywords: ["למה אירוס", "מה זה איריס", "שם המותג", "למה קוראים", "הסיפור שלכם", "מי אתם"],
     replies: [
       "השם הגיע מפרח האירוס הסגול — הוא נותן לנו את הצבע ואת החתימה. תמצא/י אותו כמעט בכל זר שאנחנו מרכיבים 🌸",
-      "אנחנו בוטיק קטן בקריית אתא. כל זר נבנה ידנית לפי ההזמנה, ולא מוציאים כלום שלא היינו שולחים למישהו קרוב.",
-    ],
-  },
-  {
-    name: "care",
-    keywords: ["כמה זמן מחזיק", "לטפל", "טיפול", "אגרטל", "להחזיק", "נובל", "מים"],
-    replies: [
-      "בכל עמוד מוצר יש לשונית 'המלצות לשזירה וטיפול באגרטל' עם הוראות מדויקות לזר הספציפי. הכלל הכי חשוב: חיתוך אלכסוני והחלפת מים כל יומיים.",
-      "רוב הזרים שלנו מחזיקים 7–12 יום עם טיפול נכון. הסוד הוא מים נקיים והרחקה משמש ישירה ומפירות מבשילים.",
-    ],
-  },
-  {
-    name: "payment",
-    keywords: ["תשלום", "אשראי", "לשלם", "כרטיס", "חיוב", "ביט", "מזומן", "חשבונית", "קופון", "הנחה"],
-    replies: [
-      "כרגע האתר במצב הדגמה, כך שלא מתבצע חיוב אמיתי — זה כדי שתוכל/י לעבור על התהליך בנוחות. בגרסה הסופית התשלום יהיה מאובטח לגמרי.",
-      "בעמוד הקופה יש גם שדה לקוד קופון. כרגע זה במצב הדגמה, בלי חיוב אמיתי.",
-    ],
-  },
-  {
-    name: "complaint",
-    keywords: ["בעיה", "לא מרוצה", "מקולקל", "התאכזבתי", "מאוחר", "לא הגיע", "תלונה", "גרוע", "כמוש"],
-    replies: [
-      "אני ממש מצטערת, וזה לגמרי לא הסטנדרט שלנו. ספר/י לי בדיוק מה קרה ואני אדאג שזה יטופל — ואם צריך, נעביר ישירות לבעלת החנות.",
-      "זה מתסכל ואני מבינה אותך לגמרי. תן/י לי את הפרטים ונמצא פתרון — החלפה או זיכוי, מה שנכון יותר. אפשר גם לעבור לוואטסאפ בכפתור למטה ולטפל בזה מהר.",
-    ],
-  },
-  {
-    name: "human",
-    keywords: ["בנאדם", "לדבר עם מישהו", "מנהל", "בעלים", "טלפון", "להתקשר", "נציג", "וואטסאפ", "ווצאפ"],
-    replies: [
-      "בכיף — הכפתור הירוק למטה מעביר ישירות לוואטסאפ של החנות למענה אישי.",
-      "אפשר לעבור לשיחה אישית בוואטסאפ בכפתור הירוק למטה. אם בינתיים יש משהו שאני יכולה לעזור בו, אני כאן.",
-    ],
-  },
-  {
-    name: "hours",
-    keywords: ["שעות", "פתוח", "סגור", "שבת", "מתי אתם"],
-    replies: [
-      "שעות הפעילות המדויקות מתעדכנות בתחתית האתר — הכי בטוח לבדוק שם. הזמנות באתר אפשר לבצע מסביב לשעון.",
-    ],
-  },
-  {
-    name: "wedding",
-    keywords: ["חתונה", "אירוע", "בר מצווה", "בת מצווה", "ברית", "כנס", "עיצוב אולם"],
-    replies: [
-      'לאירועים יש לנו את הזר המפואר (349 ש"ח), ובגודל שופע הוא באמת עושה רושם. אפשר גם לתאם הזמנה מיוחדת בכמויות. מתי האירוע?',
-      "אירועים זה משהו שאנחנו אוהבים במיוחד — אפשר להתאים גם צבעים וסגנון. לתכנון מלא שווה לעבור לוואטסאפ.",
+      "אנחנו בוטיק קטן בקריית אתא. כל זר נבנה ידנית לפי ההזמנה.",
     ],
   },
   {
     name: "thanks",
     keywords: ["תודה רבה", "מעולה", "אחלה", "יופי", "סבבה", "מושלם", "תודה", "אלוף"],
-    replies: ["בשמחה! 🌸 אם צריך עוד משהו, אני כאן.", "כיף לעזור! שיהיה לך יום מהמם.", "תמיד! מקווה שהזר יעשה בדיוק את הרושם שרצית."],
+    replies: ["בשמחה! 🌸 אם צריך עוד משהו, אני כאן.", "כיף לעזור! שיהיה לך יום מהמם."],
   },
 ];
 
@@ -162,55 +208,6 @@ const CHAT_FALLBACK = [
 ];
 
 const FOLLOW_UPS = ["רוצה שאראה לך אותו בקטלוג?", "יש משהו נוסף שחשוב לך שיהיה בזר?", "שנבדוק גם גודל מורחב?"];
-
-/* ---------- מעקב הזמנות (הדגמה) ---------- */
-const ORDER_STATES = [
-  {
-    label: "התקבלה",
-    text: (n) =>
-      `הזמנה ${n} התקבלה ונקלטה אצלנו במערכת ✅\nהיא ממתינה לשזירה ותיכנס לעבודה בבוקר הקרוב. אם צריך לשנות משהו — עכשיו זה הרגע הכי קל.`,
-  },
-  {
-    label: "בשזירה",
-    text: (n) =>
-      `הזמנה ${n} נמצאת כרגע בשזירה 🌿\nהפרחים נבחרו הבוקר והזר מורכב ידנית ברגעים אלה. בסיום הוא עובר בדיקת איכות ויוצא לדרך.`,
-  },
-  {
-    label: "יצאה לשליח",
-    text: (n) =>
-      `הזמנה ${n} כבר בדרך 🚚\nהזר יצא עם השליח והוא אמור להגיע בטווח השעות שנבחר. אם אף אחד לא יהיה בבית — השליח ייצור קשר טלפוני לתיאום.`,
-  },
-  {
-    label: "נמסרה",
-    text: (n) =>
-      `הזמנה ${n} נמסרה בהצלחה 🌸\nמקווה שהזר עשה בדיוק את הרושם שרצית. אם משהו לא היה מושלם — ספר/י לי ונטפל בזה מיד.`,
-  },
-];
-
-function extractOrderNumber(text) {
-  const clean = (text || "").toUpperCase().replace(/\s+/g, "");
-  const full = clean.match(/IRIS-?DEMO-?(\d{4,8})/);
-  if (full) return "IRIS-DEMO-" + full[1];
-  const digits = clean.match(/\d{4,8}/);
-  return digits ? "IRIS-DEMO-" + digits[0] : null;
-}
-
-function orderStatusFor(orderNumber) {
-  const digits = orderNumber.replace(/\D/g, "");
-  let sum = 0;
-  for (const d of digits) sum += Number(d);
-  return ORDER_STATES[sum % ORDER_STATES.length];
-}
-
-/* ---------- בחירת תשובה ---------- */
-function pickFresh(arr, key) {
-  const fresh = arr.filter((t) => !usedReplies.has(key + "|" + t));
-  const pool = fresh.length ? fresh : arr;
-  const choice = pool[Math.floor(Math.random() * pool.length)];
-  if (!fresh.length) arr.forEach((t) => usedReplies.delete(key + "|" + t));
-  usedReplies.add(key + "|" + choice);
-  return choice;
-}
 
 function chatDetectIntent(message) {
   const text = (message || "").toLowerCase();
@@ -237,143 +234,58 @@ function chatBudgetReply(message, intent) {
   return `בתקציב של עד ${budget} ש"ח הייתי הולכת על ${list}. ${FOLLOW_UPS[Math.floor(Math.random() * FOLLOW_UPS.length)]}`;
 }
 
-function michalReply(message) {
+function agamReply(message) {
+  const a = AGENTS.agam;
   const intent = chatDetectIntent(message);
   const budgetReply = chatBudgetReply(message, intent);
   if (budgetReply) {
-    lastIntent = intent ? intent.name : "budget";
+    a.lastIntent = intent ? intent.name : "budget";
     return budgetReply;
   }
   if (intent) {
     let reply = pickFresh(intent.replies, intent.name);
-    if (intent.name === lastIntent && Math.random() > 0.5) {
+    if (intent.name === a.lastIntent && Math.random() > 0.5) {
       reply += " " + FOLLOW_UPS[Math.floor(Math.random() * FOLLOW_UPS.length)];
     }
-    lastIntent = intent.name;
+    a.lastIntent = intent.name;
     return reply;
   }
-  lastIntent = null;
+  a.lastIntent = null;
   return pickFresh(CHAT_FALLBACK, "fallback");
 }
 
-/* ============================================================
-   ממשק
-   ============================================================ */
-
 function toggleChat() {
-  const panel = document.getElementById("chatPanel");
-  const isOpen = panel.classList.toggle("open");
-  if (isOpen && chatHistory.length === 0) {
-    addBotMessage("היי, אני מיכל 🌸 הסוכנת הדיגיטלית של פרחי איריס.\nבמה אפשר לעזור?");
-    showMainMenu();
-  }
-  if (isOpen) setTimeout(() => document.getElementById("chatInput")?.focus(), 260);
-}
-
-function chatBodyEl() {
-  return document.getElementById("chatBody");
-}
-
-function scrollChat() {
-  const body = chatBodyEl();
-  body.scrollTop = body.scrollHeight;
-}
-
-function addMessage(text, role) {
-  const div = document.createElement("div");
-  div.className = `msg ${role}`;
-  div.textContent = text;
-  chatBodyEl().appendChild(div);
-  scrollChat();
-}
-
-function addBotMessage(text) {
-  addMessage(text, "bot");
-  chatHistory.push({ role: "assistant", content: text });
-}
-
-function clearChatWidgets() {
-  chatBodyEl()
-    .querySelectorAll(".chat-menu, .chat-chips")
-    .forEach((el) => el.remove());
-}
-
-function showMainMenu() {
-  clearChatWidgets();
-  const box = document.createElement("div");
-  box.className = "chat-menu";
-  box.innerHTML = `
-    <button onclick="chatChooseMode('advice')"><span class="ico">🌸</span> ייעוץ והתאמת זר אישי</button>
-    <button onclick="chatChooseMode('track')"><span class="ico">📦</span> תמיכה ומעקב הזמנות</button>`;
-  chatBodyEl().appendChild(box);
-  scrollChat();
-}
-
-function showChips(options) {
-  clearChatWidgets();
-  const box = document.createElement("div");
-  box.className = "chat-chips";
-  box.innerHTML = options
-    .map((o) => `<button onclick="chatChip('${o.action}')">${esc(o.label)}</button>`)
-    .join("");
-  chatBodyEl().appendChild(box);
-  scrollChat();
-}
-
-function chatChip(action) {
-  if (action === "menu") {
-    chatMode = null;
-    lastOrderNumber = null;
-    addBotMessage("בטח — נחזור לתפריט הראשי. במה נמשיך?");
-    showMainMenu();
-    return;
-  }
-  if (action === "catalog") {
-    window.location.href = "catalog.html";
-    return;
-  }
-  if (action === "whatsapp") {
-    openShopWhatsApp();
-    return;
+  const opened = agentTogglePanel("agam");
+  if (opened && AGENTS.agam.history.length === 0) {
+    agentSay("agam", "היי, אני אגם 🌸 היועצת של פרחי איריס.\nהתפקיד שלי הוא לעזור לך לבחור בדיוק את הזר הנכון — לפי האירוע, האדם והתקציב.\nבמה נתחיל?");
+    agamMenu();
   }
 }
 
-function chatChooseMode(mode) {
-  chatMode = mode;
-  clearChatWidgets();
+function agamMenu() {
+  agentMenu("agam", [
+    { icon: "🎁", label: "התאמת זר לפי אירוע", action: "agamPick('event')" },
+    { icon: "💰", label: "המלצה לפי תקציב", action: "agamPick('budget')" },
+    { icon: "🌿", label: "שאלה על טיפול בפרחים", action: "agamPick('care')" },
+  ]);
+}
 
-  if (mode === "advice") {
-    addMessage("ייעוץ והתאמת זר אישי", "user");
-    addBotMessage(
-      "מעולה 🌸 ספר/י לי קצת: לאיזו הזדמנות הזר, למי הוא מיועד, ואם יש תקציב שנוח לך — ואני אתאים בדיוק.\nאפשר גם פשוט לכתוב סכום, ואמליץ לפי זה."
-    );
-    showChips([
-      { label: "חזרה לתפריט", action: "menu" },
-      { label: "לקטלוג המלא", action: "catalog" },
-    ]);
+function agamPick(kind) {
+  agentClearWidgets("agam");
+  if (kind === "event") {
+    agentAdd("agam", "התאמת זר לפי אירוע", "user");
+    agentSay("agam", "מעולה. לאיזה אירוע זה — יום הולדת, רומנטי, תודה, ניחומים או אירוע גדול?\nתכתוב/י לי במילים שלך ואני אתאים.");
+  } else if (kind === "budget") {
+    agentAdd("agam", "המלצה לפי תקציב", "user");
+    agentSay("agam", "פשוט תכתוב/י לי סכום — למשל 150 — ואני אראה לך מה הכי יפה שאפשר לקבל בו.");
   } else {
-    addMessage("תמיכה ומעקב הזמנות", "user");
-    addBotMessage(
-      'בשמחה 📦 הקלד/י את מספר ההזמנה ואבדוק עבורך את הסטטוס.\nהמספר מופיע באישור ההזמנה ונראה כך: IRIS-DEMO-123456'
-    );
-    showChips([
-      { label: "חזרה לתפריט", action: "menu" },
-      { label: "שיחה אישית בוואטסאפ", action: "whatsapp" },
-    ]);
+    agentAdd("agam", "שאלה על טיפול בפרחים", "user");
+    agentSay("agam", "תשאל/י אותי כל דבר — כמה זמן הזר מחזיק, איזה אגרטל, כל כמה זמן להחליף מים. בכל עמוד מוצר יש גם לשונית טיפול מלאה.");
   }
-}
-
-function showTyping() {
-  const div = document.createElement("div");
-  div.className = "msg bot";
-  div.id = "typingIndicator";
-  div.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
-  chatBodyEl().appendChild(div);
-  scrollChat();
-}
-
-function hideTyping() {
-  document.getElementById("typingIndicator")?.remove();
+  agentChips("agam", [
+    { label: "חזרה לתפריט", action: "agamMenu()" },
+    { label: "לקטלוג המלא", action: "location.href='catalog.html'" },
+  ]);
 }
 
 function sendChat(event) {
@@ -381,54 +293,144 @@ function sendChat(event) {
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   if (!text) return;
-
-  clearChatWidgets();
-  addMessage(text, "user");
-  chatHistory.push({ role: "user", content: text });
+  agentClearWidgets("agam");
+  agentAdd("agam", text, "user");
+  AGENTS.agam.history.push({ role: "user", content: text });
   input.value = "";
-  showTyping();
-
+  agentTyping("agam", true);
   setTimeout(() => {
-    hideTyping();
-    handleChatMessage(text);
+    agentTyping("agam", false);
+    agentSay("agam", agamReply(text));
+    agamMenu();
   }, 520 + Math.random() * 520);
 }
 
-function handleChatMessage(text) {
-  if (chatMode === "track") {
+/* ============================================================
+   מיכאל — תמיכה טכנית, משלוחים ומעקב הזמנות
+   ============================================================ */
+const ORDER_STATES = [
+  { label: "התקבלה", text: (n) => `הזמנה ${n} התקבלה ונקלטה במערכת ✅\nהיא ממתינה לשזירה ותיכנס לעבודה בבוקר הקרוב. אם צריך לשנות משהו — עכשיו זה הרגע הכי קל.` },
+  { label: "בשזירה", text: (n) => `הזמנה ${n} נמצאת כרגע בשזירה 🌿\nהפרחים נבחרו הבוקר והזר מורכב ידנית ברגעים אלה.` },
+  { label: "יצאה לשליח", text: (n) => `הזמנה ${n} כבר בדרך 🚚\nהזר יצא עם השליח ואמור להגיע בטווח השעות שנבחר. אם אף אחד לא יהיה בבית — השליח ייצור קשר טלפוני.` },
+  { label: "נמסרה", text: (n) => `הזמנה ${n} נמסרה בהצלחה 🌸\nמקווה שהזר עשה בדיוק את הרושם שרצית. אם משהו לא היה מושלם — ספר/י לי ונטפל בזה מיד.` },
+];
+
+const TECH_FAQ = [
+  { keywords: ["לא נטען", "לא עולה", "תקוע", "נתקע", "שגיאה", "לא עובד", "באג", "קורס"], reply: "בוא ננסה את הבסיס: רענון עם Ctrl+F5 (או משיכה למטה בנייד) פותר את רוב המקרים, כי הוא מנקה גרסה ישנה שנתקעה בזיכרון. אם זה ממשיך — תאר/י לי מה בדיוק קורה ובאיזה מכשיר." },
+  { keywords: ["עגלה", "סל", "נעלם", "התרוקן", "לא נשמר"], reply: "העגלה נשמרת בדפדפן שלך בלבד. היא מתאפסת אם גלשת במצב פרטי, ניקית היסטוריה, או עברת למכשיר אחר. אם היא נעלמה באותו דפדפן — ספר/י לי ואבדוק." },
+  { keywords: ["תמונה", "תמונות", "לא נראה", "לא מוצג", "ריק"], reply: "אם תמונות לא נטענות זה כמעט תמיד חיבור אינטרנט איטי או חוסם פרסומות אגרסיבי. נסה/י לרענן או לכבות את החוסם לרגע." },
+  { keywords: ["תשלום", "אשראי", "כרטיס", "חיוב", "לשלם", "סליקה"], reply: "האתר כרגע במצב הדגמה — לא מתבצע חיוב אמיתי בכרטיס, וזה בכוונה. ההזמנה נרשמת אצלנו ואנחנו חוזרים אליך לתיאום ותשלום." },
+  { keywords: ["ביטול", "לבטל", "לשנות", "שינוי"], reply: "אפשר לבטל או לשנות עד 3 שעות לפני מועד המשלוח. הכי מהיר — לפנות אלינו בוואטסאפ עם מספר ההזמנה, ואני אעביר את זה מיד." },
+  { keywords: ["משלוח", "שליח", "מתי מגיע", "זמן אספקה", "עד מתי", "אזור"], reply: `אנחנו מחלקים בקריית אתא, חיים, ביאליק, מוצקין וים — משלוח באותו יום בהזמנה מוקדמת. לחיפה ולנשר מגיעים בהזמנות מעל ₪${LARGE_ORDER_MIN}. אפשר לבדוק כתובת מדויקת בבודק אזור החלוקה בעמוד הבית.` },
+  { keywords: ["כתובת", "איפה אתם", "להגיע", "חנות", "ניווט", "waze", "וייז"], reply: `החנות נמצאת ב${SHOP_ADDRESS}. יש באתר קטע "איך מגיעים אלינו" עם כפתורי ניווט ל-Waze ול-Google Maps.` },
+];
+
+function extractOrderNumber(text) {
+  const clean = (text || "").toUpperCase().replace(/\s+/g, "");
+  const full = clean.match(/IRIS-?DEMO-?(\d{4,8})/);
+  if (full) return "IRIS-DEMO-" + full[1];
+  const digits = clean.match(/\d{4,8}/);
+  return digits ? "IRIS-DEMO-" + digits[0] : null;
+}
+
+function orderStatusFor(orderNumber) {
+  const digits = orderNumber.replace(/\D/g, "");
+  let sum = 0;
+  for (const d of digits) sum += Number(d);
+  return ORDER_STATES[sum % ORDER_STATES.length];
+}
+
+function toggleSupport() {
+  const opened = agentTogglePanel("michael");
+  if (opened && AGENTS.michael.history.length === 0) {
+    agentSay("michael", "היי, אני מיכאל 🛠️ התמיכה של פרחי איריס.\nאני כאן לתקלות באתר, לשאלות על משלוחים, למעקב אחרי הזמנה ולחיבור מהיר לוואטסאפ של החנות.\nבמה לעזור?");
+    michaelMenu();
+  }
+}
+
+function michaelMenu() {
+  agentMenu("michael", [
+    { icon: "📦", label: "מעקב אחר הזמנה", action: "michaelPick('track')" },
+    { icon: "🚚", label: "שאלות על משלוחים ואזורי חלוקה", action: "michaelPick('delivery')" },
+    { icon: "🛠️", label: "תקלה טכנית באתר", action: "michaelPick('tech')" },
+    { icon: "💬", label: "מעבר לוואטסאפ של החנות", action: "openShopWhatsApp()" },
+  ]);
+}
+
+function michaelPick(kind) {
+  const m = AGENTS.michael;
+  agentClearWidgets("michael");
+  m.mode = kind;
+  if (kind === "track") {
+    agentAdd("michael", "מעקב אחר הזמנה", "user");
+    agentSay("michael", "בשמחה 📦 הקלד/י את מספר ההזמנה ואבדוק עבורך.\nהמספר מופיע באישור ההזמנה ונראה כך: IRIS-DEMO-123456");
+  } else if (kind === "delivery") {
+    agentAdd("michael", "שאלות על משלוחים", "user");
+    agentSay("michael", `אזורי החלוקה הרגילים: קריית אתא, קריית חיים, קריית ביאליק, קריית מוצקין וקריית ים.\nלחיפה ולנשר מגיעים בהזמנות מעל ₪${LARGE_ORDER_MIN}.\nתכתוב/י לי כתובת או עיר ואבדוק, או השתמש/י בבודק אזור החלוקה בעמוד הבית.`);
+  } else {
+    agentAdd("michael", "תקלה טכנית באתר", "user");
+    agentSay("michael", "תאר/י לי מה קורה — מה ניסית לעשות, מה קיבלת, ובאיזה מכשיר. אני אנסה לפתור מיד.");
+  }
+  agentChips("michael", [
+    { label: "חזרה לתפריט", action: "michaelMenu()" },
+    { label: "וואטסאפ", action: "openShopWhatsApp()" },
+  ]);
+}
+
+function michaelReply(text) {
+  const m = AGENTS.michael;
+
+  if (m.mode === "track") {
     const orderNumber = extractOrderNumber(text);
     if (!orderNumber) {
-      addBotMessage(
-        "לא הצלחתי לזהות מספר הזמנה בהודעה 🙂\nהוא מורכב מספרות ונראה כך: IRIS-DEMO-123456. אפשר גם להקליד רק את הספרות."
-      );
-      showChips([
-        { label: "חזרה לתפריט", action: "menu" },
-        { label: "שיחה אישית בוואטסאפ", action: "whatsapp" },
-      ]);
-      return;
+      return "לא הצלחתי לזהות מספר הזמנה בהודעה 🙂\nהוא מורכב מספרות ונראה כך: IRIS-DEMO-123456. אפשר גם להקליד רק את הספרות.";
     }
-    lastOrderNumber = orderNumber;
-    const state = orderStatusFor(orderNumber);
-    addBotMessage(state.text(orderNumber));
-    addBotMessage("שים/י לב: האתר במצב הדגמה, כך שהסטטוס כאן הוא לדוגמה בלבד. למעקב אמיתי — מעבר לוואטסאפ ונבדוק ידנית.");
-    showChips([
-      { label: "בדיקת הזמנה נוספת", action: "menu" },
-      { label: "שיחה אישית בוואטסאפ", action: "whatsapp" },
-    ]);
-    return;
+    m.lastOrder = orderNumber;
+    return orderStatusFor(orderNumber).text(orderNumber) + "\n\n(האתר במצב הדגמה — הסטטוס כאן לדוגמה בלבד. למעקב אמיתי אפשר לעבור לוואטסאפ.)";
   }
 
-  addBotMessage(michalReply(text));
-  if (!chatMode) showMainMenu();
+  const area = typeof checkDeliveryArea === "function" ? checkDeliveryArea(text) : null;
+  if (area) {
+    return area.tier === "core"
+      ? `כן, מגיעים ל${area.area} — ${area.info}.`
+      : `ל${area.area} אנחנו מגיעים, אבל ${area.info}. מתחת לסכום הזה אפשר לתאם איסוף עצמי מהחנות ב${SHOP_ADDRESS}.`;
+  }
+
+  const t = (text || "").toLowerCase();
+  const faq = TECH_FAQ.find((f) => f.keywords.some((k) => t.includes(k)));
+  if (faq) return faq.reply;
+
+  return "לא בטוח שהבנתי — תוכל/י לנסח קצת אחרת?\nאני מטפל בתקלות באתר, במשלוחים ובמעקב הזמנות. לשאלות על בחירת זר — אגם בצד השני של המסך היא הכתובת 🌸";
+}
+
+function sendSupport(event) {
+  event.preventDefault();
+  const input = document.getElementById("supportInput");
+  const text = input.value.trim();
+  if (!text) return;
+  agentClearWidgets("michael");
+  agentAdd("michael", text, "user");
+  AGENTS.michael.history.push({ role: "user", content: text });
+  input.value = "";
+  agentTyping("michael", true);
+  setTimeout(() => {
+    agentTyping("michael", false);
+    agentSay("michael", michaelReply(text));
+    agentChips("michael", [
+      { label: "חזרה לתפריט", action: "michaelMenu()" },
+      { label: "וואטסאפ", action: "openShopWhatsApp()" },
+    ]);
+  }, 520 + Math.random() * 520);
 }
 
 /* ---------- וואטסאפ ---------- */
 function openShopWhatsApp() {
-  let text = WA_DEFAULT_TEXT;
-  if (chatMode === "track" && lastOrderNumber) {
-    text = `היי פרחי איריס! אשמח לבדוק סטטוס להזמנה ${lastOrderNumber} 🌸`;
-  } else if (chatMode === "advice") {
-    text = "היי פרחי איריס! אשמח לעזרה בבחירת זר מתאים 🌸";
+  let text = "היי פרחי איריס! הגעתי מהאתר ואשמח לעזרה 🌸";
+  const m = AGENTS.michael;
+  if (m.mode === "track" && m.lastOrder) {
+    text = `היי פרחי איריס! אשמח לבדוק סטטוס להזמנה ${m.lastOrder} 🌸`;
+  } else if (m.mode === "tech") {
+    text = "היי פרחי איריס! נתקלתי בתקלה באתר ואשמח לעזרה 🙏";
   }
   window.open(`https://wa.me/${SHOP_WHATSAPP}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 }

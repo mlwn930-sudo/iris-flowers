@@ -48,7 +48,7 @@
       <p class="lede">כל זר שיוצא מהחנות שלנו נבנה ביד, פרח אחר פרח, עם אותה סגולת־אירוס שנתנה לנו את השם. שלוש מידות לכל זר, ומשלוחים באזור קריית אתא ומפרץ חיפה.</p>
       <div class="hero-ctas">
         <a href="catalog.html" class="btn btn-gold">לצפייה בקטלוג</a>
-        <button class="btn btn-outline" onclick="toggleChat()">דברו עם מיכל</button>
+        <button class="btn btn-outline" onclick="toggleChat()">דברו עם אגם</button>
       </div>
       <div class="hero-tags">
         <div class="hero-tag"><strong>100%</strong><span>פרחים טריים</span></div>
@@ -130,19 +130,108 @@
   </div>
 </section>
 
-<section style="padding-top:0">
+<section id="reviews" style="padding-top:0">
   <div class="container">
-    <div class="concierge">
-      <div class="concierge-inner">
-        <div>
-          <h2>יש לך שאלה? <em>מיכל</em> כאן בשבילך</h2>
-          <p>הסוכנת הדיגיטלית שלנו זמינה מסביב לשעון — ממליצה לפי אירוע ותקציב, עוקבת אחרי סטטוס הזמנות, ומעבירה לשיחה אישית בוואטסאפ בלחיצה אחת.</p>
-          <button class="btn btn-gold" style="margin-top:24px" onclick="toggleChat()">התחילו שיחה</button>
+    <div class="section-head">
+      <span class="kicker">מה אומרים עלינו</span>
+      <h2>הלקוחות שלנו</h2>
+    </div>
+    <div class="rating-wrap">
+      <div class="rating-top">
+        <div class="rating-score">
+          <span class="num" id="ratingAvg">4.9</span>
+          <div>
+            <div class="stars" id="ratingStars"></div>
+            <div class="meta">מתוך <span id="ratingCount">127</span> דירוגים</div>
+          </div>
         </div>
-        <div class="concierge-bubble">
-          <div class="who"><img class="avatar-seal" src="assets/brand/logo-mark.png" alt="" /> מיכל · פרחי איריס</div>
-          <p>"מחפשים משהו לאירוע מיוחד, או סתם רוצים להפתיע? תגידו לי אירוע ותקציב — ואני אמליץ בול."</p>
+        <div class="rate-me">
+          <span>הזמנתם אצלנו? דרגו את החוויה:</span>
+          <div class="rate-stars" id="rateStars"></div>
+          <span class="rate-thanks" id="rateThanks">תודה על הדירוג! 🌸</span>
         </div>
+      </div>
+      <div class="reviews" id="reviewList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="help" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">אנחנו כאן</span>
+      <h2>לכל שאלה — יש לנו מישהו</h2>
+      <p>שני סוכנים דיגיטליים, כל אחד מומחה בתחום שלו, זמינים מסביב לשעון</p>
+    </div>
+    <div class="help-grid">
+      <div class="help-card">
+        <div class="who">
+          <img src="assets/brand/logo-mark.png" alt="" />
+          <div>
+            <div class="role">ייעוץ ובחירת זר</div>
+            <h4>אגם</h4>
+          </div>
+        </div>
+        <p><strong>לכל עזרה ושאלה בנושא פרחים — פנו לאגם.</strong> היא תעזור לכם לבחור בדיוק את הזר הנכון, לפי האירוע, האדם והתקציב.</p>
+        <ul>
+          <li>התאמת זר לפי אירוע ולפי תקציב</li>
+          <li>הסבר על ההבדל בין הגדלים</li>
+          <li>שאלות על טיפול בפרחים ובאגרטל</li>
+          <li>ניסוח ברכה אישית</li>
+        </ul>
+        <button class="btn btn-gold" onclick="toggleChat()">דברו עם אגם</button>
+      </div>
+
+      <div class="help-card support">
+        <div class="who">
+          <span class="ico">🛠️</span>
+          <div>
+            <div class="role">תמיכה ומשלוחים</div>
+            <h4>מיכאל</h4>
+          </div>
+        </div>
+        <p><strong>תקלה טכנית, שאלה על משלוח או מעקב אחרי הזמנה — פנו למיכאל.</strong> הוא גם מחבר אתכם ישירות לוואטסאפ של החנות.</p>
+        <ul>
+          <li>מעקב אחר סטטוס הזמנה לפי מספר</li>
+          <li>אזורי חלוקה וזמני אספקה</li>
+          <li>תקלות באתר, בעגלה ובתשלום</li>
+          <li>יצירת קשר בוואטסאפ</li>
+        </ul>
+        <button class="btn btn-ghost" onclick="toggleSupport()">דברו עם מיכאל</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="visit" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">בואו לבקר</span>
+      <h2>איך מגיעים אלינו</h2>
+    </div>
+    <div class="visit-grid">
+      <div class="visit-card">
+        <h3>הבוטיק שלנו</h3>
+        <div class="addr">רחוב איינשטיין 20<br>קריית אתא</div>
+        <p>מוזמנים לקפוץ, לראות את הפרחים מקרוב ולבנות איתנו זר בהתאמה אישית.</p>
+        <div class="visit-actions">
+          <a class="btn btn-gold" target="_blank" rel="noopener"
+             href="https://waze.com/ul?q=%D7%90%D7%99%D7%99%D7%A0%D7%A9%D7%98%D7%99%D7%99%D7%9F%2020%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%90%D7%AA%D7%90">ניווט ב-Waze</a>
+          <a class="btn btn-ghost" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&query=%D7%90%D7%99%D7%99%D7%A0%D7%A9%D7%98%D7%99%D7%99%D7%9F%2020%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%90%D7%AA%D7%90">Google Maps</a>
+        </div>
+        <div class="contact-rows">
+          <div class="contact-row"><span class="ico">📞</span> טלפון — <a href="tel:040000000">להשלמה</a></div>
+          <div class="contact-row"><span class="ico">✉️</span> אימייל — <a href="mailto:hello@iris-flowers.co.il">להשלמה</a></div>
+          <div class="contact-row"><span class="ico">📸</span> אינסטגרם — <a href="https://instagram.com/" target="_blank" rel="noopener">להשלמה</a></div>
+          <div class="contact-row"><span class="ico">💬</span> <a href="#" onclick="event.preventDefault();openShopWhatsApp()">שיחה בוואטסאפ</a></div>
+          <div class="contact-row"><span class="ico">🕒</span> שעות פתיחה — להשלמה</div>
+        </div>
+      </div>
+      <div class="visit-map">
+        <iframe
+          src="https://www.google.com/maps?q=%D7%90%D7%99%D7%99%D7%A0%D7%A9%D7%98%D7%99%D7%99%D7%9F%2020%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%90%D7%AA%D7%90&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="מפה — רחוב איינשטיין 20 קריית אתא"></iframe>
       </div>
     </div>
   </div>
@@ -182,8 +271,10 @@
       <div>
         <h5>יצירת קשר</h5>
         <ul>
-          <li>קריית אתא — כתובת להשלמה</li>
-          <li>טלפון — להשלמה</li>
+          <li><a href="https://waze.com/ul?q=%D7%90%D7%99%D7%99%D7%A0%D7%A9%D7%98%D7%99%D7%99%D7%9F%2020%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%90%D7%AA%D7%90" target="_blank" rel="noopener">רחוב איינשטיין 20, קריית אתא</a></li>
+          <li><a href="tel:040000000">טלפון — להשלמה</a></li>
+          <li><a href="mailto:hello@iris-flowers.co.il">אימייל — להשלמה</a></li>
+          <li><a href="https://instagram.com/" target="_blank" rel="noopener">אינסטגרם — להשלמה</a></li>
           <li>שעות פתיחה — להשלמה</li>
         </ul>
       </div>
@@ -202,14 +293,14 @@
   </div>
 </div>
 
-<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט עם מיכל">
+<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח שיחה עם אגם">
   <img src="assets/brand/logo-mark.png" alt="" />
   <span class="dot"></span>
 </button>
 <div class="chat-panel" id="chatPanel">
   <div class="chat-head">
     <img class="avatar-seal" src="assets/brand/logo-mark.png" alt="" />
-    <div><h4>מיכל</h4><span>הסוכנת הדיגיטלית · זמינה עכשיו</span></div>
+    <div><h4>אגם</h4><span>יועצת הזרים שלנו · זמינה עכשיו</span></div>
     <button class="chat-close" onclick="toggleChat()" aria-label="סגור">✕</button>
   </div>
   <div class="chat-body" id="chatBody"></div>
@@ -223,6 +314,26 @@
   </button>
 </div>
 
+<button class="support-launcher" onclick="toggleSupport()" aria-label="פתח תמיכה עם מיכאל">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M20 13h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1z"/><path d="M19 19v1a2 2 0 0 1-2 2h-3"/></svg>
+  <span class="dot"></span>
+</button>
+<div class="support-panel" id="supportPanel">
+  <div class="chat-head">
+    <span class="avatar-seal">🛠️</span>
+    <div><h4>מיכאל</h4><span>תמיכה טכנית ומשלוחים</span></div>
+    <button class="chat-close" onclick="toggleSupport()" aria-label="סגור">✕</button>
+  </div>
+  <div class="chat-body" id="supportBody"></div>
+  <form class="chat-input-row" onsubmit="sendSupport(event)">
+    <input type="text" id="supportInput" placeholder="תארו תקלה, או הקלידו מספר הזמנה..." autocomplete="off" />
+    <button type="submit" aria-label="שלח"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </form>
+  <button class="wa-btn" onclick="openShopWhatsApp()">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.885 3.488"/></svg>
+    מעבר לשיחה אישית ב-WhatsApp
+  </button>
+</div>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/product-modal.js"></script>

@@ -357,19 +357,79 @@ const CATEGORIES = [
   { id: "plants", name: "עציצים וסחלבים", img: "assets/products/orchid-plant.jpg" },
 ];
 
-/* ---------- אזורי חלוקה ---------- */
-const DELIVERY_AREAS = {
-  "קריית אתא": "משלוח באותו יום — הזמנה עד 14:00",
-  "חיפה": "משלוח באותו יום — הזמנה עד 13:00",
-  "קריית ביאליק": "משלוח באותו יום — הזמנה עד 13:00",
-  "קריית מוצקין": "משלוח באותו יום — הזמנה עד 13:00",
-  "קריית ים": "משלוח למחרת",
-  "קריית חיים": "משלוח באותו יום — הזמנה עד 13:00",
-  "נשר": "משלוח באותו יום — הזמנה עד 13:00",
-  "טירת כרמל": "משלוח למחרת",
-  "עכו": "משלוח למחרת",
-  "יגור": "משלוח למחרת",
-};
+/* ---------- אזורי חלוקה ----------
+   tier: "core"  = חלוקה רגילה לכל הזמנה
+         "large" = הזמנות גדולות בלבד (מעל סכום המינימום)
+   aliases: כתיבים ושכונות שגם הם צריכים להתאים לאותו אזור. */
+const LARGE_ORDER_MIN = 250;
+
+const DELIVERY_ZONES = [
+  {
+    city: "קריית אתא",
+    tier: "core",
+    info: "משלוח באותו יום — הזמנה עד 14:00",
+    aliases: ["קרית אתא", "כפר אתא", "קרית בנימין", "קריית בנימין", "גבעת טל", "רמת אלון", "אתא"],
+  },
+  {
+    city: "קריית חיים",
+    tier: "core",
+    info: "משלוח באותו יום — הזמנה עד 13:00",
+    aliases: ["קרית חיים", "חיים מערבית", "חיים מזרחית", "שכונת דגניה"],
+  },
+  {
+    city: "קריית ביאליק",
+    tier: "core",
+    info: "משלוח באותו יום — הזמנה עד 13:00",
+    aliases: ["קרית ביאליק", "ביאליק", "צור שלום", "קרית אליעזר ביאליק", "אפק"],
+  },
+  {
+    city: "קריית מוצקין",
+    tier: "core",
+    info: "משלוח באותו יום — הזמנה עד 13:00",
+    aliases: ["קרית מוצקין", "מוצקין", "נווה גנים", "קרית שמואל"],
+  },
+  {
+    city: "קריית ים",
+    tier: "core",
+    info: "משלוח באותו יום — הזמנה עד 13:00",
+    aliases: ["קרית ים", "קרית ים א", "קרית ים ב", "קרית ים ג"],
+  },
+  {
+    city: "חיפה",
+    tier: "large",
+    info: `משלוח באותו יום — הזמנות מעל ₪${LARGE_ORDER_MIN} בלבד`,
+    aliases: ["חיפא", "הדר", "נווה שאנן", "רמת הדר", "כרמל", "הכרמל", "בת גלים", "חליסה", "עיר תחתית", "רמות רמז", "אחוזה"],
+  },
+  {
+    city: "נשר",
+    tier: "large",
+    info: `משלוח באותו יום — הזמנות מעל ₪${LARGE_ORDER_MIN} בלבד`,
+    aliases: ["תל חנן", "גבעת נשר", "בן דור"],
+  },
+];
+
+/** מנרמל קלט בעברית: מסיר גרשיים, רווחים כפולים, ומאחד כתיב מלא/חסר */
+function normalizeArea(text) {
+  return String(text || "")
+    .replace(/["'`״׳]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^רחוב\s+|^רח\s+|^שדרות\s+|^שד\s+/, "")
+    .replace(/קרית/g, "קריית")
+    .replace(/\bק\s+/g, "קריית ");
+}
+
+function checkDeliveryArea(query) {
+  const q = normalizeArea(query);
+  if (!q) return null;
+
+  for (const zone of DELIVERY_ZONES) {
+    const names = [zone.city, ...zone.aliases].map(normalizeArea);
+    const hit = names.some((n) => q.includes(n) || n.includes(q));
+    if (hit) return { area: zone.city, info: zone.info, tier: zone.tier, min: LARGE_ORDER_MIN };
+  }
+  return null;
+}
 
 const GREETING_TONES = [
   { id: "romantic", label: "רומנטי" },
@@ -428,9 +488,3 @@ function categoryCardHTML(c) {
     </a>`;
 }
 
-function checkDeliveryArea(query) {
-  const q = (query || "").trim();
-  if (!q) return null;
-  const match = Object.keys(DELIVERY_AREAS).find((area) => area.includes(q) || q.includes(area));
-  return match ? { area: match, info: DELIVERY_AREAS[match] } : null;
-}

@@ -245,6 +245,116 @@ function regenerateGreeting() {
   if (activeTone) generateGreeting(activeTone, null);
 }
 
+/* ---------- העברת ההזמנה לוואטסאפ של החנות ----------
+   מכוון: פרטי כרטיס האשראי לא נכללים כאן ולעולם לא ייכללו.
+   כתובת wa.me היא URL — כל מה שנכנס אליה נשמר בהיסטוריית הדפדפן,
+   בשרתי וואטסאפ ובצ'אט של החנות. העברת מספר כרטיס בערוץ כזה היא
+   הפרת PCI-DSS וסיכון ממשי ללקוח. הסליקה תטופל בעתיד מול ספק מאושר. */
+let lastOrderMessage = "";
+
+/* ============================================================
+   התראת הזמנה במייל — רשת ביטחון למקרה שהלקוח לא לחץ "שלח" בוואטסאפ.
+   ------------------------------------------------------------
+   להפעלה (5 דקות, חינם, בלי כרטיס אשראי):
+     1. להיכנס ל-https://web3forms.com
+     2. להזין את כתובת המייל שאליה ההזמנות יגיעו וללחוץ "Create Access Key"
+     3. המפתח יישלח למייל — להדביק אותו כאן למטה
+   כתובת המייל עצמה נשמרת אצלם ולא נכנסת לקוד, כך שהיא לא נחשפת
+   בריפו הציבורי בגיטהאב.
+   שים לב: פרטי ההזמנה עוברים דרך שרתי web3forms. פרטי אשראי
+   לא נשלחים לשם, בדיוק כמו בוואטסאפ.
+   ============================================================ */
+const ORDER_EMAIL_KEY = ""; // ← הדביקו כאן את ה-Access Key
+
+async function sendOrderEmail(orderNum, message) {
+  if (!ORDER_EMAIL_KEY) return { ok: false, reason: "no-key" };
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: ORDER_EMAIL_KEY,
+        subject: `הזמנה חדשה ${orderNum} — פרחי איריס`,
+        from_name: "אתר פרחי איריס",
+        message,
+      }),
+    });
+    return { ok: res.ok, reason: res.ok ? "" : "http-" + res.status };
+  } catch (e) {
+    return { ok: false, reason: e.message };
+  }
+}
+
+function setMailStatus(text, kind) {
+  const el = document.getElementById("mailStatus");
+  if (!el) return;
+  el.textContent = text;
+  el.className = "mail-status " + (kind || "");
+}
+
+function val(id) {
+  return (document.getElementById(id)?.value || "").trim();
+}
+
+function buildOrderMessage(orderNum) {
+  const lines = cartLines();
+  const subtotal = cartTotal();
+  const discount = discountFor(subtotal);
+  const total = subtotal - discount;
+
+  const parts = [
+    "🌸 *הזמנה חדשה — פרחי איריס*",
+    `מספר הזמנה: ${orderNum}`,
+    "",
+    "*פרטי הלקוח*",
+    `👤 מזמין/ה: ${val("fName")}`,
+    `📞 טלפון: ${val("fPhone")}`,
+  ];
+
+  if (val("fRecipient")) parts.push(`🎁 מקבל/ת הזר: ${val("fRecipient")}`);
+  parts.push(`📍 כתובת: ${val("fAddress")}`);
+
+  const when = [val("fDate"), val("fTime")].filter(Boolean).join(" בשעה ");
+  if (when) parts.push(`📅 מועד הגעה: ${when}`);
+  if (val("fNote")) parts.push(`🚪 הערה לשליח: ${val("fNote")}`);
+
+  parts.push("", "*ההזמנה*");
+  lines.forEach((l) => {
+    parts.push(`• ${l.product.name} — ${l.sizeDef.label} (${stemLabel(l.product, l.size)}) × ${l.qty} = ₪${l.total}`);
+  });
+
+  parts.push("", `סכום ביניים: ₪${subtotal}`);
+  if (discount > 0) parts.push(`הנחת קופון ${appliedCoupon}: −₪${discount}`);
+  parts.push(`*סה"כ לתשלום: ₪${total}*`);
+
+  if (val("fGreeting")) {
+    parts.push("", "*ברכה להקדשה*", `"${val("fGreeting")}"`);
+  }
+
+  parts.push("", "_נשלח אוטומטית מאתר פרחי איריס. התשלום יתואם טלפונית — פרטי אשראי אינם מועברים בוואטסאפ._");
+  return parts.join("\n");
+}
+
+function whatsappOrderUrl() {
+  const number = typeof SHOP_WHATSAPP !== "undefined" ? SHOP_WHATSAPP : "972500000000";
+  return `https://wa.me/${number}?text=${encodeURIComponent(lastOrderMessage)}`;
+}
+
+function openOrderWhatsApp() {
+  if (!lastOrderMessage) return;
+  window.open(whatsappOrderUrl(), "_blank", "noopener");
+}
+
+function copyOrderMessage() {
+  navigator.clipboard?.writeText(lastOrderMessage).then(() => {
+    const el = document.getElementById("copyMsg");
+    if (el) {
+      el.textContent = "✓ פרטי ההזמנה הועתקו";
+      setTimeout(() => (el.textContent = ""), 2600);
+    }
+  });
+}
+
 /* ---------- שליחת ההזמנה (הדגמה) ---------- */
 function submitOrder() {
   if (!validateStep(1)) {
@@ -252,9 +362,26 @@ function submitOrder() {
     return;
   }
   const orderNum = "IRIS-DEMO-" + Math.floor(100000 + Math.random() * 900000);
+  lastOrderMessage = buildOrderMessage(orderNum);
+
   document.getElementById("orderNumber").textContent = orderNum;
   document.getElementById("formView").style.display = "none";
   document.getElementById("successView").style.display = "block";
+
+  // נפתח בתוך אותה לחיצה, אחרת חוסם החלונות הקופצים יעצור את זה
+  window.open(whatsappOrderUrl(), "_blank", "noopener");
+
+  // רשת ביטחון: מייל לחנות, גם אם הלקוח לא ילחץ "שלח" בוואטסאפ
+  if (ORDER_EMAIL_KEY) {
+    setMailStatus("שולח עותק לחנות…", "");
+    sendOrderEmail(orderNum, lastOrderMessage).then((r) => {
+      setMailStatus(
+        r.ok ? "✓ עותק ההזמנה נשלח לחנות במייל" : "לא הצלחנו לשלוח עותק במייל — אנא שלחו בוואטסאפ",
+        r.ok ? "ok" : "no"
+      );
+    });
+  }
+
   clearCart();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
