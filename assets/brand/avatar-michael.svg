@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="מיכאל — תמיכה טכנית">
+  <defs>
+    <radialGradient id="miBg" cx="50%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#2A6A92"/>
+      <stop offset="60%" stop-color="#17405A"/>
+      <stop offset="100%" stop-color="#0C1C28"/>
+    </radialGradient>
+    <linearGradient id="miHair" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#3A2A1E"/>
+      <stop offset="60%" stop-color="#241A12"/>
+      <stop offset="100%" stop-color="#150F0A"/>
+    </linearGradient>
+    <linearGradient id="miSkin" x1="30%" y1="10%" x2="70%" y2="95%">
+      <stop offset="0%" stop-color="#F2CFB2"/>
+      <stop offset="100%" stop-color="#D9AC86"/>
+    </linearGradient>
+    <linearGradient id="miSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7FBEDC"/>
+      <stop offset="50%" stop-color="#D6EEF9"/>
+      <stop offset="100%" stop-color="#4E90B4"/>
+    </linearGradient>
+    <clipPath id="miClip"><circle cx="60" cy="60" r="56"/></clipPath>
+  </defs>
+
+  <circle cx="60" cy="60" r="56" fill="url(#miBg)"/>
+
+  <g clip-path="url(#miClip)">
+    <!-- כתפיים -->
+    <path d="M16 120c3-22 20-33 44-33s41 11 44 33z" fill="#12303F"/>
+    <path d="M60 87c-9 0-15 4-15 4l15 29 15-29s-6-4-15-4z" fill="#1B4257"/>
+    <!-- צווארון -->
+    <path d="M52 88l8 10 8-10-8-4z" fill="#D6EEF9" opacity=".85"/>
+
+    <!-- צוואר -->
+    <path d="M52 75h16v13c0 5-16 5-16 0z" fill="#CFA079"/>
+
+    <!-- פנים -->
+    <ellipse cx="60" cy="57" rx="20" ry="23" fill="url(#miSkin)"/>
+
+    <!-- שיער קצר -->
+    <path d="M39 52c0-14 9-24 21-24s21 10 21 24c0-6-5-10-9-11-4 3-20 4-27 0-3 2-6 5-6 11z" fill="url(#miHair)"/>
+
+    <!-- גבות -->
+    <path d="M48 49c3-2 7-2 9 1" stroke="#2A1D12" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M63 50c2-3 6-3 9-1" stroke="#2A1D12" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+    <!-- עיניים -->
+    <ellipse cx="52.5" cy="57" rx="3" ry="3.3" fill="#26190F"/>
+    <ellipse cx="67.5" cy="57" rx="3" ry="3.3" fill="#26190F"/>
+    <circle cx="53.5" cy="56" r="1.1" fill="#fff" opacity=".9"/>
+    <circle cx="68.5" cy="56" r="1.1" fill="#fff" opacity=".9"/>
+
+    <!-- אף וחיוך -->
+    <path d="M60 59v5" stroke="#BF8F6B" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M54 69c3 3 9 3 12 0" stroke="#9E5147" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <!-- זקן קל -->
+    <path d="M46 63c1 10 7 16 14 16s13-6 14-16c-2 12-8 14-14 14s-12-2-14-14z" fill="#2A1D12" opacity=".2"/>
+
+    <!-- אוזניות תמיכה -->
+    <path d="M34 60v-4a26 26 0 0 1 52 0v4" stroke="url(#miSteel)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <rect x="28" y="56" width="10" height="17" rx="5" fill="url(#miSteel)"/>
+    <rect x="82" y="56" width="10" height="17" rx="5" fill="url(#miSteel)"/>
+    <!-- מיקרופון -->
+    <path d="M33 73c0 10 8 15 17 16" stroke="url(#miSteel)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="51" cy="89" r="3.4" fill="#D6EEF9"/>
+  </g>
+
+  <circle cx="60" cy="60" r="56" fill="none" stroke="url(#miSteel)" stroke-width="4"/>
+</svg>

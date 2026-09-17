@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="אגם — יועצת הזרים">
+  <defs>
+    <radialGradient id="agBg" cx="50%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#5B3A87"/>
+      <stop offset="60%" stop-color="#341B55"/>
+      <stop offset="100%" stop-color="#1C0B2E"/>
+    </radialGradient>
+    <linearGradient id="agHair" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4A2C18"/>
+      <stop offset="55%" stop-color="#2E1A0E"/>
+      <stop offset="100%" stop-color="#1A0E07"/>
+    </linearGradient>
+    <linearGradient id="agSkin" x1="30%" y1="10%" x2="70%" y2="95%">
+      <stop offset="0%" stop-color="#F6D8C0"/>
+      <stop offset="100%" stop-color="#E2B694"/>
+    </linearGradient>
+    <linearGradient id="agGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9C7C3C"/>
+      <stop offset="35%" stop-color="#E8D3A0"/>
+      <stop offset="70%" stop-color="#C5A059"/>
+      <stop offset="100%" stop-color="#8A6C33"/>
+    </linearGradient>
+    <clipPath id="agClip"><circle cx="60" cy="60" r="56"/></clipPath>
+  </defs>
+
+  <circle cx="60" cy="60" r="56" fill="url(#agBg)"/>
+
+  <g clip-path="url(#agClip)">
+    <!-- כתפיים -->
+    <path d="M18 120c3-21 19-32 42-32s39 11 42 32z" fill="#2A1342"/>
+    <path d="M60 88c-8 0-14 4-14 4l14 28 14-28s-6-4-14-4z" fill="#3D1F5C"/>
+
+    <!-- שיער אחורי -->
+    <path d="M28 62c0-23 14-38 32-38s32 15 32 38c0 16-3 27-6 34-2-14-1-28-4-36-10 5-34 6-44-2-3 9-4 24-4 38-4-8-6-19-6-34z" fill="url(#agHair)"/>
+
+    <!-- צוואר -->
+    <path d="M52 76h16v14c0 5-16 5-16 0z" fill="#D9A886"/>
+
+    <!-- פנים -->
+    <ellipse cx="60" cy="58" rx="20" ry="24" fill="url(#agSkin)"/>
+
+    <!-- גבות -->
+    <path d="M48 50c3-2 7-2 9 0" stroke="#3A2214" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M63 50c2-2 6-2 9 0" stroke="#3A2214" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- עיניים -->
+    <ellipse cx="52.5" cy="57" rx="3.1" ry="3.4" fill="#2E1A0E"/>
+    <ellipse cx="67.5" cy="57" rx="3.1" ry="3.4" fill="#2E1A0E"/>
+    <circle cx="53.5" cy="56" r="1.1" fill="#fff" opacity=".9"/>
+    <circle cx="68.5" cy="56" r="1.1" fill="#fff" opacity=".9"/>
+
+    <!-- אף וחיוך -->
+    <path d="M60 60v5" stroke="#C99574" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M54 70c3 3 9 3 12 0" stroke="#B4574F" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+    <!-- תלתלים קדמיים -->
+    <path d="M28 62c0-23 14-38 32-38 9 0 16 3 21 9-12-1-27 3-35 11-7 7-12 14-14 22-2-1-4-2-4-4z" fill="url(#agHair)"/>
+
+    <!-- פרח אירוס בשיער -->
+    <g transform="translate(84 40) scale(.92)">
+      <path d="M0 0c-3 5-5 9-1 15 4-6 4-10 1-15z" fill="#8E6BC8"/>
+      <path d="M-1 9c-6-2-11 0-11 6 5 2 9-1 11-6z" fill="#6E4BA8"/>
+      <path d="M1 9c6-2 11 0 11 6-5 2-9-1-11-6z" fill="#7C57B8"/>
+      <circle cx="0" cy="9" r="2.4" fill="url(#agGold)"/>
+    </g>
+  </g>
+
+  <circle cx="60" cy="60" r="56" fill="none" stroke="url(#agGold)" stroke-width="4"/>
+</svg>

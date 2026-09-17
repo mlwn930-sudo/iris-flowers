@@ -50,6 +50,10 @@
         <a href="catalog.html" class="btn btn-gold">לצפייה בקטלוג</a>
         <button class="btn btn-outline" onclick="toggleChat()">דברו עם אגם</button>
       </div>
+      <a href="#visit" class="hero-directions">
+        הוראות הגעה
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      </a>
       <div class="hero-tags">
         <div class="hero-tag"><strong>100%</strong><span>פרחים טריים</span></div>
         <div class="hero-tag"><strong>3 מידות</strong><span>קלאסי · מורחב · שופע</span></div>
@@ -60,22 +64,7 @@
   </div>
 </header>
 
-<div class="signature container">
-  <div class="signature-card">
-    <img class="sig-seal" src="assets/brand/logo-mark.png" alt="" />
-    <div>
-      <span class="tag">חתימת המותג</span>
-      <h3>זר האירוס הסגול</h3>
-      <p>הזר שעליו נבנה המותג — אירוסים סגולים טריים, נבחרים ביד כל בוקר.</p>
-    </div>
-    <div style="text-align:center">
-      <div class="signature-price">₪189</div>
-      <button class="btn btn-deep" style="margin-top:10px" onclick="openProductModal('iris-signature')">לצפייה והזמנה</button>
-    </div>
-  </div>
-</div>
-
-<section id="categories">
+<section id="categories" style="padding-top:64px">
   <div class="container">
     <div class="section-head">
       <img class="divider-mark" src="assets/brand/logo-mark.png" alt="" />
@@ -166,7 +155,7 @@
     <div class="help-grid">
       <div class="help-card">
         <div class="who">
-          <img src="assets/brand/logo-mark.png" alt="" />
+          <img src="assets/brand/avatar-agam.svg" alt="" />
           <div>
             <div class="role">ייעוץ ובחירת זר</div>
             <h4>אגם</h4>
@@ -184,7 +173,7 @@
 
       <div class="help-card support">
         <div class="who">
-          <span class="ico">🛠️</span>
+          <img src="assets/brand/avatar-michael.svg" alt="" />
           <div>
             <div class="role">תמיכה ומשלוחים</div>
             <h4>מיכאל</h4>
@@ -294,12 +283,13 @@
 </div>
 
 <button class="chat-launcher" onclick="toggleChat()" aria-label="פתח שיחה עם אגם">
-  <img src="assets/brand/logo-mark.png" alt="" />
+  <span class="agent-tip">עזרה בבחירת הזר</span>
+  <img src="assets/brand/avatar-agam.svg" alt="" />
   <span class="dot"></span>
 </button>
 <div class="chat-panel" id="chatPanel">
   <div class="chat-head">
-    <img class="avatar-seal" src="assets/brand/logo-mark.png" alt="" />
+    <img class="avatar-seal" src="assets/brand/avatar-agam.svg" alt="" />
     <div><h4>אגם</h4><span>יועצת הזרים שלנו · זמינה עכשיו</span></div>
     <button class="chat-close" onclick="toggleChat()" aria-label="סגור">✕</button>
   </div>
@@ -315,12 +305,13 @@
 </div>
 
 <button class="support-launcher" onclick="toggleSupport()" aria-label="פתח תמיכה עם מיכאל">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M20 13h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1z"/><path d="M19 19v1a2 2 0 0 1-2 2h-3"/></svg>
+  <span class="agent-tip">תמיכה</span>
+  <img src="assets/brand/avatar-michael.svg" alt="" />
   <span class="dot"></span>
 </button>
 <div class="support-panel" id="supportPanel">
   <div class="chat-head">
-    <span class="avatar-seal">🛠️</span>
+    <img class="avatar-seal" src="assets/brand/avatar-michael.svg" alt="" />
     <div><h4>מיכאל</h4><span>תמיכה טכנית ומשלוחים</span></div>
     <button class="chat-close" onclick="toggleSupport()" aria-label="סגור">✕</button>
   </div>

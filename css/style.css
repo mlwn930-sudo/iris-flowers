@@ -826,3 +826,35 @@ h1,h2,h3,h4,h5{color:var(--text-cream);}
 .mail-status{min-height:20px;margin-top:6px;font-size:.84rem;font-weight:600;color:var(--text-faint);}
 .mail-status.ok{color:#8FD9A8;}
 .mail-status.no{color:#F0A0AC;}
+
+/* ============================================================
+   כפתור "הוראות הגעה" בהירו + תוויות מעל הסוכנים + עצירת תנועת הלוגו
+   ============================================================ */
+.hero-directions{display:inline-flex;align-items:center;gap:8px;margin-top:26px;
+  color:var(--gold-soft);font-size:.9rem;font-weight:600;letter-spacing:.02em;
+  border-bottom:1px solid rgba(197,160,89,.4);padding-bottom:5px;transition:color .2s,border-color .2s;}
+.hero-directions:hover{color:#fff;border-color:var(--gold);}
+.hero-directions svg{width:16px;height:16px;animation:nudge 1.9s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* הסמל בהירו ובנאב נשאר יציב — בלי ריחוף ובלי סיבוב */
+.hero-mark{animation:none;}
+.brand:hover .brand-mark{transform:none;}
+.success-screen .seal{animation:none;}
+
+/* תוויות מעל עיגולי הסוכנים */
+.chat-launcher,.support-launcher{overflow:visible;}
+.agent-tip{position:absolute;bottom:calc(100% + 9px);white-space:nowrap;
+  font-family:'Frank Ruhl Libre',serif;font-size:.74rem;font-weight:600;letter-spacing:.03em;
+  padding:5px 13px;border-radius:999px;pointer-events:none;
+  background:rgba(18,7,32,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 6px 18px rgba(0,0,0,.4);}
+.chat-launcher .agent-tip{left:0;color:var(--gold-soft);border:1px solid rgba(197,160,89,.55);}
+.support-launcher .agent-tip{right:0;color:#BFE3F5;border:1px solid rgba(120,190,230,.5);background:rgba(12,28,40,.9);}
+.chat-launcher img,.support-launcher img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.chat-launcher,.support-launcher{padding:0;}
+.help-card .who img{object-fit:cover;background:none;}
+
+@media(max-width:620px){
+  .agent-tip{font-size:.66rem;padding:4px 10px;}
+}
