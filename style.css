@@ -170,7 +170,8 @@ section{padding:84px 0;}
 .pm-overlay.open .pm{transform:translateY(0) scale(1);}
 
 .pm-media{position:relative;background:var(--iris-night);overflow:hidden;min-height:420px;}
-.pm-media .pm-photo{width:100%;height:100%;object-fit:cover;}
+.pm-media .pm-photo{width:100%;height:100%;object-fit:cover;transition:opacity .22s ease,transform .5s ease;}
+.pm-media .pm-photo.fading{opacity:.15;transform:scale(1.015);}
 .pm-media::after{content:"";position:absolute;inset:0;border-inline-end:1px solid rgba(197,160,89,.35);background:linear-gradient(to top,rgba(18,7,32,.5),transparent 42%);pointer-events:none;}
 .pm-media .badge-stack{top:16px;right:16px;}
 .pm-seal{position:absolute;bottom:16px;inset-inline-start:16px;width:52px;height:52px;z-index:3;opacity:.95;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6));}
@@ -181,9 +182,10 @@ section{padding:84px 0;}
 
 .pm-tag{display:inline-block;align-self:flex-start;border:1px solid var(--gold);color:var(--gold-deep);font-weight:700;padding:3px 13px;border-radius:999px;font-size:.66rem;letter-spacing:.07em;margin-bottom:10px;}
 .pm-body h3{font-size:1.72rem;color:var(--iris-deep);line-height:1.25;margin-bottom:8px;}
-.pm-botanical{font-family:'Frank Ruhl Libre',serif;font-size:1rem;color:#5C5064;line-height:1.8;margin-bottom:6px;}
-.pm-stems{font-size:.82rem;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:7px;}
-.pm-stems b{color:var(--gold-deep);font-weight:700;}
+.pm-botanical{font-family:'Frank Ruhl Libre',serif;font-size:1rem;color:#5C5064;line-height:1.8;margin-bottom:18px;}
+
+/* דגל הגודל על גבי התמונה */
+.pm-size-flag{position:absolute;bottom:16px;inset-inline-end:16px;z-index:4;background:rgba(18,7,32,.8);backdrop-filter:blur(8px);border:1px solid rgba(197,160,89,.5);color:var(--gold-soft);font-size:.76rem;font-weight:700;padding:7px 15px;border-radius:999px;white-space:nowrap;}
 
 .pm-price-row{display:flex;align-items:baseline;gap:10px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:20px;}
 .pm-price{font-family:'Frank Ruhl Libre',serif;font-size:2.1rem;font-weight:700;color:var(--iris-deep);transition:opacity .18s;}
@@ -192,13 +194,33 @@ section{padding:84px 0;}
 
 .size-label{font-size:.74rem;font-weight:700;letter-spacing:.06em;color:var(--muted);margin-bottom:9px;text-transform:uppercase;}
 .size-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:8px;}
-.size-opt{border:1px solid var(--input-line);border-radius:11px;padding:11px 8px;text-align:center;transition:all .22s;background:#fff;}
-.size-opt:hover{border-color:var(--gold);}
+.size-opt{border:1px solid var(--input-line);border-radius:11px;padding:10px 8px;text-align:center;transition:all .22s;background:#fff;}
+.size-opt:hover{border-color:var(--gold);transform:translateY(-2px);}
 .size-opt .s-name{font-weight:700;font-size:.9rem;color:var(--iris-deep);display:block;}
-.size-opt .s-price{font-size:.78rem;color:var(--muted);display:block;margin-top:2px;}
+.size-opt .s-stems{font-size:.68rem;color:var(--muted);display:block;margin-top:1px;}
+.size-opt .s-price{font-size:.82rem;color:var(--muted);display:block;margin-top:3px;font-weight:600;}
 .size-opt.active{border-color:var(--gold);background:rgba(197,160,89,.1);box-shadow:inset 0 0 0 1px var(--gold);}
-.size-opt.active .s-price{color:var(--gold-deep);font-weight:600;}
-.size-note{font-size:.8rem;color:var(--muted);min-height:34px;margin-bottom:18px;line-height:1.5;}
+.size-opt.active .s-price{color:var(--gold-deep);}
+.size-opt.active .s-stems{color:var(--gold-deep);}
+.size-note{font-size:.8rem;color:var(--muted);min-height:34px;margin-bottom:16px;line-height:1.5;}
+
+/* ---------- פירוט ההרכב ---------- */
+.comp-card{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px 16px;margin-bottom:20px;}
+.comp-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--line);}
+.comp-head>span:first-child{font-size:.76rem;font-weight:700;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;}
+.comp-total{font-size:.82rem;font-weight:700;color:var(--gold-deep);white-space:nowrap;}
+.comp-list{list-style:none;display:flex;flex-direction:column;}
+.comp-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem;}
+.comp-list li:last-child{border-bottom:none;padding-bottom:0;}
+.comp-list .c-name{color:#5C5064;display:flex;align-items:center;gap:9px;}
+.comp-list .c-name::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.7;flex-shrink:0;}
+.comp-list .c-qty{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:1rem;color:var(--iris-deep);background:var(--iris-soft);border-radius:8px;min-width:34px;text-align:center;padding:1px 8px;}
+.comp-list.pop li{animation:compIn .32s ease backwards;}
+.comp-list.pop li:nth-child(2){animation-delay:.04s;}
+.comp-list.pop li:nth-child(3){animation-delay:.08s;}
+.comp-list.pop li:nth-child(4){animation-delay:.12s;}
+.comp-list.pop li:nth-child(5){animation-delay:.16s;}
+@keyframes compIn{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:none;}}
 
 .pm-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;}
 .pm-tab{padding:10px 15px;font-size:.84rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}

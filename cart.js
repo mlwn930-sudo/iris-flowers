@@ -133,10 +133,10 @@ function renderCartDrawer() {
       .map(
         (l) => `
       <div class="cart-row">
-        <div class="thumb"><img src="${l.product.img}" alt="${esc(l.product.name)}" /></div>
+        <div class="thumb"><img src="${imageFor(l.product, l.size)}" onerror="this.onerror=null;this.src='${l.product.img}'" alt="${esc(l.product.name)}" /></div>
         <div class="info">
           <h5>${esc(l.product.name)}</h5>
-          <span class="size-chip">${esc(l.sizeDef.label)} · ₪${l.unit}</span>
+          <span class="size-chip">${esc(l.sizeDef.label)} · ${esc(stemLabel(l.product, l.size))} · ₪${l.unit}</span>
           <div class="qty">
             <button onclick="setLineQty('${l.id}','${l.size}',${l.qty - 1});renderCartDrawer();" aria-label="הפחת">−</button>
             <span>${l.qty}</span>
