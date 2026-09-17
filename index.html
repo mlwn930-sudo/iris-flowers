@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>פרחי איריס — חנות פרחים בוטיקית בקריית אתא</title>
+<meta name="description" content="פרחי איריס — זרים סגולים בהשראת פרח האירוס, משלוחים בקריית אתא ומפרץ חיפה, וסוכנת AI שמלווה אתכם בבחירה." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#4B2E83"/><path d="M50 55C50 55 20 52 10 38C5 30 9 21 18 19C27 17 35 24 40 34C44 42 50 55 50 55Z" fill="#7C4DBE"/><path d="M50 55C50 55 80 52 90 38C95 30 91 21 82 19C73 17 65 24 60 34C56 42 50 55 50 55Z" fill="#7C4DBE"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#C9A24B"/></svg>
+      פרחי איריס
+    </a>
+    <div class="nav-links">
+      <a href="index.html">בית</a>
+      <a href="catalog.html">המוצרים שלנו</a>
+      <a href="about.html">אודות המותג</a>
+      <a href="policy.html">מדיניות ואספקת משלוחים</a>
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        🛒 עגלה <span class="cart-badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-text">
+      <div class="hero-eyebrow"><span class="dot"></span> בוטיק פרחים · קריית אתא</div>
+      <h1>פרחים שמדברים<br>בשפה של <em>איריס</em></h1>
+      <p>כל זר שיוצא מהחנות שלנו נבנה ביד, פרח פרח, עם אותה סגולת-אירוס שנתנה לנו את השם. משלוחים באזור קריית אתא ומפרץ חיפה.</p>
+      <div class="hero-ctas">
+        <a href="catalog.html" class="btn btn-gold">לצפייה בקטלוג 🌸</a>
+        <button class="btn btn-outline" onclick="toggleChat()">דברו עם מיכל, הסוכנת שלנו</button>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="hero-emblem hero-emblem-standalone" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="פרחי איריס - לוגו">
+        <circle cx="100" cy="100" r="94" fill="#241834"/>
+        <circle cx="100" cy="100" r="86" fill="none" stroke="#AE8A3F" stroke-width="3"/>
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#AE8A3F" stroke-width="1"/>
+        <g transform="translate(72,44) scale(0.56)">
+          <path d="M50 62C50 62 22 58 12 42C7 33 12 23 22 21C32 19 40 27 45 38C48 46 50 62 50 62Z" fill="#C9B8DE"/>
+          <path d="M50 62C50 62 78 58 88 42C93 33 88 23 78 21C68 19 60 27 55 38C52 46 50 62 50 62Z" fill="#C9B8DE"/>
+          <path d="M50 62C50 62 33 44 34 24C35 12 43 5 50 5C57 5 65 12 66 24C67 44 50 62 50 62Z" fill="#EDE0F7"/>
+          <circle cx="50" cy="60" r="5" fill="#AE8A3F"/>
+        </g>
+        <text x="100" y="132" text-anchor="middle" font-family="'Frank Ruhl Libre',serif" font-size="26" font-weight="700" fill="#fff">פרחי איריס</text>
+        <text x="100" y="152" text-anchor="middle" font-family="'Assistant',sans-serif" font-size="11" letter-spacing="1" fill="#AE8A3F">בוטיק פרחים · קריית אתא</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="signature container">
+  <div class="signature-card">
+    <div>
+      <span class="tag">חתימת פרחי איריס</span>
+      <h3>זר האירוס הסגול</h3>
+      <p>הזר שעליו נבנה המותג — אירוסים סגולים טריים, נבחרים ביד כל בוקר.</p>
+    </div>
+    <div style="text-align:center">
+      <div class="signature-price">₪189</div>
+      <a href="catalog.html#signature" class="btn btn-deep" style="margin-top:10px;display:inline-flex">להזמנה</a>
+    </div>
+  </div>
+</div>
+
+<section id="categories">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">מה מחפשים?</span>
+      <h2>קטגוריות פופולריות</h2>
+      <p>מזרי חתימה ועד עציצים — כל קטגוריה נבחרה בקפידה</p>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="delivery-checker">
+      <div class="dc-icon">🚚</div>
+      <div class="dc-text">
+        <h4>בודקים אזור חלוקה</h4>
+        <p>הקלידו את העיר או היישוב שלכם ותקבלו אישור מיידי על זמני המשלוח</p>
+      </div>
+      <form class="delivery-form" onsubmit="handleDeliveryCheck(event)">
+        <input type="text" id="dcInput" placeholder="לדוגמה: קריית אתא, חיפה, נשר..." />
+        <button type="submit" class="btn btn-deep">בדיקת זמינות</button>
+      </form>
+      <div class="dc-result" id="dcResult"></div>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="container">
+    <div class="story-art">
+      <svg viewBox="0 0 200 200" fill="none">
+        <path d="M100 120C100 120 76 96 76 66C76 50 87 40 100 40C113 40 124 50 124 66C124 96 100 120 100 120Z" fill="#7C4DBE"/>
+        <path d="M100 120C100 120 55 116 40 92C33 80 39 66 53 63C67 60 78 71 85 86C90 98 100 120 100 120Z" fill="#D9C2F5"/>
+        <path d="M100 120C100 120 145 116 160 92C167 80 161 66 147 63C133 60 122 71 115 86C110 98 100 120 100 120Z" fill="#D9C2F5"/>
+        <path d="M100 120C100 120 92 150 100 174C106 156 108 138 100 120Z" fill="#C9A24B"/>
+      </svg>
+    </div>
+    <div class="story-text">
+      <span class="kicker">הסיפור שלנו</span>
+      <h2>מקריית אתא, באהבה</h2>
+      <p>פרחי איריס נולד מתוך אהבה לפרח האירוס — הסגולת שמופיעה כמעט בכל זר שאנחנו מרכיבים. אנחנו חנות שכונתית עם לב גדול: כל הזמנה מתקבלת באופן אישי, וכל זר נבנה ידנית לפי ההזמנה.</p>
+      <p>אנחנו מאמינים שפרחים הם דרך להגיד מה שקשה לומר במילים — וכל זר שיוצא מהדלת שלנו נושא את זה איתו.</p>
+      <div class="story-badges">
+        <div><strong>100%</strong><span>פרחים טריים</span></div>
+        <div><strong>24/7</strong><span>סוכנת AI זמינה</span></div>
+        <div><strong>מקומי</strong><span>קריית אתא ומפרץ חיפה</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">הכי אהובים</span>
+      <h2>זרים נבחרים</h2>
+      <p>טעימה מהקטלוג המלא שלנו</p>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="catalog.html" class="btn btn-deep">לכל הקטלוג 🌸</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="concierge">
+      <div class="container">
+        <div>
+          <h2>יש לך שאלה? מיכל כאן בשבילך</h2>
+          <p>הסוכנת הדיגיטלית שלנו זמינה 24/7 — עוזרת לבחור זר מתאים, עונה על שאלות משלוח, ומלווה אתכם עד ההזמנה.</p>
+          <button class="btn btn-gold" style="margin-top:22px" onclick="toggleChat()">התחילו שיחה עם מיכל</button>
+        </div>
+        <div class="concierge-bubble">
+          <div class="who"><span class="avatar">מ</span> מיכל · פרחי איריס</div>
+          <p style="opacity:.9;font-size:.9rem">"היי 🌸 מחפשים משהו לאירוע מיוחד, או סתם רוצים להפתיע מישהו? ספרו לי ואני אמליץ בדיוק על הזר הנכון."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#D9C2F5"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#C9A24B"/></svg>
+          פרחי איריס
+        </div>
+        <p style="opacity:.75;max-width:280px">חנות פרחים בוטיקית בקריית אתא. זרים טריים, עיצוב אישי, ומשלוחים לכל האזור.</p>
+      </div>
+      <div>
+        <h5>ניווט</h5>
+        <ul>
+          <li><a href="index.html">בית</a></li>
+          <li><a href="catalog.html">המוצרים שלנו</a></li>
+          <li><a href="about.html">אודות המותג</a></li>
+          <li><a href="policy.html">מדיניות ואספקת משלוחים</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>קטגוריות</h5>
+        <ul>
+          <li><a href="catalog.html#signature">אירוסים</a></li>
+          <li><a href="catalog.html#roses">ורדים</a></li>
+          <li><a href="catalog.html#events">אירועים</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>יצירת קשר</h5>
+        <ul>
+          <li>📍 קריית אתא (כתובת מדויקת — להשלמה)</li>
+          <li>📞 טלפון — להשלמה</li>
+          <li>🕒 שעות פתיחה — להשלמה</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — כל התוכן לצורכי מצגת</div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <a href="checkout.html" class="btn btn-deep" style="width:100%;justify-content:center">מעבר לתשלום</a>
+  </div>
+</div>
+
+<!-- Chat Widget -->
+<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט עם מיכל">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.75c0 2.62 1.36 4.96 3.5 6.53V22l4.02-2.2c.8.15 1.62.23 2.48.23 5.52 0 10-3.94 10-8.75S17.52 2 12 2z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="avatar">מ</div>
+    <div><h4>מיכל</h4><span>הסוכנת הדיגיטלית · פרחי איריס</span></div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <form class="chat-input-row" onsubmit="sendChat(event)">
+    <input type="text" id="chatInput" placeholder="כתבו הודעה..." autocomplete="off" />
+    <button type="submit" aria-label="שלח"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </form>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/chat-widget.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  document.getElementById("catGrid").innerHTML = CATEGORIES.map(categoryCardHTML).join("");
+  document.getElementById("featuredGrid").innerHTML = PRODUCTS.slice(0,4).map(productCardHTML).join("");
+
+  function handleDeliveryCheck(e) {
+    e.preventDefault();
+    const val = document.getElementById("dcInput").value;
+    const result = document.getElementById("dcResult");
+    const found = checkDeliveryArea(val);
+    if (found) {
+      result.className = "dc-result ok";
+      result.textContent = `מעולה! אנחנו מגיעים ל${found.area} — ${found.info} 🌸`;
+    } else {
+      result.className = "dc-result no";
+      result.textContent = "האזור הזה לא מופיע ברשימת המשלוחים הרגילה שלנו — צרו קשר טלפוני ונבדוק אפשרות מיוחדת.";
+    }
+  }
+
+  updateCartBadge();
+</script>
+</body>
+</html>

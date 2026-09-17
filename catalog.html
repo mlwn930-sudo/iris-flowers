@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>הקטלוג שלנו — פרחי איריס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#4B2E83"/><path d="M50 55C50 55 20 52 10 38C5 30 9 21 18 19C27 17 35 24 40 34C44 42 50 55 50 55Z" fill="#7C4DBE"/><path d="M50 55C50 55 80 52 90 38C95 30 91 21 82 19C73 17 65 24 60 34C56 42 50 55 50 55Z" fill="#7C4DBE"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#C9A24B"/></svg>
+      פרחי איריס
+    </a>
+    <div class="nav-links">
+      <a href="index.html">בית</a>
+      <a href="catalog.html">המוצרים שלנו</a>
+      <a href="about.html">אודות המותג</a>
+      <a href="policy.html">מדיניות ואספקת משלוחים</a>
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        🛒 עגלה <span class="cart-badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<section style="padding-top:60px">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">הקטלוג המלא</span>
+      <h2>כל הזרים שלנו</h2>
+      <p>מזר האירוס הסגול — חתימת המותג — ועד עציצים לבית</p>
+    </div>
+    <div class="cat-filters" id="catFilters"></div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — כל התוכן לצורכי מצגת</div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <a href="checkout.html" class="btn btn-deep" style="width:100%;justify-content:center">מעבר לתשלום</a>
+  </div>
+</div>
+
+<!-- Chat Widget -->
+<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט עם מיכל">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.75c0 2.62 1.36 4.96 3.5 6.53V22l4.02-2.2c.8.15 1.62.23 2.48.23 5.52 0 10-3.94 10-8.75S17.52 2 12 2z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="avatar">מ</div>
+    <div><h4>מיכל</h4><span>הסוכנת הדיגיטלית · פרחי איריס</span></div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <form class="chat-input-row" onsubmit="sendChat(event)">
+    <input type="text" id="chatInput" placeholder="כתבו הודעה..." autocomplete="off" />
+    <button type="submit" aria-label="שלח"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </form>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/chat-widget.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  let activeCat = (location.hash || "").replace("#","") || "all";
+
+  function renderFilters() {
+    const all = [{id:"all", name:"הכל"}, ...CATEGORIES];
+    document.getElementById("catFilters").innerHTML = all.map(c => `
+      <button class="${activeCat===c.id?'active':''}" onclick="setFilter('${c.id}')">${c.name}</button>
+    `).join("");
+  }
+
+  function renderProducts() {
+    const list = activeCat === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCat);
+    document.getElementById("productGrid").innerHTML = list.map(productCardHTML).join("");
+  }
+
+  function setFilter(id) {
+    activeCat = id;
+    history.replaceState(null, "", id === "all" ? "catalog.html" : `catalog.html#${id}`);
+    renderFilters();
+    renderProducts();
+  }
+
+  renderFilters();
+  renderProducts();
+  updateCartBadge();
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>אודות המותג — פרחי איריס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#2C1B47"/><path d="M50 55C50 55 20 52 10 38C5 30 9 21 18 19C27 17 35 24 40 34C44 42 50 55 50 55Z" fill="#5B3A87"/><path d="M50 55C50 55 80 52 90 38C95 30 91 21 82 19C73 17 65 24 60 34C56 42 50 55 50 55Z" fill="#5B3A87"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#AE8A3F"/></svg>
+      פרחי איריס
+    </a>
+    <div class="nav-links">
+      <a href="index.html">בית</a>
+      <a href="catalog.html">המוצרים שלנו</a>
+      <a href="about.html">אודות המותג</a>
+      <a href="policy.html">מדיניות ואספקת משלוחים</a>
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        🛒 עגלה <span class="cart-badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:70px 0 100px">
+  <div class="container" style="justify-content:center;text-align:center">
+    <div class="hero-text" style="flex:none;max-width:700px;margin:0 auto">
+      <div class="hero-eyebrow" style="margin-inline:auto"><span class="dot"></span> הסיפור שלנו</div>
+      <h1 style="font-size:2.6rem">מקריית אתא, <em>באהבה</em></h1>
+      <p style="margin-inline:auto">איך פרח קטן הפך למותג — ולמה אנחנו עדיין מרכיבים כל זר ביד, אחד אחד.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container" style="max-width:820px">
+    <div class="panel" style="padding:44px">
+      <h3 style="margin-bottom:16px">איך הכל התחיל</h3>
+      <p style="color:#5b4f6e;margin-bottom:16px">פרחי איריס נולד מתוך אהבה לפרח האירוס הסגול — הפרח שנתן למותג את השם, ואת הצבע שמלווה כל זר שיוצא מהחנות. התחלנו כחנות שכונתית קטנה בקריית אתא, מתוך רצון אחד פשוט: לגרום לאנשים להרגיש משהו כשהם מקבלים זר פרחים.</p>
+      <p style="color:#5b4f6e;margin-bottom:16px">היום אנחנו משרתים את כל אזור קריית אתא ומפרץ חיפה, אבל הגישה נשארה אותו דבר — כל הזמנה מתקבלת באופן אישי, וכל זר נבנה ביד, פרח אחר פרח, לפי ההזמנה הספציפית שלכם.</p>
+      <h3 style="margin:32px 0 16px">למה אירוס?</h3>
+      <p style="color:#5b4f6e;margin-bottom:16px">האירוס הוא פרח שמסמל אמונה, תקווה ותקשורת — בדיוק מה שאנחנו רוצים שכל זר יעביר. זר האירוס הסגול הוא חתימת המותג שלנו, ומככב כמעט בכל שילוב שאנחנו מרכיבים.</p>
+      <div class="story-badges" style="margin-top:30px">
+        <div><strong>100%</strong><span>פרחים טריים</span></div>
+        <div><strong>24/7</strong><span>סוכנת AI זמינה</span></div>
+        <div><strong>מקומי</strong><span>קריית אתא ומפרץ חיפה</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="concierge">
+      <div class="container">
+        <div>
+          <h2>רוצים להכיר אותנו יותר?</h2>
+          <p>מיכל, הסוכנת הדיגיטלית שלנו, תשמח לספר עוד על המותג, הערכים שלנו, ולעזור לכם למצוא את הזר המושלם.</p>
+          <button class="btn btn-gold" style="margin-top:22px" onclick="toggleChat()">דברו עם מיכל</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#C9B8DE"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#AE8A3F"/></svg>
+          פרחי איריס
+        </div>
+        <p style="opacity:.75;max-width:280px">חנות פרחים בוטיקית בקריית אתא. זרים טריים, עיצוב אישי, ומשלוחים לכל האזור.</p>
+      </div>
+      <div>
+        <h5>ניווט</h5>
+        <ul>
+          <li><a href="index.html">בית</a></li>
+          <li><a href="catalog.html">המוצרים שלנו</a></li>
+          <li><a href="about.html">אודות המותג</a></li>
+          <li><a href="policy.html">מדיניות ואספקת משלוחים</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>קטגוריות</h5>
+        <ul>
+          <li><a href="catalog.html#signature">אירוסים</a></li>
+          <li><a href="catalog.html#roses">ורדים</a></li>
+          <li><a href="catalog.html#events">אירועים</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>יצירת קשר</h5>
+        <ul>
+          <li>📍 קריית אתא (כתובת מדויקת — להשלמה)</li>
+          <li>📞 טלפון — להשלמה</li>
+          <li>🕒 שעות פתיחה — להשלמה</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — כל התוכן לצורכי מצגת</div>
+  </div>
+</footer>
+
+<div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <a href="checkout.html" class="btn btn-deep" style="width:100%;justify-content:center">מעבר לתשלום</a>
+  </div>
+</div>
+
+<button class="chat-launcher" onclick="toggleChat()" aria-label="פתח צ'אט עם מיכל">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.75c0 2.62 1.36 4.96 3.5 6.53V22l4.02-2.2c.8.15 1.62.23 2.48.23 5.52 0 10-3.94 10-8.75S17.52 2 12 2z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="avatar">מ</div>
+    <div><h4>מיכל</h4><span>הסוכנת הדיגיטלית · פרחי איריס</span></div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <form class="chat-input-row" onsubmit="sendChat(event)">
+    <input type="text" id="chatInput" placeholder="כתבו הודעה..." autocomplete="off" />
+    <button type="submit" aria-label="שלח"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </form>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/chat-widget.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  updateCartBadge();
+</script>
+</body>
+</html>

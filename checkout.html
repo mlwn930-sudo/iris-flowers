@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>השלמת הזמנה — פרחי איריס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 100 100" fill="none"><path d="M50 55C50 55 35 40 35 22C35 12 42 6 50 6C58 6 65 12 65 22C65 40 50 55 50 55Z" fill="#2C1B47"/><path d="M50 55C50 55 45 75 50 92C53 82 55 68 50 55Z" fill="#AE8A3F"/></svg>
+      פרחי איריס
+    </a>
+    <div class="nav-links"><a href="catalog.html">חזרה לקטלוג</a></div>
+    <div class="nav-actions"></div>
+  </div>
+</nav>
+
+<section style="padding-top:50px">
+  <div class="container" id="checkoutContainer">
+
+    <div id="formView">
+      <div class="checkout-progress" id="progressBar"></div>
+
+      <!-- STEP 1 -->
+      <div class="step-panel active" id="step1">
+        <div class="checkout-wrap">
+          <div class="panel">
+            <h3>פרטי משלוח ויעד</h3>
+            <div class="field-row">
+              <div class="field"><label>שם המזמין/ה</label><input type="text" id="fName" placeholder="ישראל ישראלי" required /></div>
+              <div class="field"><label>טלפון</label><input type="tel" id="fPhone" placeholder="050-0000000" required /></div>
+            </div>
+            <div class="field"><label>שם מקבל/ת הזר</label><input type="text" id="fRecipient" placeholder="למי זה מגיע?" /></div>
+            <div class="field"><label>כתובת למשלוח</label><input type="text" id="fAddress" placeholder="רחוב, מספר בית, קריית אתא" required /></div>
+            <div class="field-row">
+              <div class="field"><label>תאריך הגעה</label><input type="date" id="fDate" required /></div>
+              <div class="field"><label>שעת הגעה משוערת</label><input type="time" id="fTime" /></div>
+            </div>
+            <button class="btn btn-deep" style="width:100%;justify-content:center;margin-top:10px" onclick="goStep(2)">להמשך — כתיבת ברכה</button>
+          </div>
+          <div class="panel">
+            <h3>סיכום הזמנה</h3>
+            <div id="orderLines1"></div>
+            <div class="order-total"><span>סה"כ</span><span id="orderTotal1">₪0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-panel" id="step2">
+        <div class="checkout-wrap">
+          <div class="panel">
+            <h3>עיצוב ברכה והקדשה</h3>
+            <p style="color:#6b5f7a;font-size:.88rem;margin-bottom:16px">בחרו טון, ומיכל תכתוב עבורכם ברכה מוכנה — אפשר גם לערוך אותה בעצמכם.</p>
+            <div class="tone-buttons" id="toneButtons"></div>
+            <div class="greeting-card">
+              <textarea id="fGreeting" placeholder="כתבו כאן את הברכה שלכם, או בחרו טון למעלה..."></textarea>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-outline" style="color:var(--iris-deep);border-color:var(--iris-deep)" onclick="goStep(1)">חזרה</button>
+              <button class="btn btn-deep" onclick="goStep(3)">להמשך — תשלום</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>סיכום הזמנה</h3>
+            <div id="orderLines2"></div>
+            <div class="order-total"><span>סה"כ</span><span id="orderTotal2">₪0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-panel" id="step3">
+        <div class="checkout-wrap">
+          <div class="panel">
+            <div class="demo-flag">⚠️ מצב הדגמה — לא יבוצע חיוב אמיתי בכרטיס האשראי.</div>
+            <h3>פרטי תשלום</h3>
+            <div class="field"><label>מספר כרטיס</label><input type="text" id="fCard" placeholder="4580 0000 0000 0000" maxlength="19" /></div>
+            <div class="field-row">
+              <div class="field"><label>תוקף</label><input type="text" id="fExp" placeholder="MM/YY" maxlength="5" /></div>
+              <div class="field"><label>CVV</label><input type="text" id="fCvv" placeholder="123" maxlength="3" /></div>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-outline" style="color:var(--iris-deep);border-color:var(--iris-deep)" onclick="goStep(2)">חזרה</button>
+              <button class="btn btn-deep" style="flex:1;justify-content:center" onclick="submitOrder()">בצע הזמנה (דמו) — <span id="payTotal">₪0</span></button>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>סיכום סופי</h3>
+            <div id="orderLines3"></div>
+            <div class="order-total"><span>סה"כ לתשלום</span><span id="orderTotal3">₪0</span></div>
+            <p id="greetingPreview" style="margin-top:16px;font-size:.85rem;color:#6b5f7a;display:none"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="successView" class="panel success-screen" style="display:none">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>ההזמנה התקבלה! 🌸</h2>
+      <p>מספר הזמנה (הדגמה): <strong id="orderNumber"></strong></p>
+      <p>זהו אתר הדגמה — לא בוצע חיוב אמיתי.</p>
+      <a href="catalog.html" class="btn btn-deep" style="margin-top:24px;display:inline-flex">חזרה לקטלוג</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">© <span id="year"></span> פרחי איריס · אתר הדגמה — כל התוכן לצורכי מצגת</div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>
