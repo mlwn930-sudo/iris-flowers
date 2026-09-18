@@ -4,11 +4,25 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>השלמת הזמנה — פרחי איריס</title>
+<meta name="theme-color" content="#070011" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="פרחי איריס" />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:title" content="השלמת הזמנה — פרחי איריס" />
+<meta property="og:description" content="עוד כמה פרטים והזר בדרך אליכם." />
+<meta property="og:image" content="https://example.com/assets/brand/logo-hero.jpg" />
+<meta property="og:url" content="https://example.com/checkout.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="השלמת הזמנה — פרחי איריס" />
+<meta name="twitter:description" content="עוד כמה פרטים והזר בדרך אליכם." />
+<meta name="twitter:image" content="https://example.com/assets/brand/logo-hero.jpg" />
 <link rel="icon" href="assets/brand/favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/aurora.css" />
+<link rel="stylesheet" href="css/a11y.css" />
 </head>
 <body class="checkout-page">
 
@@ -30,7 +44,7 @@
   </div>
 </nav>
 
-<main>
+<main id="mainContent">
 <section style="padding:46px 0 64px">
   <div class="container">
 
@@ -69,6 +83,26 @@
             <div class="regen-row" id="regenRow" style="display:none">
               <button class="regen-btn" onclick="regenerateGreeting()">↻ נסח לי ניסוח אחר</button>
             </div>
+
+            <!-- ============================================================
+                 שליחה אנונימית — הרבה זרים נשלחים בלי חשיפת השולח.
+                 ============================================================ -->
+            <div class="switch-row">
+              <span class="txt">
+                <b>שליחה אנונימית</b>
+                <small id="anonNote">כברירת מחדל שם השולח מופיע על כרטיס הברכה.</small>
+              </span>
+              <button type="button" class="switch" id="anonSwitch" role="switch" aria-checked="false"
+                      aria-label="שליחה אנונימית — ללא חשיפת שם השולח" onclick="toggleAnonymous()"></button>
+            </div>
+
+            <!-- ============================================================
+                 תוספות לזר — נבחרות אחרי הברכה ולפני התשלום.
+                 ============================================================ -->
+            <h3 style="margin-top:30px;font-size:1.05rem">רוצים לצרף משהו לזר?</h3>
+            <p class="sub">אפשר גם בלי — הזר מושלם גם לבד</p>
+            <div class="addons" id="addonsBox" role="group" aria-label="תוספות לזר"></div>
+
             <div class="step-nav">
               <button class="btn btn-ghost" onclick="goStep(1)">חזרה</button>
               <button class="btn btn-deep" onclick="goStep(3)">להמשך — תשלום</button>
@@ -106,8 +140,11 @@
             <div class="coupon-msg" id="couponMsg"></div>
           </div>
 
+          <div id="orderAddons"></div>
           <div class="order-sub" id="orderSubtotal"></div>
           <div class="order-sub discount" id="orderDiscount" style="display:none"></div>
+          <div class="order-sub" id="orderShipping"></div>
+          <div class="cart-progress"><div class="label" id="shipHint"></div></div>
 
           <div class="order-total">
             <span>סה"כ לתשלום</span>
@@ -117,7 +154,8 @@
           <div class="aside-note">
             משלוחים באזור קריית אתא ומפרץ חיפה.<br>
             הזמנה עד 14:00 — משלוח באותו יום.<br>
-            ניתן לבטל או לשנות עד 3 שעות לפני מועד המשלוח.
+            ניתן לבטל או לשנות עד 3 שעות לפני מועד המשלוח.<br>
+            דמי משלוח ₪29 · חינם בהזמנה מעל ₪250.
           </div>
         </aside>
       </div>
@@ -219,9 +257,11 @@
     מעבר לשיחה אישית ב-WhatsApp
   </button>
 </div>
+<script src="js/a11y.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/chat-widget.js"></script>
 <script src="js/checkout.js"></script>
+<script src="js/enhance.js"></script>
 </body>
 </html>

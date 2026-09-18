@@ -14,6 +14,63 @@ const COUPONS = {
 
 let appliedCoupon = null;
 
+/* ============================================================
+   תוספות לזר + שליחה אנונימית
+   ============================================================ */
+const selectedAddons = new Set();
+let anonymousGift = false;
+
+function addonsTotal() {
+  let sum = 0;
+  selectedAddons.forEach((id) => {
+    const a = findAddon(id);
+    if (a) sum += a.price;
+  });
+  return sum;
+}
+
+function renderAddons() {
+  const box = document.getElementById("addonsBox");
+  if (!box) return;
+  box.innerHTML = ADDONS.map(
+    (a) => `
+    <button type="button" class="addon ${selectedAddons.has(a.id) ? "on" : ""}"
+            role="checkbox" aria-checked="${selectedAddons.has(a.id)}"
+            onclick="toggleAddon('${a.id}')">
+      <span class="emo" aria-hidden="true">${a.emo}</span>
+      <span class="txt"><b>${esc(a.name)}</b><small>${esc(a.note)}</small></span>
+      <span class="amt">+₪${a.price}</span>
+      <span class="tick" aria-hidden="true">✓</span>
+    </button>`
+  ).join("");
+}
+
+function toggleAddon(id) {
+  if (selectedAddons.has(id)) selectedAddons.delete(id);
+  else selectedAddons.add(id);
+  renderAddons();
+  renderOrderSummary();
+  const a = findAddon(id);
+  if (a && typeof announce === "function") {
+    announce(selectedAddons.has(id) ? `${a.name} נוסף להזמנה` : `${a.name} הוסר מההזמנה`);
+  }
+}
+
+function toggleAnonymous() {
+  anonymousGift = !anonymousGift;
+  const sw = document.getElementById("anonSwitch");
+  if (sw) sw.setAttribute("aria-checked", anonymousGift ? "true" : "false");
+  const note = document.getElementById("anonNote");
+  if (note) {
+    note.textContent = anonymousGift
+      ? "השם שלך לא יופיע על הכרטיס, והשליח לא יחשוף מי שלח. ניצור איתך קשר רק אם יש בעיה במסירה."
+      : "כברירת מחדל שם השולח מופיע על כרטיס הברכה.";
+  }
+  if (typeof announce === "function") {
+    announce(anonymousGift ? "שליחה אנונימית הופעלה" : "שליחה אנונימית כובתה");
+  }
+}
+
 function discountFor(subtotal) {
   if (!appliedCoupon) return 0;
   const c = COUPONS[appliedCoupon];
@@ -97,9 +154,12 @@ function validateStep(step) {
 /* ---------- סיכום ההזמנה בסיידבאר ---------- */
 function renderOrderSummary() {
   const lines = cartLines();
-  const subtotal = cartTotal();
+  const goods = cartTotal();
+  const addons = addonsTotal();
+  const subtotal = goods + addons;
   const discount = discountFor(subtotal);
-  const total = subtotal - discount;
+  const shipping = deliveryFeeFor(subtotal - discount);
+  const total = subtotal - discount + shipping;
 
   const countEl = document.getElementById("orderCount");
   if (countEl) countEl.textContent = cartCount();
@@ -124,6 +184,20 @@ function renderOrderSummary() {
       : `<p class="checkout-empty">העגלה ריקה — <a href="catalog.html">חזרה לקטלוג</a></p>`;
   }
 
+  // שורות התוספות מופיעות בסיכום כמו כל פריט אחר
+  const addonEl = document.getElementById("orderAddons");
+  if (addonEl) {
+    const chosen = ADDONS.filter((a) => selectedAddons.has(a.id));
+    addonEl.innerHTML = chosen.length
+      ? chosen
+          .map(
+            (a) =>
+              `<div class="order-sub"><span>${a.emo} ${esc(a.name)}</span><span>₪${a.price}</span></div>`
+          )
+          .join("")
+      : "";
+  }
+
   const subEl = document.getElementById("orderSubtotal");
   if (subEl) subEl.innerHTML = `<span>סכום ביניים</span><span>₪${subtotal}</span>`;
 
@@ -135,6 +209,22 @@ function renderOrderSummary() {
     } else {
       discEl.style.display = "none";
     }
+  }
+
+  // דמי משלוח — גלויים לפני שלב התשלום, לא הפתעה בסוף
+  const shipEl = document.getElementById("orderShipping");
+  if (shipEl) {
+    shipEl.innerHTML = `<span>משלוח</span><span class="${shipping === 0 ? "free" : ""}">${
+      shipping === 0 ? "חינם 🎉" : "₪" + shipping
+    }</span>`;
+  }
+  const shipHint = document.getElementById("shipHint");
+  if (shipHint) {
+    const missing = FREE_DELIVERY_OVER - (subtotal - discount);
+    shipHint.innerHTML =
+      shipping === 0
+        ? `<span class="ship-free">המשלוח עלינו — עברתם את ₪${FREE_DELIVERY_OVER}</span>`
+        : `עוד <b>₪${missing}</b> והמשלוח חינם`;
   }
 
   document.querySelectorAll(".js-total").forEach((n) => (n.textContent = `₪${total}`));
@@ -298,9 +388,12 @@ function val(id) {
 
 function buildOrderMessage(orderNum) {
   const lines = cartLines();
-  const subtotal = cartTotal();
+  const goods = cartTotal();
+  const addons = addonsTotal();
+  const subtotal = goods + addons;
   const discount = discountFor(subtotal);
-  const total = subtotal - discount;
+  const shipping = deliveryFeeFor(subtotal - discount);
+  const total = subtotal - discount + shipping;
 
   const parts = [
     "🌸 *הזמנה חדשה — פרחי איריס*",
@@ -323,12 +416,23 @@ function buildOrderMessage(orderNum) {
     parts.push(`• ${l.product.name} — ${l.sizeDef.label} (${stemLabel(l.product, l.size)}) × ${l.qty} = ₪${l.total}`);
   });
 
+  const chosenAddons = ADDONS.filter((a) => selectedAddons.has(a.id));
+  if (chosenAddons.length) {
+    parts.push("", "*תוספות*");
+    chosenAddons.forEach((a) => parts.push(`• ${a.emo} ${a.name} = ₪${a.price}`));
+  }
+
   parts.push("", `סכום ביניים: ₪${subtotal}`);
   if (discount > 0) parts.push(`הנחת קופון ${appliedCoupon}: −₪${discount}`);
+  parts.push(`משלוח: ${shipping === 0 ? "חינם" : "₪" + shipping}`);
   parts.push(`*סה"כ לתשלום: ₪${total}*`);
 
   if (val("fGreeting")) {
     parts.push("", "*ברכה להקדשה*", `"${val("fGreeting")}"`);
+  }
+
+  if (anonymousGift) {
+    parts.push("", "⚠️ *שליחה אנונימית* — אין לציין את שם השולח על הכרטיס ואין לחשוף אותו בפני המקבל/ת.");
   }
 
   parts.push("", "_נשלח אוטומטית מאתר פרחי איריס. התשלום יתואם טלפונית — פרטי אשראי אינם מועברים בוואטסאפ._");
@@ -391,7 +495,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderProgress();
+  renderAddons();
   renderOrderSummary();
   renderToneButtons();
   updateCartBadge();
+
+  // תאריך ברירת מחדל: היום, ולא מאפשרים לבחור תאריך שעבר
+  const dateEl = document.getElementById("fDate");
+  if (dateEl) {
+    const today = new Date().toISOString().slice(0, 10);
+    dateEl.min = today;
+    if (!dateEl.value) dateEl.value = today;
+  }
 });

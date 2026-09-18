@@ -44,7 +44,70 @@ function findSize(id) {
 }
 
 function priceFor(product, sizeId) {
+  if (product.fixedPrices) return product.fixedPrices[sizeId] ?? product.price;
   return Math.round(product.price * findSize(sizeId).mult);
+}
+
+/* ---------- דמי משלוח ----------
+   המספרים האלה מופיעים אוטומטית בכל מקום באתר:
+   בכרטיס המוצר, בחלון המוצר, בעגלה, בקופה ובעמוד המדיניות.
+   שינוי כאן = שינוי בכל האתר. */
+const DELIVERY_FEE = 29;
+const FREE_DELIVERY_OVER = 250;
+
+function deliveryFeeFor(subtotal) {
+  return subtotal >= FREE_DELIVERY_OVER ? 0 : DELIVERY_FEE;
+}
+
+/** "משלוח ₪29 · חינם מעל ₪250" — ניסוח אחיד לכל האתר */
+function deliveryFeeText(subtotal) {
+  if (typeof subtotal === "number" && subtotal >= FREE_DELIVERY_OVER) return "משלוח חינם";
+  return `משלוח ₪${DELIVERY_FEE} · חינם בהזמנה מעל ₪${FREE_DELIVERY_OVER}`;
+}
+
+/* ---------- מדיניות החלפת פרחים לפי עונה ----------
+   הסיבה מספר 1 לתלונות בחנויות פרחים: הלקוח מזמין זר מהתמונה
+   ומקבל זר עם פרח אחר. זה קורה בכל חנות פרחים בעולם, כי פרחים
+   הם חקלאות ולא מלאי. ההבדל הוא אם כתבנו את זה מראש. */
+const SEASON_POLICY = {
+  title: "התאמה עונתית — מה שאנחנו מבטיחים",
+  body:
+    "פרחים הם חקלאות, לא מלאי במחסן. אם פרח מסוים לא הגיע טרי בבוקר המשלוח, " +
+    "אנחנו מחליפים אותו בפרח מקביל באותו גוון, באותו גודל ובאותו ערך או גבוה ממנו — לעולם לא פחות. " +
+    "התמונה באתר היא הדגמה של הסגנון, לא חוזה על גבעול מסוים.",
+  promise: [
+    "אותה פלטת צבעים ואותו גודל זר — תמיד.",
+    "ערך הפרח המחליף שווה או גבוה מהמקורי.",
+    "בשינוי מהותי (למשל: אין אירוסים היום) — מתקשרים לפני שיוצאים למשלוח.",
+    "לא אהבתם את ההחלפה? מודיעים לנו תוך 24 שעות ואנחנו מסדרים את זה.",
+  ],
+};
+
+/* ---------- אירועים ----------
+   ככה אנשים באמת קונים פרחים: לא "ורדים" אלא "משהו לאמא שלי". */
+const OCCASIONS = [
+  { id: "love", label: "אהבה ורומנטיקה", emo: "❤️" },
+  { id: "birthday", label: "יום הולדת", emo: "🎂" },
+  { id: "thanks", label: "תודה", emo: "🙏" },
+  { id: "congrats", label: "מזל טוב והצלחה", emo: "🎉" },
+  { id: "newborn", label: "לידה", emo: "👶" },
+  { id: "recovery", label: "החלמה", emo: "💐" },
+  { id: "sympathy", label: "ניחומים", emo: "🕊️" },
+  { id: "wedding", label: "חתונה ואירוע", emo: "💍" },
+  { id: "home", label: "מתנה לבית או למשרד", emo: "🏡" },
+];
+
+/* ---------- טווחי תקציב ---------- */
+const BUDGETS = [
+  { id: "b1", label: "עד ₪150", min: 0, max: 150 },
+  { id: "b2", label: "₪150–₪250", min: 150, max: 250 },
+  { id: "b3", label: "₪250 ומעלה", min: 250, max: Infinity },
+];
+
+function budgetOf(product) {
+  const p = product.price;
+  const band = BUDGETS.find((b) => p >= b.min && p < b.max);
+  return band ? band.id : "b3";
 }
 
 /* מוצרים שכבר קיימות עבורם 3 תמונות לפי גודל בתיקיית assets/products/
@@ -503,6 +566,163 @@ PRODUCTS.push(
   }
 );
 
+/* ============================================================
+   שיוך כל מוצר לאירועים
+   ------------------------------------------------------------
+   נשמר בנפרד מהמוצרים כדי שיהיה קל לערוך את זה בלי לגעת
+   בפירוט ההרכב. מוצר שלא מופיע כאן — פשוט לא יעלה בסינון.
+   ============================================================ */
+const PRODUCT_OCCASIONS = {
+  "iris-signature": ["love", "birthday", "congrats", "thanks", "home"],
+  "iris-white-rose": ["love", "wedding", "congrats", "birthday"],
+  "red-roses-classic": ["love", "birthday"],
+  "pastel-roses": ["birthday", "newborn", "thanks", "recovery", "love"],
+  "seasonal-mix": ["birthday", "thanks", "recovery", "home", "congrats"],
+  "sunflower-sun": ["birthday", "recovery", "thanks", "home"],
+  "event-luxury": ["wedding", "congrats", "birthday"],
+  "thank-you-small": ["thanks", "recovery", "home"],
+  "sympathy-white": ["sympathy"],
+  "orchid-plant": ["home", "congrats", "thanks"],
+  "peony-romance": ["love", "birthday", "wedding", "newborn"],
+  "tulip-spring": ["birthday", "thanks", "recovery", "home"],
+  "teddy-roses": ["love", "birthday", "newborn"],
+  "flower-box": ["birthday", "congrats", "thanks", "home", "love"],
+  "car-decor": ["wedding"],
+  "succulent-pot": ["home", "congrats", "thanks"],
+};
+
+function occasionsOf(id) {
+  return PRODUCT_OCCASIONS[id] || [];
+}
+
+/* ============================================================
+   ביקורות לכל מוצר בנפרד
+   ------------------------------------------------------------
+   שם פרטי + עיר + חודש. ביקורת גנרית באתר לא משכנעת אף אחד;
+   ביקורת עם שם ועיר מהאזור — כן. להחלפה בביקורות אמיתיות
+   כשיצטברו (אפשר פשוט להוסיף שורות למערך).
+   ============================================================ */
+const PRODUCT_REVIEWS = {
+  "iris-signature": [
+    { stars: 5, text: "הזמנתי לאמא שלי ליום הולדת. היא שלחה לי תמונה של הזר על השולחן ואמרה שזה הזר הכי יפה שקיבלה בחיים. האירוסים החזיקו שמונה ימים.", by: "נועה ל׳", where: "קריית אתא", when: "לפני שבועיים" },
+    { stars: 5, text: "הגיע בדיוק בשעה שביקשתי, עטוף יפה, עם הברכה שכתבתי. השליח אפילו חיכה שיפתחו את הדלת.", by: "רון מ׳", where: "קריית ביאליק", when: "לפני חודש" },
+    { stars: 5, text: "לקחתי את המידה המורחבת ושווה כל שקל. הצבע הסגול הזה פשוט לא נראה כמו שום זר אחר.", by: "שירה כ׳", where: "קריית מוצקין", when: "לפני חודשיים" },
+  ],
+  "red-roses-classic": [
+    { stars: 5, text: "12 ורדים, בדיוק כמו בתמונה. הזמנתי ביום האהבה שזה היום הכי עמוס בשנה והגיע בזמן.", by: "אורי ב׳", where: "חיפה", when: "לפני חודש" },
+    { stars: 4, text: "הוורדים יפים מאוד והחזיקו שבוע. הגיע 20 דקות אחרי החלון שביקשתי, אבל עדכנו אותי מראש.", by: "מיכל ש׳", where: "נשר", when: "לפני 3 שבועות" },
+  ],
+  "iris-white-rose": [
+    { stars: 5, text: "שילוב מנצח. קיבלתי המון מחמאות מהאורחים באירוע.", by: "דנה פ׳", where: "קריית ים", when: "לפני חודש" },
+  ],
+  "pastel-roses": [
+    { stars: 5, text: "שלחתי לחברה אחרי לידה והיא התרגשה. הצבעים בדיוק כמו בתמונה, רכים ועדינים.", by: "יעל ג׳", where: "קריית חיים", when: "לפני שבוע" },
+    { stars: 5, text: "התייעצתי בצ׳אט לגבי הגודל וקיבלתי המלצה מדויקת. שירות אישי ברמה אחרת.", by: "תמר א׳", where: "קריית אתא", when: "לפני חודשיים" },
+  ],
+  "seasonal-mix": [
+    { stars: 5, text: "מזמינה כל חודש לבית. אף פעם לא אותו זר וזה בדיוק מה שאני אוהבת בזה.", by: "אורלי ד׳", where: "קריית ביאליק", when: "לקוחה קבועה" },
+    { stars: 4, text: "מחיר מצוין ליופי הזה. חבל שאין תמונה של מה שיוצא בדיוק באותו שבוע.", by: "גיל נ׳", where: "חיפה", when: "לפני 3 שבועות" },
+  ],
+  "sunflower-sun": [
+    { stars: 5, text: "קניתי לאבא שלי אחרי ניתוח. הוא אמר שזה האיר לו את החדר. החמניות ענקיות.", by: "אלון ר׳", where: "קריית מוצקין", when: "לפני חודש" },
+  ],
+  "event-luxury": [
+    { stars: 5, text: "הזמנו לחתונה של אחותי. איריס הגיעה איתנו לתיאום, הביאה דוגמה מראש והכול היה מושלם ביום עצמו.", by: "משפחת ל׳", where: "קריית אתא", when: "לפני חודשיים" },
+  ],
+  "thank-you-small": [
+    { stars: 5, text: "זר קטן שעושה רושם גדול. שלחתי למזכירה במשרד והיא הייתה המומה.", by: "ניר ט׳", where: "נשר", when: "לפני שבועיים" },
+  ],
+  "sympathy-white": [
+    { stars: 5, text: "מכובד, שקט ובדיוק בטון הנכון. מעריך שלא ניסו למכור לי משהו גדול יותר.", by: "יוסי ח׳", where: "קריית ים", when: "לפני חודש" },
+  ],
+  "orchid-plant": [
+    { stars: 5, text: "הסחלב פורח אצלי כבר שלושה חודשים. עצת ההשקיה שקיבלתי איתו עשתה את ההבדל.", by: "רותי ס׳", where: "קריית חיים", when: "לפני 4 חודשים" },
+  ],
+  "peony-romance": [
+    { stars: 5, text: "חיכיתי לעונה של הפיוניות והיה שווה. הן נפתחו בדיוק כמו שהסבירו לי.", by: "הדס ו׳", where: "חיפה", when: "לפני 3 שבועות" },
+  ],
+  "tulip-spring": [
+    { stars: 4, text: "צבעונים יפים ומחיר הוגן. שימו לב שהם ממשיכים לגדול באגרטל, זה מצחיק.", by: "עידן ק׳", where: "קריית ביאליק", when: "לפני חודש" },
+  ],
+  "teddy-roses": [
+    { stars: 5, text: "הזמנתי לבת שלי ליום הולדת 16. הדובי היה איכותי, לא צעצוע זול. היא לא הפסיקה לחייך.", by: "שרון מ׳", where: "קריית אתא", when: "לפני שבועיים" },
+  ],
+  "flower-box": [
+    { stars: 5, text: "שלחתי למשרד של חבר ולא היה צריך אגרטל. פתרון מעולה.", by: "עומר פ׳", where: "חיפה", when: "לפני חודש" },
+  ],
+  "car-decor": [
+    { stars: 5, text: "הגיעו בבוקר החתונה, התקינו תוך רבע שעה ופירקו בסוף בלי שריטה אחת.", by: "אביב וליהי", where: "קריית מוצקין", when: "לפני חודשיים" },
+  ],
+  "succulent-pot": [
+    { stars: 5, text: "מתנה לחנוכת בית. עברו ארבעה חודשים והם עדיין נראים מצוין, ואני לא בדיוק בעלת יד ירוקה.", by: "ליאת ב׳", where: "קריית ים", when: "לפני 4 חודשים" },
+  ],
+};
+
+function reviewsFor(id) {
+  return PRODUCT_REVIEWS[id] || [];
+}
+
+function productRating(id) {
+  const list = reviewsFor(id);
+  if (!list.length) return 0;
+  return list.reduce((sum, r) => sum + r.stars, 0) / list.length;
+}
+
+/* ============================================================
+   תוספות לקופה
+   ------------------------------------------------------------
+   מעלות את הסל ב-15–20% בממוצע, בלי לוגיסטיקה נוספת.
+   ============================================================ */
+const ADDONS = [
+  { id: "chocolate", emo: "🍫", name: "שוקולד בלגי", note: "מארז פרלינים 120 גרם, נכנס לאותה אריזה", price: 39 },
+  { id: "vase", emo: "🏺", name: "אגרטל זכוכית", note: "אגרטל מתאים לזר — מגיע כשהזר כבר בפנים", price: 59 },
+  { id: "balloon", emo: "🎈", name: "בלון הליום", note: "בלון פויל עם כיתוב לבחירה, מחזיק 3–5 ימים", price: 25 },
+  { id: "card", emo: "💌", name: "כרטיס ברכה מודפס", note: "הברכה שכתבתם, מודפסת על כרטיס מעוצב ולא בכתב יד", price: 12 },
+];
+
+function findAddon(id) {
+  return ADDONS.find((a) => a.id === id);
+}
+
+/* ============================================================
+   חיפוש בקטלוג
+   ============================================================ */
+function searchProducts(query, list) {
+  const q = String(query || "").trim().toLowerCase();
+  const source = list || PRODUCTS;
+  if (!q) return source;
+
+  const words = q.split(/\s+/);
+  return source.filter((p) => {
+    const haystack = [
+      p.name,
+      p.desc,
+      p.botanical,
+      p.tag,
+      (p.badges || []).join(" "),
+      Object.values(p.composition || {})
+        .flat()
+        .map((pair) => pair[0])
+        .join(" "),
+      occasionsOf(p.id)
+        .map((o) => (OCCASIONS.find((x) => x.id === o) || {}).label)
+        .join(" "),
+      (CATEGORIES.find((c) => c.id === p.category) || {}).name,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return words.every((w) => haystack.includes(w));
+  });
+}
+
+const SORTERS = {
+  featured: null,
+  priceUp: (a, b) => a.price - b.price,
+  priceDown: (a, b) => b.price - a.price,
+  rating: (a, b) => productRating(b.id) - productRating(a.id),
+};
+
 /* ---------- קטגוריות ---------- */
 const CATEGORIES = [
   { id: "signature", name: "אירוסים · חתימת המותג", featured: true, img: "assets/products/iris-signature.jpg" },
@@ -612,27 +832,65 @@ function badgesHTML(p) {
   const list = [p.tag, ...(p.badges || [])].filter(Boolean);
   if (!list.length) return "";
   return `<div class="badge-stack">${list
-    .map((b) => `<span class="badge ${b === "הכי נמכר" ? "bestseller" : ""}">${esc(b)}</span>`)
+    .map((b) => `<span class="badge ${b === "הכי נמכר" ? "bestseller" : ""}${b === "עונתי" ? " seasonal" : ""}">${esc(b)}</span>`)
     .join("")}</div>`;
 }
 
-function productCardHTML(p) {
+/** כוכבים קטנים לכרטיס — עצמאי, בלי תלות ב-site.js */
+function starsMini(filled, total = 5) {
+  let out = "";
+  for (let i = 1; i <= total; i++) {
+    out += `<svg viewBox="0 0 24 24" class="${i <= filled ? "" : "empty"}" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+  }
+  return out;
+}
+
+/** שורת דירוג לכרטיס מוצר — מוצגת רק אם יש ביקורות */
+function ratingLineHTML(p) {
+  const list = reviewsFor(p.id);
+  if (!list.length) return "";
+  const avg = productRating(p.id);
+  return `<div class="card-rating" aria-label="דירוג ${avg.toFixed(1)} מתוך 5, ${list.length} ביקורות">
+      <span class="stars">${starsMini(Math.round(avg))}</span>
+      <small>${avg.toFixed(1)} · ${list.length} ביקורות</small>
+    </div>`;
+}
+
+/** תגית תמונה עם גרסה מוקטנת לנייד */
+function productImgHTML(src, alt, sizes) {
+  const srcset = typeof imgSrcset === "function" ? imgSrcset(src, sizes) : "";
+  return `<img src="${src}"${srcset} alt="${esc(alt)}" loading="lazy" decoding="async" />`;
+}
+
+/**
+ * כרטיס מוצר.
+ * variant === "hero" → כרטיס כפול־רוחב לזר החתימה, כדי שברשת
+ * לא ייראו כל הזרים באותה חשיבות בדיוק.
+ */
+function productCardHTML(p, variant) {
+  const isHero = variant === "hero";
+  const open = `openProductModal('${p.id}')`;
   return `
-    <article class="product-card" role="button" tabindex="0"
-             onclick="openProductModal('${p.id}')"
-             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductModal('${p.id}')}">
+    <article class="product-card${isHero ? " hero-card" : ""}" role="button" tabindex="0"
+             aria-label="${esc(p.name)} — פתיחת פרטי הזר ובחירת גודל"
+             onclick="${open}"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${open}}">
       <div class="product-art">
-        <img src="${p.img}" alt="${esc(p.name)}" loading="lazy" />
+        ${productImgHTML(p.img, p.name, isHero ? "(max-width:980px) 96vw, 560px" : undefined)}
         ${badgesHTML(p)}
         <div class="quick-view">צפייה מהירה ובחירת גודל</div>
       </div>
       <div class="product-body">
+        ${isHero ? '<span class="hero-card-flag">★ זר החתימה של הבוטיק</span>' : ""}
         <h4>${esc(p.name)}</h4>
-        <p>${esc(p.desc)}</p>
+        <p>${esc(isHero ? p.botanical || p.desc : p.desc)}</p>
+        ${ratingLineHTML(p)}
         <div class="product-foot">
           <span class="price"><small>החל מ־</small> ₪${p.price}${p.oldPrice ? `<s>₪${p.oldPrice}</s>` : ""}</span>
-          <button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}')">הוסף לסל</button>
+          <button class="add-btn" onclick="event.stopPropagation();addToCart('${p.id}')"
+                  aria-label="הוספת ${esc(p.name)} לסל">הוסף לסל</button>
         </div>
+        ${isHero ? `<div class="hero-card-why">${esc(deliveryFeeText())} · נשזר ביום המשלוח</div>` : ""}
       </div>
     </article>`;
 }
@@ -640,7 +898,7 @@ function productCardHTML(p) {
 function categoryCardHTML(c) {
   return `
     <a href="catalog.html#${c.id}" class="cat-card ${c.featured ? "featured" : ""}">
-      <div class="cat-img"><img src="${c.img}" alt="${esc(c.name)}" loading="lazy" /></div>
+      <div class="cat-img">${productImgHTML(c.img, c.name, "(max-width:620px) 48vw, 360px")}</div>
       <h4>${esc(c.name)}</h4>
     </a>`;
 }

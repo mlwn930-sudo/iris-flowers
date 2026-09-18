@@ -5,11 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>אודות המותג — פרחי איריס</title>
 <meta name="description" content="הסיפור של פרחי איריס — בוטיק פרחים בקריית אתא שנולד מאהבה לפרח האירוס הסגול." />
+<meta name="theme-color" content="#070011" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="פרחי איריס" />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:title" content="אודות המותג — פרחי איריס" />
+<meta property="og:description" content="הסיפור של פרחי איריס — בוטיק פרחים בקריית אתא שנולד מאהבה לפרח האירוס הסגול." />
+<meta property="og:image" content="https://example.com/assets/brand/logo-banner.jpg" />
+<meta property="og:url" content="https://example.com/about.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="אודות המותג — פרחי איריס" />
+<meta name="twitter:description" content="הסיפור של פרחי איריס — בוטיק פרחים בקריית אתא שנולד מאהבה לפרח האירוס הסגול." />
+<meta name="twitter:image" content="https://example.com/assets/brand/logo-banner.jpg" />
 <link rel="icon" href="assets/brand/favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/aurora.css" />
+<link rel="stylesheet" href="css/a11y.css" />
 </head>
 <body>
 
@@ -33,7 +47,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
         עגלה <span class="cart-badge" style="display:none">0</span>
       </button>
-      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט">☰</button>
+      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט" aria-expanded="false" aria-controls="navLinks">☰</button>
     </div>
   </div>
 </nav>
@@ -45,6 +59,8 @@
     <p>איך פרח אחד הפך למותג — ולמה אנחנו עדיין מרכיבים כל זר ביד</p>
   </div>
 </header>
+
+<main id="mainContent">
 
 <section style="padding-bottom:0">
   <div class="container">
@@ -95,6 +111,8 @@
   </div>
 </section>
 
+</main>
+
 <footer id="contact">
   <div class="container">
     <div class="footer-grid">
@@ -142,11 +160,11 @@
 </footer>
 
 <div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגור">✕</button></div>
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="עגלת הקניות" aria-hidden="true">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגירת העגלה">✕</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot">
-    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <div class="cart-total"><span>סה"כ כולל משלוח</span><span id="cartTotalValue">₪0</span></div>
     <a href="checkout.html" class="btn btn-deep btn-block">מעבר לתשלום</a>
   </div>
 </div>
@@ -194,10 +212,12 @@
     מעבר לשיחה אישית ב-WhatsApp
   </button>
 </div>
+<script src="js/a11y.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/product-modal.js"></script>
 <script src="js/chat-widget.js"></script>
 <script src="js/site.js"></script>
+<script src="js/enhance.js"></script>
 </body>
 </html>

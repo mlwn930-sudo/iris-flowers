@@ -5,11 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>פרחי איריס — בוטיק פרחים בקריית אתא</title>
 <meta name="description" content="פרחי איריס — בוטיק פרחים בקריית אתא. זרים בעבודת יד, שלוש מידות לכל זר, ומשלוחים באזור קריית אתא ומפרץ חיפה." />
+<meta name="theme-color" content="#070011" />
 <link rel="icon" href="assets/brand/favicon.png" />
+
+<!-- ============================================================
+     Open Graph — מה שמוצג כשמדביקים קישור בוואטסאפ, בפייסבוק
+     או בטלגרם. בלי זה הקישור מופיע כשורת טקסט אפורה.
+     שימו לב: og:url ו-og:image חייבים להיות כתובות מלאות (https://),
+     ולכן יש להחליף את example.com בדומיין האמיתי כשהוא ייקנה.
+     ============================================================ -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="פרחי איריס" />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:title" content="פרחי איריס — בוטיק פרחים בקריית אתא" />
+<meta property="og:description" content="זרים בעבודת יד, שלוש מידות לכל זר, ומשלוח באותו יום בקריית אתא ובמפרץ חיפה." />
+<meta property="og:image" content="https://example.com/assets/brand/logo-hero.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="זר אירוסים סגולים של פרחי איריס" />
+<meta property="og:url" content="https://example.com/index.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="פרחי איריס — בוטיק פרחים בקריית אתא" />
+<meta name="twitter:description" content="זרים בעבודת יד, שלוש מידות לכל זר, ומשלוח באותו יום בקריית אתא ובמפרץ חיפה." />
+<meta name="twitter:image" content="https://example.com/assets/brand/logo-hero.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/aurora.css" />
+<link rel="stylesheet" href="css/a11y.css" />
 </head>
 <body>
 
@@ -33,10 +58,15 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
         עגלה <span class="cart-badge" style="display:none">0</span>
       </button>
-      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט">☰</button>
+      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט" aria-expanded="false" aria-controls="navLinks">☰</button>
     </div>
   </div>
 </nav>
+
+<!-- טיימר חלון המשלוח — מתעדכן כל שנייה מ-js/enhance.js -->
+<div class="cutoff-bar" id="cutoffBar" role="status" aria-live="off"></div>
+
+<main id="mainContent">
 
 <header class="hero">
   <div class="hero-bg"></div>
@@ -64,15 +94,15 @@
   </div>
 </header>
 
-<section id="categories" style="padding-top:64px">
+<section id="categories" class="band-glow" style="padding-top:64px">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <img class="divider-mark" src="assets/brand/logo-mark.png" alt="" />
       <span class="kicker">הקולקציה</span>
       <h2>קטגוריות פופולריות</h2>
       <p>מזרי החתימה שלנו ועד עציצים לבית — כל קטגוריה נבחרה בקפידה</p>
     </div>
-    <div class="cat-grid" id="catGrid"></div>
+    <div class="cat-grid" id="catGrid" data-reveal-stagger></div>
   </div>
 </section>
 
@@ -83,19 +113,24 @@
       <small>הקלידו עיר וקבלו זמן אספקה מיידי</small>
     </div>
     <form class="delivery-form" onsubmit="handleDeliveryCheck(event)">
+      <label class="sr-only" for="dcInput">עיר או שכונה לבדיקת אזור חלוקה</label>
       <input type="text" id="dcInput" placeholder="לדוגמה: קריית אתא, חיפה, נשר..." />
       <button type="submit">בדיקת זמינות</button>
     </form>
-    <div class="dc-result" id="dcResult"></div>
+    <div class="dc-result" id="dcResult" role="status" aria-live="polite"></div>
+    <div class="ship-note" style="margin-top:12px">
+      <span aria-hidden="true">🚚</span>
+      <span>דמי משלוח <strong>₪29</strong> · <span class="ship-free">חינם בהזמנה מעל ₪250</span> · איסוף עצמי מהחנות בחינם</span>
+    </div>
   </div>
 </div>
 
-<section class="story" id="story">
+<section class="story band-deep" id="story">
   <div class="container">
-    <div class="story-photo">
-      <img src="assets/products/studio.jpg" alt="שזירת זר בסטודיו של פרחי איריס" />
+    <div class="story-photo" data-reveal="right">
+      <img src="assets/products/studio.jpg" alt="שזירת זר בסטודיו של פרחי איריס" loading="lazy" />
     </div>
-    <div class="story-text">
+    <div class="story-text" data-reveal="left">
       <span class="kicker">הסיפור שלנו</span>
       <h2>מקריית אתא, באהבה</h2>
       <p>פרחי איריס נולד מתוך אהבה לפרח האירוס הסגול — הפרח שנתן למותג את השם ואת הצבע שמלווה כל זר שיוצא מהדלת שלנו.</p>
@@ -105,23 +140,23 @@
   </div>
 </section>
 
-<section>
+<section class="band-glow">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <span class="kicker">נבחרת הבוטיק</span>
       <h2>זרים אהובים</h2>
       <p>לחצו על כל זר כדי לראות אותו מקרוב, לבחור גודל ולקרוא המלצות טיפול</p>
     </div>
-    <div class="product-grid" id="featuredGrid"></div>
-    <div style="text-align:center;margin-top:44px">
+    <div class="product-grid" id="featuredGrid" data-reveal-stagger></div>
+    <div style="text-align:center;margin-top:44px" data-reveal>
       <a href="catalog.html" class="btn btn-deep">לכל הקטלוג</a>
     </div>
   </div>
 </section>
 
-<section id="reviews" style="padding-top:0">
+<section id="reviews" class="band-deep" style="padding-top:64px">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <span class="kicker">מה אומרים עלינו</span>
       <h2>הלקוחות שלנו</h2>
     </div>
@@ -145,14 +180,33 @@
   </div>
 </section>
 
-<section id="help" style="padding-top:0">
+<!-- ============================================================
+     מדיניות התאמה עונתית — הסיבה מספר 1 לתלונות בחנויות פרחים.
+     מי שכותב את זה מראש, בגלוי, כמעט לא מקבל תלונות.
+     ============================================================ -->
+<section id="seasonal" class="band-glow" style="padding-top:64px">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
+      <span class="kicker">שקיפות</span>
+      <h2>מה קורה כשפרח לא הגיע היום</h2>
+      <p>אנחנו מעדיפים שתדעו את זה לפני ההזמנה ולא אחריה</p>
+    </div>
+    <div class="panel" style="max-width:860px;margin:0 auto" data-reveal>
+      <h3 id="seasonalTitle">התאמה עונתית — מה שאנחנו מבטיחים</h3>
+      <p id="seasonalBody"></p>
+      <ul class="a11y-statement" id="seasonalList" style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:12px"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="help" class="band-deep" style="padding-top:64px">
+  <div class="container">
+    <div class="section-head" data-reveal>
       <span class="kicker">אנחנו כאן</span>
       <h2>לכל שאלה — יש לנו מישהו</h2>
       <p>שני סוכנים דיגיטליים, כל אחד מומחה בתחום שלו, זמינים מסביב לשעון</p>
     </div>
-    <div class="help-grid">
+    <div class="help-grid" data-reveal-stagger>
       <div class="help-card">
         <div class="who">
           <img src="assets/brand/avatar-agam.svg" alt="" />
@@ -192,13 +246,13 @@
   </div>
 </section>
 
-<section id="visit" style="padding-top:0">
+<section id="visit" class="band-glow" style="padding-top:64px">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <span class="kicker">בואו לבקר</span>
       <h2>איך מגיעים אלינו</h2>
     </div>
-    <div class="visit-grid">
+    <div class="visit-grid" data-reveal-stagger>
       <div class="visit-card">
         <h3>הבוטיק שלנו</h3>
         <div class="addr">רחוב איינשטיין 20<br>קריית אתא</div>
@@ -225,6 +279,8 @@
     </div>
   </div>
 </section>
+
+</main>
 
 <footer id="contact">
   <div class="container">
@@ -273,11 +329,11 @@
 </footer>
 
 <div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגור">✕</button></div>
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="עגלת הקניות" aria-hidden="true">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגירת העגלה">✕</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot">
-    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <div class="cart-total"><span>סה"כ כולל משלוח</span><span id="cartTotalValue">₪0</span></div>
     <a href="checkout.html" class="btn btn-deep btn-block">מעבר לתשלום</a>
   </div>
 </div>
@@ -325,14 +381,29 @@
     מעבר לשיחה אישית ב-WhatsApp
   </button>
 </div>
+<script src="js/a11y.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/product-modal.js"></script>
 <script src="js/chat-widget.js"></script>
 <script src="js/site.js"></script>
+<script src="js/enhance.js"></script>
 <script>
   document.getElementById("catGrid").innerHTML = CATEGORIES.map(categoryCardHTML).join("");
-  document.getElementById("featuredGrid").innerHTML = PRODUCTS.slice(0, 4).map(productCardHTML).join("");
+
+  /* היררכיה ברשת: זר החתימה מקבל כרטיס כפול־רוחב, והשאר רגילים.
+     ככה העין יודעת מיד מה הדבר הכי חשוב בעמוד. */
+  const featured = PRODUCTS.slice(0, 7); // 1 כפול + 6 רגילים = שתי שורות מלאות
+  document.getElementById("featuredGrid").innerHTML =
+    productCardHTML(featured[0], "hero") + featured.slice(1).map((p) => productCardHTML(p)).join("");
+
+  /* מדיניות ההתאמה העונתית — נשאבת מקובץ המוצרים כדי שיהיה
+     מקור אמת אחד לנוסח, גם כאן וגם בחלון המוצר וגם בעמוד המדיניות. */
+  document.getElementById("seasonalTitle").textContent = SEASON_POLICY.title;
+  document.getElementById("seasonalBody").textContent = SEASON_POLICY.body;
+  document.getElementById("seasonalList").innerHTML = SEASON_POLICY.promise
+    .map((line) => `<li>${esc(line)}</li>`)
+    .join("");
 </script>
 </body>
 </html>

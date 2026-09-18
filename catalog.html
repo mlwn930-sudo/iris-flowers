@@ -5,11 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>המוצרים שלנו — פרחי איריס</title>
 <meta name="description" content="הקטלוג המלא של פרחי איריס — זרי אירוסים, ורדים, חמניות, זרי אירועים ועציצים. שלוש מידות לכל זר." />
+<meta name="theme-color" content="#070011" />
 <link rel="icon" href="assets/brand/favicon.png" />
+
+<!-- Open Graph — תצוגה מסודרת בהדבקת קישור בוואטסאפ ובפייסבוק -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="פרחי איריס" />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:title" content="הקטלוג של פרחי איריס — זרים בעבודת יד" />
+<meta property="og:description" content="זרי אירוסים, ורדים, חמניות, זרי אירועים ועציצים. שלוש מידות לכל זר, ומשלוח באותו יום." />
+<meta property="og:image" content="https://example.com/assets/products/iris-signature.jpg" />
+<meta property="og:image:alt" content="זר האירוס הסגול — חתימת פרחי איריס" />
+<meta property="og:url" content="https://example.com/catalog.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="הקטלוג של פרחי איריס — זרים בעבודת יד" />
+<meta name="twitter:description" content="זרי אירוסים, ורדים, חמניות, זרי אירועים ועציצים. שלוש מידות לכל זר." />
+<meta name="twitter:image" content="https://example.com/assets/products/iris-signature.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/aurora.css" />
+<link rel="stylesheet" href="css/a11y.css" />
 </head>
 <body>
 
@@ -33,10 +51,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
         עגלה <span class="cart-badge" style="display:none">0</span>
       </button>
-      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט">☰</button>
+      <button class="nav-toggle" onclick="toggleNav()" aria-label="תפריט" aria-expanded="false" aria-controls="navLinks">☰</button>
     </div>
   </div>
 </nav>
+
+<div class="cutoff-bar" id="cutoffBar" role="status" aria-live="off"></div>
+
+<main id="mainContent">
 
 <header class="page-head">
   <div class="container">
@@ -46,12 +68,53 @@
   </div>
 </header>
 
-<section style="padding-top:56px">
+<section class="band-glow" style="padding-top:48px">
   <div class="container">
-    <div class="cat-filters" id="catFilters"></div>
+
+    <!-- ============================================================
+         חיפוש ומיון — ככה אנשים באמת מחפשים פרחים:
+         "משהו לאמא ליום הולדת עד 200 שקל", ולא "קטגוריית ורדים".
+         ============================================================ -->
+    <div class="catalog-tools" data-reveal>
+      <div class="tool-field">
+        <label for="catSearch">חיפוש חופשי</label>
+        <div class="search-box">
+          <input type="search" id="catSearch" placeholder="ורדים, אירוס, יום הולדת, שוקולד..."
+                 autocomplete="off" oninput="onSearchInput(this.value)" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+          </svg>
+          <button type="button" class="clear" id="searchClear" onclick="clearSearch()" aria-label="ניקוי החיפוש">✕</button>
+        </div>
+      </div>
+
+      <div class="tool-field">
+        <label for="occSelect">לאיזו הזדמנות</label>
+        <select id="occSelect" onchange="setOccasion(this.value)">
+          <option value="all">כל ההזדמנויות</option>
+        </select>
+      </div>
+
+      <div class="tool-field">
+        <label for="sortSelect">מיון</label>
+        <select id="sortSelect" onchange="setSort(this.value)">
+          <option value="featured">מומלץ</option>
+          <option value="priceUp">מחיר — מהזול ליקר</option>
+          <option value="priceDown">מחיר — מהיקר לזול</option>
+          <option value="rating">הכי מדורגים</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cat-filters" id="catFilters" role="group" aria-label="סינון לפי קטגוריה"></div>
+    <div class="cat-filters" id="budgetFilters" role="group" aria-label="סינון לפי תקציב" style="margin-top:-24px"></div>
+
+    <div class="result-count" id="resultCount" role="status" aria-live="polite"></div>
     <div class="product-grid" id="productGrid"></div>
   </div>
 </section>
+
+</main>
 
 <footer id="contact">
   <div class="container">
@@ -100,11 +163,11 @@
 </footer>
 
 <div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגור">✕</button></div>
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="עגלת הקניות" aria-hidden="true">
+  <div class="cart-head"><h3>העגלה שלך</h3><button class="cart-close" onclick="closeCart()" aria-label="סגירת העגלה">✕</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot">
-    <div class="cart-total"><span>סה"כ</span><span id="cartTotalValue">₪0</span></div>
+    <div class="cart-total"><span>סה"כ כולל משלוח</span><span id="cartTotalValue">₪0</span></div>
     <a href="checkout.html" class="btn btn-deep btn-block">מעבר לתשלום</a>
   </div>
 </div>
@@ -152,37 +215,149 @@
     מעבר לשיחה אישית ב-WhatsApp
   </button>
 </div>
+<script src="js/a11y.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/product-modal.js"></script>
 <script src="js/chat-widget.js"></script>
 <script src="js/site.js"></script>
+<script src="js/enhance.js"></script>
 <script>
-  let activeCat = (location.hash || "").replace("#", "") || "all";
+  /* ============================================================
+     מצב הקטלוג — קטגוריה · אירוע · תקציב · חיפוש · מיון.
+     כל שינוי מריץ מחדש את אותה שרשרת, כך שאין מצב שבו
+     שני מסננים סותרים זה את זה.
+     ============================================================ */
+  const view = {
+    cat: (location.hash || "").replace("#", "") || "all",
+    occasion: "all",
+    budget: "all",
+    query: "",
+    sort: "featured",
+  };
 
   function renderFilters() {
     const all = [{ id: "all", name: "הכל" }, ...CATEGORIES];
     document.getElementById("catFilters").innerHTML = all
-      .map((c) => `<button class="${activeCat === c.id ? "active" : ""}" onclick="setFilter('${c.id}')">${esc(c.name)}</button>`)
+      .map(
+        (c) =>
+          `<button type="button" class="${view.cat === c.id ? "active" : ""}" aria-pressed="${view.cat === c.id}"
+                   onclick="setFilter('${c.id}')">${esc(c.name)}</button>`
+      )
       .join("");
+
+    document.getElementById("budgetFilters").innerHTML =
+      [{ id: "all", label: "כל התקציבים" }, ...BUDGETS]
+        .map(
+          (b) =>
+            `<button type="button" class="${view.budget === b.id ? "active" : ""}" aria-pressed="${view.budget === b.id}"
+                     onclick="setBudget('${b.id}')">${esc(b.label)}</button>`
+        )
+        .join("");
+
+    const occSel = document.getElementById("occSelect");
+    if (occSel.options.length <= 1) {
+      OCCASIONS.forEach((o) => {
+        const opt = document.createElement("option");
+        opt.value = o.id;
+        opt.textContent = `${o.emo} ${o.label}`;
+        occSel.appendChild(opt);
+      });
+    }
+  }
+
+  function currentList() {
+    let list = PRODUCTS.slice();
+    if (view.cat !== "all") list = list.filter((p) => p.category === view.cat);
+    if (view.occasion !== "all") list = list.filter((p) => occasionsOf(p.id).includes(view.occasion));
+    if (view.budget !== "all") list = list.filter((p) => budgetOf(p) === view.budget);
+    list = searchProducts(view.query, list);
+    const sorter = SORTERS[view.sort];
+    if (sorter) list.sort(sorter);
+    return list;
   }
 
   function renderProducts() {
-    const list = activeCat === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === activeCat);
-    document.getElementById("productGrid").innerHTML = list.length
-      ? list.map(productCardHTML).join("")
-      : `<p style="grid-column:1/-1;text-align:center;color:var(--muted)">אין מוצרים בקטגוריה הזו כרגע.</p>`;
+    const list = currentList();
+    const grid = document.getElementById("productGrid");
+    const count = document.getElementById("resultCount");
+
+    if (!list.length) {
+      grid.innerHTML = `
+        <div class="no-results">
+          <strong>לא מצאנו זר שמתאים לסינון הזה</strong>
+          נסו לנקות מסנן אחד, או פשוט שאלו את אגם בצ'אט — היא תמצא לכם משהו.
+          <div style="margin-top:18px"><button type="button" class="btn btn-ghost" onclick="resetFilters()">ניקוי כל המסננים</button></div>
+        </div>`;
+      count.textContent = "";
+      return;
+    }
+
+    // הזר הראשון ברשימה מקבל כרטיס כפול — אלא אם מסננים לתוצאה בודדת
+    const useHero = list.length >= 4 && view.query === "";
+    grid.innerHTML = useHero
+      ? productCardHTML(list[0], "hero") + list.slice(1).map((p) => productCardHTML(p)).join("")
+      : list.map((p) => productCardHTML(p)).join("");
+
+    count.innerHTML = `נמצאו <b>${list.length}</b> ${list.length === 1 ? "זר" : "זרים"}${
+      view.query ? ` עבור "${esc(view.query)}"` : ""
+    } · ${esc(deliveryFeeText())}`;
   }
 
-  function setFilter(id) {
-    activeCat = id;
-    history.replaceState(null, "", id === "all" ? "catalog.html" : `catalog.html#${id}`);
+  function apply() {
     renderFilters();
     renderProducts();
   }
 
-  renderFilters();
-  renderProducts();
+  function setFilter(id) {
+    view.cat = id;
+    history.replaceState(null, "", id === "all" ? "catalog.html" : `catalog.html#${id}`);
+    apply();
+  }
+
+  function setBudget(id) {
+    view.budget = id;
+    apply();
+  }
+
+  function setOccasion(id) {
+    view.occasion = id;
+    apply();
+  }
+
+  function setSort(id) {
+    view.sort = id;
+    apply();
+  }
+
+  let searchTimer = null;
+  function onSearchInput(value) {
+    view.query = value;
+    document.getElementById("searchClear").classList.toggle("show", value.length > 0);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(apply, 160); // השהיה קלה כדי לא לרנדר על כל תו
+  }
+
+  function clearSearch() {
+    document.getElementById("catSearch").value = "";
+    onSearchInput("");
+    document.getElementById("catSearch").focus();
+  }
+
+  function resetFilters() {
+    view.cat = "all";
+    view.occasion = "all";
+    view.budget = "all";
+    view.query = "";
+    view.sort = "featured";
+    document.getElementById("catSearch").value = "";
+    document.getElementById("occSelect").value = "all";
+    document.getElementById("sortSelect").value = "featured";
+    document.getElementById("searchClear").classList.remove("show");
+    apply();
+  }
+
+  apply();
 </script>
 </body>
 </html>
