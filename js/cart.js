@@ -157,7 +157,7 @@ function renderCartDrawer() {
   if (!lines.length) {
     itemsEl.innerHTML = `
       <div class="cart-empty">
-        <img src="assets/brand/logo-mark.png" alt="" />
+        <img src="assets/brand/logo-mark-96.png" alt="" />
         העגלה שלך ריקה כרגע.<br>זמן לבחור זר מהקטלוג!
       </div>`;
   } else {

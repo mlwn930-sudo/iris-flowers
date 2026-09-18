@@ -3,7 +3,12 @@
    ============================================================ */
 
 function toggleNav() {
-  document.getElementById("navLinks")?.classList.toggle("open");
+  const links = document.getElementById("navLinks");
+  if (!links) return;
+  const open = links.classList.toggle("open");
+  // בלי זה קורא מסך מכריז "סגור" גם כשהתפריט פתוח
+  document.querySelector(".nav-toggle")?.setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) links.querySelector("a")?.focus();
 }
 
 function handleDeliveryCheck(e) {

@@ -22,7 +22,7 @@ function pmEnsureDOM() {
         <img class="pm-photo" id="pmImg" src="" alt="" />
         <div id="pmBadges"></div>
         <span class="pm-size-flag" id="pmSizeFlag"></span>
-        <img class="pm-seal" src="assets/brand/logo-mark.png" alt="" />
+        <img class="pm-seal" src="assets/brand/logo-mark-96.png" alt="" />
       </div>
       <button class="pm-close" onclick="closeProductModal()" aria-label="סגירת חלון הזר">✕</button>
       <div class="pm-body">
@@ -117,16 +117,18 @@ function openProductModal(id, size) {
     <ul>${product.care.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>
     <p style="margin-top:12px"><strong>אגרטל מומלץ:</strong> ${esc(product.vase)}</p>`;
 
+  // נשאב מ-DELIVERY_ZONES ולא נכתב ידנית, כדי שלא ייווצרו שוב
+  // סתירות בין החלון הזה, עמוד המדיניות ובודק אזור החלוקה
   document.getElementById("pmPanelDelivery").innerHTML = `
     <ul>
-      <li><strong>דמי משלוח ₪${DELIVERY_FEE}</strong> — ומשלוח חינם בהזמנה מעל ₪${FREE_DELIVERY_OVER}.</li>
-      <li>קריית אתא — משלוח באותו יום בהזמנה עד 14:00.</li>
-      <li>חיפה, קריית ביאליק, מוצקין, חיים ונשר — באותו יום בהזמנה עד 13:00.</li>
-      <li>קריית ים, טירת כרמל, עכו ויגור — משלוח למחרת.</li>
+      <li><strong>דמי משלוח ₪${DELIVERY_FEE}</strong> — ומשלוח חינם בהזמנה מעל ₪${FREE_DELIVERY_OVER}. איסוף עצמי מהחנות בחינם.</li>
+      ${deliveryTableRows()
+        .map((r) => `<li>${esc(r.city)} — ${esc(r.info)}.</li>`)
+        .join("")}
       <li>בעמוד התשלום אפשר לבחור תאריך ושעת הגעה מועדפים.</li>
       <li>הזר נשזר ביום המשלוח — לא מראש, ולא מהמקרר.</li>
     </ul>
-    <p style="margin-top:12px">לא בטוחים שאנחנו מגיעים אליכם? בדקו בבודק אזור החלוקה בעמוד הבית, או שאלו את מיכל בצ'אט.</p>`;
+    <p style="margin-top:12px">לא בטוחים שאנחנו מגיעים אליכם? בדקו בבודק אזור החלוקה בעמוד הבית, או שאלו את מיכאל בצ'אט.</p>`;
 
   pmRenderSizes();
   pmSetImage(pmSize, true);

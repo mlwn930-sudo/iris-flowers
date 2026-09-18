@@ -31,7 +31,7 @@
 <nav class="nav">
   <div class="container">
     <a href="index.html" class="brand">
-      <img class="brand-mark" src="assets/brand/logo-mark.png" alt="פרחי איריס" />
+      <img class="brand-mark" src="assets/brand/logo-mark-96.png" width="96" height="96" alt="פרחי איריס" />
       <span class="brand-type">
         <span class="name">פרחי איריס</span>
         <span class="sub">HAUTE FLORAL STUDIO</span>
@@ -62,9 +62,11 @@
             </div>
             <div class="field"><label>שם מקבל/ת הזר</label><input type="text" id="fRecipient" placeholder="למי זה מגיע?" /></div>
             <div class="field"><label>כתובת למשלוח</label><input type="text" id="fAddress" placeholder="רחוב, מספר בית, עיר" /></div>
-            <div class="field-row">
-              <div class="field"><label>תאריך הגעה</label><input type="date" id="fDate" /></div>
-              <div class="field"><label>שעה מועדפת</label><input type="time" id="fTime" /></div>
+            <div class="field"><label for="fDate">תאריך הגעה</label><input type="date" id="fDate" onchange="renderSlots()" /></div>
+            <div class="field">
+              <label id="slotLabel">חלון הגעה</label>
+              <p class="field-hint">אנחנו מחלקים בחלונות, לא בשעה מדויקת — ככה השליח מגיע בזמן ולא ממהר</p>
+              <div class="slot-grid" id="slotGrid" role="radiogroup" aria-labelledby="slotLabel"></div>
             </div>
             <div class="field"><label>הערה לשליח (לא חובה)</label><input type="text" id="fNote" placeholder="קומה, דלת, או בקשה מיוחדת" /></div>
             <div class="step-nav">
@@ -161,7 +163,7 @@
       </div>
 
       <div class="care-banner">
-        <img class="seal" src="assets/brand/logo-mark.png" alt="" />
+        <img class="seal" src="assets/brand/logo-mark-96.png" width="96" height="96" alt="" />
         <div>
           <h4>כל זר כאן עובר דרך הידיים שלנו</h4>
           <p>
@@ -181,7 +183,7 @@
     </div>
 
     <div id="successView" class="success-screen" style="display:none">
-      <img class="seal" src="assets/brand/logo-mark.png" alt="" />
+      <img class="seal" src="assets/brand/logo-mark-96.png" width="96" height="96" alt="" />
       <h2>ההזמנה התקבלה</h2>
       <p>מספר הזמנה:</p>
       <p class="order-no" id="orderNumber"></p>

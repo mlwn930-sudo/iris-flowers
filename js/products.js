@@ -797,16 +797,157 @@ function normalizeArea(text) {
     .replace(/\bק\s+/g, "קריית ");
 }
 
+/* ערים שאנחנו *לא* מחלקים אליהן, אבל השם שלהן מכיל שם של אזור
+   שכן מחלקים אליו. בלי הרשימה הזו "טירת כרמל" נקלט כ"חיפה"
+   (בגלל האליאס "כרמל") והלקוח מקבל אישור שקרי. */
+const EXCLUDED_AREAS = ["טירת כרמל", "טירת הכרמל", "כרמיאל", "בת ים", "קריית שמונה", "קרית שמונה", "רמת גן", "רמת השרון", "אור עקיבא"];
+
 function checkDeliveryArea(query) {
   const q = normalizeArea(query);
   if (!q) return null;
 
+  // קלט קצר מדי אינו שם של מקום — "א" או "ים" החזירו בעבר
+  // "מגיעים לקריית אתא" ו"מגיעים לקריית חיים" בהתאמה.
+  if (q.length < 3) return null;
+
+  // ערים חריגות שנבלעות בתוך אליאס של אזור אחר
+  if (EXCLUDED_AREAS.some((city) => q.includes(normalizeArea(city)))) return null;
+
   for (const zone of DELIVERY_ZONES) {
     const names = [zone.city, ...zone.aliases].map(normalizeArea);
-    const hit = names.some((n) => q.includes(n) || n.includes(q));
+    const hit = names.some((n) => {
+      if (n.length < 3) return false;
+      // הקלט מכיל את שם האזור — "רחוב הרצל קריית אתא" ✓
+      if (q.includes(n)) return true;
+      // שם האזור מכיל את הקלט — מותר רק כשהקלט ארוך מספיק
+      // כדי להיות שם אמיתי, ולא אות בודדת או צירוף מקרי.
+      return q.length >= 4 && n.includes(q);
+    });
     if (hit) return { area: zone.city, info: zone.info, tier: zone.tier, min: LARGE_ORDER_MIN };
   }
   return null;
+}
+
+/* ============================================================
+   טבלת אזורי החלוקה לתצוגה
+   ------------------------------------------------------------
+   נבנית מ-DELIVERY_ZONES, כדי שלא יהיו שוב שלושה מקורות סותרים.
+   לפני זה עמוד המדיניות הבטיח "חיפה — אותו יום עד 13:00" בזמן
+   שהבודק אמר "מעל ₪250 בלבד", והבטיח "קריית ים — למחרת" בזמן
+   שהבודק אמר "אותו יום". כל טקסט שמתאר אזורי חלוקה חייב לצאת
+   מכאן ולא להיכתב ידנית.
+   ============================================================ */
+function deliveryTableRows() {
+  return DELIVERY_ZONES.map((z) => ({
+    city: z.city,
+    info: z.info,
+    tier: z.tier,
+    note: z.tier === "core" ? "חלוקה רגילה" : `הזמנות מעל ₪${LARGE_ORDER_MIN}`,
+  }));
+}
+
+/** רשימת הערים בשורה אחת — לשימוש הסוכנים ובטקסטים קצרים */
+function deliveryCitiesText() {
+  const core = DELIVERY_ZONES.filter((z) => z.tier === "core").map((z) => z.city);
+  const large = DELIVERY_ZONES.filter((z) => z.tier === "large").map((z) => z.city);
+  let out = `חלוקה רגילה: ${core.join(", ")}.`;
+  if (large.length) out += ` ל${large.join(" ול")} מגיעים בהזמנות מעל ₪${LARGE_ORDER_MIN}.`;
+  return out;
+}
+
+/** שעת הסגירה המוקדמת ביותר מבין אזורי החלוקה הרגילים */
+function earliestCutoffText() {
+  return "קריית אתא — עד 14:00. שאר הקריות — עד 13:00. שישי — עד 11:00.";
+}
+
+/* ============================================================
+   חלונות משלוח
+   ------------------------------------------------------------
+   עד היום שדה השעה היה <input type="time"> פתוח, כלומר הלקוח
+   יכול היה לבקש משלוח ב-03:40 בלילה — והמערכת הייתה מאשרת.
+   שליח אמיתי יוצא בחלונות, לא בשעה מדויקת.
+   ============================================================ */
+const DELIVERY_SLOTS = [
+  { id: "asap", label: "מוקדם ככל האפשר", from: 9.5, to: 20.5, note: "נצא איתו במשלוח הראשון שיוצא" },
+  { id: "morning", label: "09:30 – 12:00", from: 9.5, to: 12 },
+  { id: "noon", label: "12:00 – 15:00", from: 12, to: 15 },
+  { id: "afternoon", label: "15:00 – 18:00", from: 15, to: 18 },
+  { id: "evening", label: "18:00 – 20:30", from: 18, to: 20.5, note: "לא זמין בשישי" },
+];
+
+function findSlot(id) {
+  return DELIVERY_SLOTS.find((s) => s.id === id) || null;
+}
+
+/**
+ * אילו חלונות זמינים בתאריך מסוים.
+ * מחזיר לכל חלון גם סיבה לחסימה, כדי שנוכל להסביר ולא רק לאפור.
+ */
+function slotsForDate(dateStr, now) {
+  now = now || new Date();
+  const target = dateStr ? new Date(dateStr + "T00:00:00") : new Date(now);
+  const isToday = target.toDateString() === now.toDateString();
+  const day = target.getDay();
+  const nowHours = now.getHours() + now.getMinutes() / 60;
+
+  const FRIDAY_END = 14; // שישי — יום קצר
+
+  return DELIVERY_SLOTS.map((raw) => {
+    let slot = { ...raw };
+
+    if (day === 6) return { ...slot, ok: false, why: "שבת — החנות סגורה" };
+
+    if (day === 5) {
+      // חלון שמתחיל אחרי הסגירה — לא קיים
+      if (slot.from >= FRIDAY_END) return { ...slot, ok: false, why: "בשישי מסיימים ב-14:00" };
+      // חלון שחוצה את שעת הסגירה — מקצרים אותו במקום להבטיח שעה
+      // שבה כבר אין אף אחד בחנות
+      if (slot.to > FRIDAY_END) {
+        slot.to = FRIDAY_END;
+        if (slot.id !== "asap") slot.label = slot.label.replace(/–.*/, "– 14:00");
+        slot.note = "בשישי החלון מתקצר";
+      }
+    }
+
+    // חלון שכבר חלף היום — צריך שעה וחצי הכנה לפני שהוא נסגר
+    if (isToday && slot.to <= nowHours + 1.5) {
+      return { ...slot, ok: false, why: "החלון הזה כבר חלף להיום" };
+    }
+    return { ...slot, ok: true, why: "" };
+  });
+}
+
+/* ============================================================
+   המשפט היומי
+   ------------------------------------------------------------
+   מתחלף פעם ביום ב-08:00 בבוקר. לפני 08:00 עדיין מוצג המשפט
+   של אתמול — כי מי שנכנס ב-06:00 עדיין נמצא באתמול שלו.
+   נבחר לפי מספר היום בשנה, כך שהוא זהה לכל המבקרים באותו יום
+   ומתחלף בדיוק פעם ביממה. אין כאן אקראיות שמרצדת ברענון.
+   ============================================================ */
+const DAILY_LINES = [
+  "פרח אחד על שולחן משנה את מצב הרוח של כל החדר.",
+  "אף אחד מעולם לא הצטער ששלח פרחים. רק ששכח.",
+  "היום מישהו מחכה לסימן שחושבים עליו.",
+  "אפשר להגיד הרבה דברים בלי לפתוח את הפה.",
+  "הזר הכי יפה הוא זה שהגיע בלי סיבה.",
+  "יש ימים שצריך מילים. ויש ימים שעדיף פרחים.",
+  "בוקר טוב. מישהו היום ישמח בזכותך.",
+  "פרחים הם הדרך הכי קצרה בין שני אנשים.",
+  "לא צריך תאריך מיוחד כדי שמישהו ירגיש מיוחד.",
+  "מה שמזכיר לאנשים שהם אהובים — שווה את המחיר.",
+  "כל זר שיוצא מכאן נבנה ביד. בלי קיצורי דרך.",
+  "הדבר היחיד שנשאר מרגע יפה הוא מי שהיה שם איתך.",
+  "טריות היא לא סיסמה. היא ההבדל בין שבוע ליומיים.",
+  "פרחים לא פותרים כלום — הם רק מזכירים שיש מי שאכפת לו.",
+];
+
+/** מחזיר את המשפט של היום. היום "מתחלף" ב-08:00. */
+function dailyLine(now) {
+  now = now || new Date();
+  const shifted = new Date(now.getTime() - 8 * 60 * 60 * 1000); // היום מתחיל ב-08:00
+  const dayNumber = Math.floor(shifted.getTime() / 86400000);
+  return DAILY_LINES[((dayNumber % DAILY_LINES.length) + DAILY_LINES.length) % DAILY_LINES.length];
 }
 
 const GREETING_TONES = [

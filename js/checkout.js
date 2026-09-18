@@ -71,6 +71,53 @@ function toggleAnonymous() {
   }
 }
 
+/* ============================================================
+   חלון ההגעה
+   ============================================================ */
+let selectedSlot = "asap";
+
+function renderSlots() {
+  const box = document.getElementById("slotGrid");
+  if (!box) return;
+  const date = document.getElementById("fDate")?.value || "";
+  const list = slotsForDate(date);
+
+  // אם החלון שנבחר כבר לא זמין בתאריך החדש — עוברים לראשון שכן
+  if (!list.some((s) => s.id === selectedSlot && s.ok)) {
+    const first = list.find((s) => s.ok);
+    selectedSlot = first ? first.id : null;
+  }
+
+  box.innerHTML = list
+    .map(
+      (s) => `
+      <button type="button" class="slot ${s.id === selectedSlot ? "on" : ""} ${s.ok ? "" : "off"}"
+              role="radio" aria-checked="${s.id === selectedSlot}" ${s.ok ? "" : "disabled"}
+              onclick="pickSlot('${s.id}')">
+        <b>${esc(s.label)}</b>
+        <small>${esc(s.ok ? s.note || "" : s.why)}</small>
+      </button>`
+    )
+    .join("");
+
+  if (!list.some((s) => s.ok)) {
+    box.innerHTML = `<p class="slot-none">בתאריך הזה אנחנו לא מחלקים. בחרו תאריך אחר, או דברו עם מיכאל ונמצא פתרון.</p>`;
+  }
+}
+
+function pickSlot(id) {
+  const slot = slotsForDate(document.getElementById("fDate")?.value || "").find((s) => s.id === id);
+  if (!slot || !slot.ok) return;
+  selectedSlot = id;
+  renderSlots();
+  if (typeof announce === "function") announce(`נבחר חלון הגעה: ${slot.label}`);
+}
+
+function selectedSlotLabel() {
+  const s = findSlot(selectedSlot);
+  return s ? s.label : "";
+}
+
 function discountFor(subtotal) {
   if (!appliedCoupon) return 0;
   const c = COUPONS[appliedCoupon];
@@ -407,7 +454,7 @@ function buildOrderMessage(orderNum) {
   if (val("fRecipient")) parts.push(`🎁 מקבל/ת הזר: ${val("fRecipient")}`);
   parts.push(`📍 כתובת: ${val("fAddress")}`);
 
-  const when = [val("fDate"), val("fTime")].filter(Boolean).join(" בשעה ");
+  const when = [val("fDate"), selectedSlotLabel()].filter(Boolean).join(" · חלון ");
   if (when) parts.push(`📅 מועד הגעה: ${when}`);
   if (val("fNote")) parts.push(`🚪 הערה לשליח: ${val("fNote")}`);
 
@@ -496,6 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderProgress();
   renderAddons();
+  renderSlots();
   renderOrderSummary();
   renderToneButtons();
   updateCartBadge();
@@ -506,5 +554,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date().toISOString().slice(0, 10);
     dateEl.min = today;
     if (!dateEl.value) dateEl.value = today;
+    renderSlots();
   }
 });

@@ -34,6 +34,42 @@ function initReveal() {
   );
 
   targets.forEach(function (el) { io.observe(el); });
+
+  /* ------------------------------------------------------------
+     רשת ביטחון: כל מה שכבר *מעל* המסך חייב להיות גלוי.
+
+     ה-Observer מדווח רק על מה שנחתך עם המסך. כשהעמוד נטען כבר
+     מגולל — או קופץ — כל מה שנדלג עליו נשאר ב-opacity:0 לנצח,
+     והמשתמש שגולל למעלה רואה קטעים ריקים.
+
+     זה קורה בארבעה מצבים יומיומיים:
+       · כניסה בקישור עם עוגן (policy.html#accessibility)
+       · רענון שבו הדפדפן משחזר את מיקום הגלילה
+       · חיפוש בעמוד (Ctrl+F) שקופץ לתוצאה
+       · מקש End
+     ------------------------------------------------------------ */
+  function revealPassed() {
+    targets.forEach(function (el) {
+      if (el.classList.contains("revealed")) return;
+      var r = el.getBoundingClientRect();
+      // כבר מעל המסך, או נמצא בתוכו — אין סיבה להסתיר
+      if (r.bottom < window.innerHeight * 0.92) {
+        el.classList.add("revealed");
+        io.unobserve(el);
+      }
+    });
+  }
+
+  revealPassed();
+  window.addEventListener("load", revealPassed);
+  window.addEventListener("hashchange", function () { setTimeout(revealPassed, 700); });
+
+  // סריקה קצרה בשנייה הראשונה, בזמן שתמונות עצלות עדיין מזיזות את הפריסה
+  var sweeps = 0;
+  var sweep = setInterval(function () {
+    revealPassed();
+    if (++sweeps > 6) clearInterval(sweep);
+  }, 250);
 }
 
 /** מסמן אלמנטים חדשים שנוצרו ב-JS (כרטיסי מוצר, למשל) */
@@ -342,6 +378,32 @@ function imgSrcset(src, sizes) {
 }
 
 /* ============================================================
+   6.5 המשפט היומי
+   ------------------------------------------------------------
+   מוזרק מיד מתחת לניווט, בראש כל עמוד. מתחלף פעם ביום ב-08:00.
+   ============================================================ */
+function initDailyLine() {
+  if (typeof dailyLine !== "function") return;
+  if (document.querySelector(".daily-line")) return;
+
+  var nav = document.querySelector(".nav");
+  if (!nav) return;
+
+  var el = document.createElement("div");
+  el.className = "daily-line";
+  el.setAttribute("role", "note");
+  el.innerHTML = '<span class="bud" aria-hidden="true">🌸</span><span>' + dailyLine() + "</span>";
+  nav.parentNode.insertBefore(el, nav.nextSibling);
+
+  // אם הדף נשאר פתוח מעבר ל-08:00, המשפט מתחלף בלי רענון
+  setInterval(function () {
+    var now = dailyLine();
+    var span = el.querySelector("span:last-child");
+    if (span && span.textContent !== now) span.textContent = now;
+  }, 60000);
+}
+
+/* ============================================================
    7. גלילה לעוגן — אמינה גם בנייד
    ------------------------------------------------------------
    שתי בעיות בהתנהגות ברירת המחדל של הדפדפן:
@@ -518,6 +580,7 @@ function initHeroVideo() {
    הפעלה
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
+  initDailyLine();
   initReveal();
   initScrollProgress();
   initCutoffBar();

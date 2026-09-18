@@ -556,6 +556,42 @@ h1,h2,h3{letter-spacing:-.01em;}
 /* ============================================================
    12. חלון המוצר
    ============================================================ */
+
+/* ------------------------------------------------------------
+   תיקון קריטי: החלון לא היה ניתן לגלילה כלל בדסקטופ.
+
+   .pm-body הוא פריט גריד, ולפריט גריד יש min-height:auto —
+   כלומר הוא לא יכול להתכווץ מתחת לגובה התוכן שלו. התוצאה:
+   הגוף גדל ל-1605 פיקסלים בתוך חלון של 663, .pm{overflow:hidden}
+   חתך את השאר, ו-overflow-y:auto מעולם לא נכנס לפעולה.
+   פירוט ההרכב, הביקורות וכפתורי הקנייה היו פשוט בלתי נגישים.
+
+   min-height:0 מחזיר לפריט את היכולת להתכווץ — ואז הגלילה עובדת.
+   ------------------------------------------------------------ */
+/* min-height:0 לבדו לא הספיק: גם *שורת* הגריד גדלה לגובה התוכן,
+   כי ברירת המחדל שלה היא auto. minmax(0,1fr) כולא אותה בגובה
+   החלון, ורק אז הגוף מתחיל לגלול. */
+.pm{min-height:0;grid-template-rows:minmax(0,1fr);}
+.pm-body{min-height:0;overscroll-behavior:contain;}
+.pm-media{min-height:0;}
+@media(max-width:1080px){
+  /* בפריסה של עמודה אחת התמונה קבועה והגוף הוא זה שגולל */
+  .pm{grid-template-rows:auto minmax(0,1fr);}
+  .pm-media{min-height:250px;}
+  .pm-body{max-height:none;}
+}
+
+/* פס גלילה דק בתוך החלון, שלא ייראה כמו פס מערכת */
+.pm-body::-webkit-scrollbar{width:6px;}
+.pm-body::-webkit-scrollbar-thumb{background:rgba(168,85,247,.5);border-radius:999px;}
+
+/* רמז ויזואלי שיש עוד תוכן למטה */
+.pm-body::after{
+  content:"";position:sticky;bottom:-32px;display:block;height:34px;margin-top:-34px;
+  background:linear-gradient(to top,rgba(11,1,32,.95),transparent);
+  pointer-events:none;flex-shrink:0;
+}
+
 .pm-overlay{background:rgba(5,0,14,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
 .pm{
   background:linear-gradient(165deg,#1B0640 0%,#0B0120 100%);
@@ -906,7 +942,78 @@ body.overlay-open .to-top{opacity:0;pointer-events:none;}
 .hero-video.done{opacity:0;}
 
 /* ============================================================
-   23. התאמות נייד
+   23. חלונות הגעה בקופה
+   ============================================================ */
+.field-hint{font-size:.78rem;color:var(--text-faint);margin:-2px 0 9px;line-height:1.5;}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;}
+.slot{
+  display:flex;flex-direction:column;gap:2px;text-align:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.28);
+  border-radius:13px;padding:12px 10px;transition:all .2s;
+}
+.slot b{font-size:.92rem;color:#fff;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+.slot small{font-size:.7rem;color:var(--text-faint);line-height:1.4;min-height:1em;}
+.slot:hover:not(.off){border-color:var(--neon-cyan);background:rgba(34,211,238,.09);transform:translateY(-2px);}
+.slot.on{
+  border-color:var(--neon-magenta);
+  background:linear-gradient(150deg,rgba(255,45,149,.18),rgba(168,85,247,.12));
+  box-shadow:0 0 22px rgba(255,45,149,.3);
+}
+.slot.on small{color:#FFD9EC;}
+.slot.off{opacity:.42;cursor:not-allowed;border-style:dashed;}
+.slot.off b{color:var(--text-faint);}
+.slot:focus-visible{outline:3px solid var(--neon-cyan);outline-offset:3px;}
+.slot-none{
+  grid-column:1/-1;font-size:.86rem;color:var(--warn);
+  background:rgba(255,92,138,.08);border:1px solid rgba(255,92,138,.3);
+  border-radius:13px;padding:14px;text-align:center;
+}
+
+/* ============================================================
+   24. המשפט היומי
+   ------------------------------------------------------------
+   יושב בין הניווט לרצועת הטיימר. שקט, נמוך, לא מתחרה בכלום —
+   אבל ראשון בדף, כך שהוא הדבר הראשון שקוראים.
+   ============================================================ */
+.daily-line{
+  position:relative;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:11px 22px;text-align:center;
+  background:linear-gradient(90deg,rgba(7,0,17,0),rgba(20,4,48,.7),rgba(7,0,17,0));
+  border-bottom:1px solid rgba(168,85,247,.14);
+  font-family:'Frank Ruhl Libre',serif;
+  font-size:.95rem;font-style:italic;letter-spacing:.01em;
+  color:rgba(255,246,252,.78);
+}
+.daily-line .bud{
+  font-style:normal;font-size:1rem;line-height:1;flex-shrink:0;
+  filter:drop-shadow(0 0 calc(10px * var(--glow-strength)) rgba(255,45,149,.7));
+}
+.daily-line em{
+  font-style:italic;
+  background:var(--aurora);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:auroraSlide 10s linear infinite;
+}
+@media(max-width:620px){
+  .daily-line{font-size:.82rem;padding:9px 14px;gap:8px;}
+}
+
+/* ============================================================
+   25. מספרים — טיפוגרפיה של מוצר, לא של טקסט
+   ------------------------------------------------------------
+   מחירים, שעות וסכומים מקבלים ספרות בעלות רוחב אחיד. בלי זה
+   המחיר "קופץ" כשמחליפים גודל זר, וזה נראה זול.
+   ============================================================ */
+.price,.pm-price,.signature-price,.order-total .amount,.cart-total,
+.cutoff-clock,.rating-score .num,.slot b,.addon .amt,.aside-row .amt,
+.order-sub,.cart-fee-row,.card-rating small,.chat-card .cc-price{
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+}
+
+/* ============================================================
+   26. התאמות נייד
    ============================================================ */
 @media(max-width:980px){
   .hero h1{font-size:2.9rem;}
