@@ -52,8 +52,10 @@ function initReveal() {
     targets.forEach(function (el) {
       if (el.classList.contains("revealed")) return;
       var r = el.getBoundingClientRect();
-      // כבר מעל המסך, או נמצא בתוכו — אין סיבה להסתיר
-      if (r.bottom < window.innerHeight * 0.92) {
+      // כל מה שכבר נכנס לאזור המסך — או עבר אותו — חייב להיות גלוי.
+      // בודקים את ה-top ולא את ה-bottom, אחרת אלמנט גבוה מהמסך
+      // (רשת מוצרים למשל) לא עומד בתנאי ונשאר שקוף.
+      if (r.top < window.innerHeight * 0.92) {
         el.classList.add("revealed");
         io.unobserve(el);
       }
@@ -63,6 +65,22 @@ function initReveal() {
   revealPassed();
   window.addEventListener("load", revealPassed);
   window.addEventListener("hashchange", function () { setTimeout(revealPassed, 700); });
+
+  // גם בגלילה: קפיצה מהירה (גלגלת, מקש End, גרירת פס הגלילה)
+  // מדלגת על אלמנטים מהר מכדי שה-Observer יספיק לדווח עליהם.
+  var scrollTick = false;
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (scrollTick) return;
+      scrollTick = true;
+      requestAnimationFrame(function () {
+        revealPassed();
+        scrollTick = false;
+      });
+    },
+    { passive: true }
+  );
 
   // סריקה קצרה בשנייה הראשונה, בזמן שתמונות עצלות עדיין מזיזות את הפריסה
   var sweeps = 0;

@@ -1,0 +1,501 @@
+/* ============================================================
+   פרחי איריס — ערכת "BLOSSOM"
+   ------------------------------------------------------------
+   ורוד בהיר + סגול לילך. נטענת אחרי aurora.css ודורסת אותה.
+
+   זה לא רק החלפת צבעים — זה היפוך פולריות. האתר נבנה כהה עם
+   טקסט בהיר, וכאן הוא הופך לבהיר עם טקסט כהה. לכן הקובץ הזה
+   חייב לדרוס לא רק את הרקעים אלא גם כל טקסט, גבול וצל.
+
+   להסרה: מוחקים שורה אחת מכל עמוד HTML והאתר חוזר לכהה.
+   ============================================================ */
+
+:root{
+  /* ---------- הבסיס הבהיר ---------- */
+  --blush:#FDE8F2;          /* ורוד בהיר — הרקע הראשי */
+  --blush-deep:#F9D6E6;
+  --lilac:#E9DEFC;          /* סגול לילך */
+  --lilac-deep:#D9C7F7;
+  --cream:#FFF7FB;
+  --paper:#FFFFFF;
+
+  /* ---------- טקסט: כהה על בהיר ---------- */
+  --plum:#2E1A3E;           /* טקסט ראשי */
+  --ink:#2E1A3E;
+  --text-cream:#2E1A3E;
+  --text-dim:#5E4470;
+  --text-faint:#6E5585;  /* כהה מספיק כדי לעבור WCAG AA גם בטקסט קטן */
+  --muted:#6B5478;
+
+  /* ---------- מבטאים ---------- */
+  --rose:#D6608F;           /* ורוד עז — פעולות ראשיות */
+  --rose-soft:#F0A8C6;
+  --violet:#8B5CF6;         /* סגול — קישורים ואינטראקציה */
+  --violet-deep:#6D3FD4;
+  --gold:#C9973F;
+  --gold-soft:#A87C2E;
+  --gold-deep:#8A6420;
+
+  /* ---------- התאמות לשמות הישנים ---------- */
+  --iris-ink:#FDE8F2;
+  --iris-night:#F6E4F4;
+  --iris-deep:#6D3FD4;
+  --iris-mid:#8B5CF6;
+  --iris-soft:#F3EAFC;
+  --neon-violet:#8B5CF6;
+  --neon-magenta:#D6608F;
+  --neon-cyan:#5B8FD6;
+  --neon-lime:#7CB342;
+
+  /* ---------- קווים וזכוכית ---------- */
+  --line:rgba(109,63,212,.16);
+  --input-line:rgba(109,63,212,.26);
+  --glass:rgba(255,255,255,.72);
+  --glass-soft:rgba(255,255,255,.55);
+  --glass-line:rgba(109,63,212,.18);
+  --glass-line-soft:rgba(46,26,62,.1);
+
+  /* ---------- סטטוסים ---------- */
+  --ok:#2E8B57;
+  --warn:#C2185B;
+
+  /* ---------- מעברי צבע ---------- */
+  --gold-grad:linear-gradient(115deg,#D6608F 0%,#B57BE8 40%,#8B5CF6 70%,#D6608F 100%);
+  --aurora:linear-gradient(115deg,#D6608F,#C08BEE,#8B5CF6,#F0A8C6);
+  --aurora-soft:linear-gradient(115deg,rgba(214,96,143,.6),rgba(139,92,246,.6));
+
+  /* ---------- צללים רכים במקום זוהר ---------- */
+  --glow-violet:0 6px 20px rgba(109,63,212,.16);
+  --glow-magenta:0 6px 20px rgba(214,96,143,.18);
+  --shadow-soft:0 6px 22px rgba(109,63,212,.12);
+  --shadow-lift:0 16px 44px rgba(109,63,212,.18);
+  --glow-strength:.35;   /* הזוהר מתעמעם — על רקע בהיר הוא מלכלך */
+}
+
+/* ============================================================
+   1. הרקע
+   ============================================================ */
+body{
+  background:var(--blush);
+  color:var(--plum);
+}
+
+/* כתמי האור — עדינים, בגווני ורוד ולילך */
+body::before{
+  background:
+    radial-gradient(38vmax 30vmax at 12% 8%, rgba(233,222,252,.9), transparent 62%),
+    radial-gradient(42vmax 34vmax at 88% 18%, rgba(253,214,232,.85), transparent 64%),
+    radial-gradient(36vmax 30vmax at 76% 82%, rgba(226,214,250,.7), transparent 62%),
+    radial-gradient(30vmax 26vmax at 20% 92%, rgba(255,240,247,.9), transparent 62%),
+    var(--blush);
+  filter:blur(40px);
+}
+body::after{opacity:.22;mix-blend-mode:multiply;}
+
+.scroll-progress{box-shadow:0 1px 6px rgba(214,96,143,.4);}
+::-webkit-scrollbar-track{background:rgba(109,63,212,.06);}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--rose),var(--violet));}
+::selection{background:rgba(214,96,143,.25);color:var(--plum);}
+
+/* ============================================================
+   2. טיפוגרפיה
+   ============================================================ */
+h1,h2,h3,h4,h5{color:var(--plum);}
+.section-head h2{text-shadow:none;color:var(--plum);}
+.section-head p{color:var(--text-dim);}
+.section-head .kicker,.story-text .kicker{color:var(--rose);text-shadow:none;}
+.hero h1{text-shadow:none;color:var(--plum);}
+.hero p.lede{color:var(--text-dim);text-shadow:none;}
+
+/* ============================================================
+   3. ניווט
+   ============================================================ */
+.nav{
+  background:rgba(255,255,255,.78);
+  border-bottom:1px solid rgba(109,63,212,.14);
+  box-shadow:0 2px 20px rgba(109,63,212,.08);
+}
+.nav-links a{color:var(--text-dim);}
+.nav-links a:hover,.nav-links a.active{color:var(--violet-deep);text-shadow:none;}
+.nav-links a::after{box-shadow:none;}
+.brand-mark{filter:drop-shadow(0 2px 8px rgba(109,63,212,.25));}
+.brand-type .sub{color:var(--text-faint);}
+.nav-toggle{color:var(--violet-deep);}
+.cart-badge{background:var(--rose);color:#fff;border-color:#fff;}
+
+/* ============================================================
+   4. כפתורים
+   ============================================================ */
+.btn::after{background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);}
+.btn-gold{
+  background:linear-gradient(115deg,#D6608F,#B57BE8,#8B5CF6);
+  background-size:200% 100%;color:#fff;
+  box-shadow:0 8px 22px rgba(214,96,143,.3);
+}
+.btn-gold:hover{box-shadow:0 14px 32px rgba(214,96,143,.38);filter:brightness(1.05);}
+.btn-deep{
+  background:linear-gradient(135deg,#8B5CF6,#6D3FD4);color:#fff;
+  border-color:transparent;box-shadow:0 8px 22px rgba(109,63,212,.28);
+}
+.btn-deep:hover{background:linear-gradient(135deg,#9B72F8,#7B4FE0);box-shadow:0 14px 32px rgba(109,63,212,.35);}
+.btn-ghost,.btn-outline{
+  border-color:rgba(109,63,212,.35);color:var(--violet-deep);
+  background:rgba(255,255,255,.6);
+}
+.btn-ghost:hover,.btn-outline:hover{
+  border-color:var(--violet);background:rgba(139,92,246,.1);
+  color:var(--violet-deep);box-shadow:none;
+}
+
+/* ============================================================
+   5. הירו — צעיף בהיר על התמונה
+   ============================================================ */
+.hero{color:var(--plum);}
+.hero::before{
+  background:
+    linear-gradient(to top,rgba(253,232,242,.97) 2%,rgba(253,232,242,.86) 40%,rgba(233,222,252,.8) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 50%,rgba(255,255,255,.65),transparent 72%);
+}
+.hero-bg{opacity:.5;}
+.hero-eyebrow{
+  border-color:rgba(214,96,143,.45);background:rgba(255,255,255,.75);
+  color:var(--rose);box-shadow:0 4px 14px rgba(214,96,143,.14);
+}
+.hero-mark{animation:none;filter:drop-shadow(0 8px 24px rgba(109,63,212,.25));}
+.hero-tag{
+  border-color:rgba(109,63,212,.2);background:rgba(255,255,255,.72);
+  color:var(--text-dim);
+}
+.hero-tag strong{color:var(--violet-deep);text-shadow:none;}
+.hero-tag span{opacity:1;color:var(--text-faint);}
+.hero-directions{color:var(--violet-deep);border-bottom-color:rgba(109,63,212,.3);}
+.hero-directions:hover{color:var(--rose);border-color:var(--rose);}
+.hero-tags{border-top-color:rgba(109,63,212,.14);}
+
+/* ============================================================
+   6. קצב הקטעים
+   ============================================================ */
+.band-deep{
+  background:linear-gradient(180deg,rgba(233,222,252,.7),rgba(253,232,242,.5));
+  border-block-color:rgba(109,63,212,.12);
+}
+.band-glow{
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,.75),transparent 70%),
+    linear-gradient(180deg,rgba(255,247,251,.8),transparent);
+}
+.band-deep::before,.band-glow::before{
+  background:linear-gradient(90deg,transparent,rgba(214,96,143,.3),rgba(139,92,246,.3),transparent);
+}
+
+/* ============================================================
+   7. כרטיסים
+   ============================================================ */
+.cat-card,.product-card,.panel,.help-card,.visit-card,.rating-wrap,
+.signature-card,.greeting-card,.checkout-main,.checkout-aside,.catalog-tools{
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(109,63,212,.14);
+  box-shadow:0 8px 28px rgba(109,63,212,.1);
+  backdrop-filter:blur(10px);
+}
+.product-card:hover,.cat-card:hover{
+  box-shadow:0 20px 44px rgba(109,63,212,.18);
+  border-color:rgba(214,96,143,.3);
+}
+.product-body h4,.cat-card h4{color:var(--plum);}
+.product-body p{color:var(--text-dim);}
+.product-foot{border-top-color:rgba(109,63,212,.12);}
+.price{color:var(--violet-deep);text-shadow:none;}
+.price small,.price s{color:var(--text-faint);}
+.add-btn{border-color:rgba(214,96,143,.4);color:var(--rose);background:rgba(214,96,143,.06);}
+.add-btn:hover{background:var(--rose);color:#fff;border-color:var(--rose);box-shadow:none;}
+.quick-view{
+  background:rgba(255,255,255,.92);border-color:rgba(109,63,212,.25);
+  color:var(--violet-deep);box-shadow:0 4px 14px rgba(109,63,212,.15);
+}
+.badge-stack .badge{
+  background:rgba(255,255,255,.92);border-color:rgba(109,63,212,.2);color:var(--violet-deep);
+}
+.badge-stack .badge.bestseller{
+  background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;box-shadow:none;
+}
+.cat-card.featured::after{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;box-shadow:none;}
+.card-rating .stars svg{fill:var(--gold);filter:none;}
+.card-rating .stars svg.empty{fill:rgba(46,26,62,.15);}
+.card-rating small{color:var(--text-faint);}
+.hero-card-flag{background:rgba(214,96,143,.1);border-color:rgba(214,96,143,.35);color:var(--rose);box-shadow:none;}
+.hero-card-why{color:var(--violet-deep);border-top-color:rgba(139,92,246,.22);}
+.cat-filters button{border-color:rgba(109,63,212,.2);color:var(--text-dim);background:rgba(255,255,255,.6);}
+.cat-filters button:hover{border-color:var(--violet);color:var(--violet-deep);box-shadow:none;}
+.cat-filters button.active{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;box-shadow:none;}
+
+/* ============================================================
+   8. רצועות ומידע
+   ============================================================ */
+.daily-line{
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+  border-bottom-color:rgba(109,63,212,.12);color:var(--text-dim);
+}
+.daily-line em{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.cutoff-bar{
+  background:linear-gradient(90deg,rgba(253,214,232,.7),rgba(233,222,252,.7));
+  border-block-color:rgba(109,63,212,.16);color:var(--plum);
+}
+.cutoff-bar a{color:var(--violet-deep);}
+.cutoff-clock{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.delivery-strip{
+  background:linear-gradient(90deg,rgba(255,255,255,.7),rgba(233,222,252,.6));
+  border-block-color:rgba(109,63,212,.16);
+}
+.delivery-strip .dc-label,.dc-label{color:var(--plum);}
+.delivery-strip .dc-label small{color:var(--text-faint);}
+.delivery-form input{color:var(--plum);border-bottom-color:rgba(109,63,212,.3);}
+.delivery-form input::placeholder{color:var(--text-faint);}
+.delivery-form button{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;}
+.ship-note{background:rgba(139,92,246,.07);border-color:rgba(139,92,246,.22);color:var(--text-dim);}
+.ship-note strong{color:var(--violet-deep);}
+.ship-free{color:var(--ok);}
+.result-count{color:var(--text-dim);}
+.result-count b{color:var(--violet-deep);}
+.tool-field label{color:var(--rose);}
+.search-box input,.tool-field select{
+  background:rgba(255,255,255,.85);border-color:rgba(109,63,212,.22);color:var(--plum);
+}
+.search-box input::placeholder{color:var(--text-faint);}
+.search-box input:focus,.tool-field select:focus{
+  border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.15);
+}
+.tool-field select option{background:#fff;color:var(--plum);}
+.no-results{color:var(--text-dim);}
+.no-results strong{color:var(--plum);}
+
+/* ============================================================
+   9. חלון המוצר
+   ============================================================ */
+.pm-overlay{background:rgba(46,26,62,.4);}
+.pm{
+  background:linear-gradient(170deg,#FFFFFF 0%,#FDF3F8 100%);
+  border-color:rgba(109,63,212,.2);
+  box-shadow:0 30px 80px rgba(46,26,62,.28);
+}
+.pm-body::after{background:linear-gradient(to top,rgba(253,243,248,.96),transparent);}
+.pm-media::after{border-inline-end-color:rgba(109,63,212,.14);background:none;}
+.pm-price{color:var(--violet-deep);text-shadow:none;}
+.pm-price-note,.size-note,.size-label{color:var(--text-faint);}
+.pm-botanical{color:var(--text-dim);}
+.pm-tag{color:var(--rose);border-color:rgba(214,96,143,.4);background:rgba(214,96,143,.07);}
+.pm-size-flag{background:rgba(255,255,255,.92);border-color:rgba(109,63,212,.22);color:var(--violet-deep);}
+.pm-price-row{border-color:rgba(109,63,212,.12);}
+.size-opt{background:rgba(255,255,255,.8);border-color:rgba(109,63,212,.18);}
+.size-opt .s-name{color:var(--plum);}
+.size-opt .s-stems,.size-opt .s-price{color:var(--text-dim);}
+.size-opt:hover{border-color:var(--violet);background:rgba(139,92,246,.07);box-shadow:none;}
+.size-opt.active{
+  background:linear-gradient(150deg,rgba(214,96,143,.12),rgba(139,92,246,.1));
+  border-color:var(--rose);box-shadow:0 4px 14px rgba(214,96,143,.18);
+}
+.size-opt.active .s-price{color:var(--rose);}
+.comp-card{background:rgba(253,232,242,.5);border-color:rgba(109,63,212,.14);}
+.comp-head>span:first-child{color:var(--text-faint);}
+.comp-total{color:var(--violet-deep);}
+.comp-list li{border-bottom-color:rgba(109,63,212,.1);}
+.comp-list .c-name{color:var(--text-dim);}
+.comp-list .c-qty{background:rgba(139,92,246,.14);color:var(--violet-deep);}
+.pm-tabs{border-bottom-color:rgba(109,63,212,.14);}
+.pm-tab{color:var(--text-faint);}
+.pm-tab:hover{color:var(--plum);}
+.pm-tab.active{color:var(--violet-deep);border-bottom-color:var(--rose);text-shadow:none;}
+.pm-panel{color:var(--text-dim);}
+.pm-close{background:rgba(214,96,143,.12);border-color:rgba(214,96,143,.3);color:var(--rose);}
+.pm-close:hover{background:var(--rose);color:#fff;box-shadow:none;}
+.pm-share-btn{border-color:rgba(109,63,212,.25);color:var(--violet-deep);background:rgba(255,255,255,.7);}
+.pm-share-btn:hover{border-color:var(--violet);background:rgba(139,92,246,.1);box-shadow:none;}
+.pm-share-btn.wa{border-color:rgba(37,211,102,.4);color:#1B8B45;background:rgba(37,211,102,.08);}
+.season-note{background:rgba(124,179,66,.08);border-color:rgba(124,179,66,.28);color:var(--text-dim);}
+.season-note strong{color:#3F6B18;}
+.pm-reviews{border-top-color:rgba(109,63,212,.14);}
+.pm-reviews h5{color:var(--rose);}
+.pm-reviews h5 .avg{color:var(--violet-deep);}
+.mini-review{background:rgba(253,232,242,.5);border-color:rgba(109,63,212,.12);}
+.mini-review p{color:var(--text-dim);}
+.mini-review .by{color:var(--violet-deep);}
+.mini-review .by span{color:var(--text-faint);}
+
+/* ============================================================
+   10. עגלה, קופה, צ'אט
+   ============================================================ */
+.overlay{background:rgba(46,26,62,.35);}
+.cart-drawer{
+  background:linear-gradient(180deg,#FFFFFF 0%,#FDF3F8 100%);
+  border-inline-end-color:rgba(109,63,212,.16);
+  box-shadow:-20px 0 60px rgba(46,26,62,.18);
+}
+.cart-head h3,.cart-total{color:var(--plum);}
+.cart-close{color:var(--text-faint);}
+.cart-row{border-bottom-color:rgba(109,63,212,.1);}
+.cart-row .thumb{border-color:rgba(109,63,212,.14);}
+.cart-row .info h5{color:var(--plum);}
+.cart-row .qty button{border-color:rgba(109,63,212,.2);color:var(--plum);}
+.cart-row .price{color:var(--violet-deep);}
+.cart-foot,.cart-head{border-color:rgba(109,63,212,.12);}
+.cart-fee-row{color:var(--text-dim);}
+.cart-empty{color:var(--text-faint);}
+.cart-progress .track{background:rgba(109,63,212,.1);}
+.cart-progress .fill{background:linear-gradient(90deg,#D6608F,#8B5CF6);box-shadow:none;}
+.cart-progress .label{color:var(--text-faint);}
+.cart-progress .label b{color:var(--violet-deep);}
+
+.field label{color:var(--text-dim);}
+.field input,.field textarea{background:rgba(255,255,255,.85);border-color:rgba(109,63,212,.22);color:var(--plum);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-faint);}
+.field input:focus,.field textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.15);}
+.field-hint{color:var(--text-faint);}
+.greeting-card textarea{color:var(--violet-deep);}
+.tone-btn{border-color:rgba(109,63,212,.2);color:var(--text-dim);}
+.tone-btn:hover{border-color:var(--violet);background:rgba(139,92,246,.08);color:var(--violet-deep);}
+.tone-btn.active{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;}
+.demo-flag{background:rgba(201,151,63,.1);color:#8A6420;border-color:rgba(201,151,63,.35);}
+.checkout-progress .circle{border-color:rgba(109,63,212,.2);color:var(--text-faint);}
+.checkout-progress .label{color:var(--text-faint);}
+.checkout-progress .line{background:rgba(109,63,212,.14);}
+.checkout-progress .step.active .circle{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;box-shadow:none;}
+.checkout-progress .step.active .label{color:var(--rose);}
+.checkout-progress .step.done .circle{background:rgba(46,139,87,.12);border-color:var(--ok);color:var(--ok);}
+.order-total .amount{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.order-sub,.aside-note{color:var(--text-dim);}
+.aside-row .meta h6{color:var(--plum);}
+.aside-row .amt{color:var(--violet-deep);}
+.coupon-row input{background:rgba(255,255,255,.85);border-color:rgba(109,63,212,.22);color:var(--plum);}
+.coupon-row button{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;}
+.slot{background:rgba(255,255,255,.8);border-color:rgba(109,63,212,.18);}
+.slot b{color:var(--plum);}
+.slot small{color:var(--text-faint);}
+.slot:hover:not(.off){border-color:var(--violet);background:rgba(139,92,246,.07);}
+.slot.on{background:linear-gradient(150deg,rgba(214,96,143,.14),rgba(139,92,246,.1));border-color:var(--rose);box-shadow:none;}
+.slot.on small{color:var(--rose);}
+.addon{background:rgba(255,255,255,.8);border-color:rgba(109,63,212,.18);}
+.addon .txt b{color:var(--plum);}
+.addon .txt small{color:var(--text-faint);}
+.addon .amt{color:var(--violet-deep);}
+.addon:hover{border-color:var(--violet);background:rgba(139,92,246,.07);}
+.addon.on{background:linear-gradient(150deg,rgba(214,96,143,.14),rgba(139,92,246,.1));border-color:var(--rose);box-shadow:none;}
+.addon .tick{border-color:rgba(109,63,212,.25);}
+.addon.on .tick{background:var(--rose);border-color:var(--rose);box-shadow:none;}
+.switch-row{background:rgba(255,255,255,.8);border-color:rgba(109,63,212,.18);}
+.switch-row .txt b{color:var(--plum);}
+.switch-row .txt small{color:var(--text-faint);}
+.switch{background:rgba(109,63,212,.18);border-color:rgba(109,63,212,.2);}
+.switch[aria-checked="true"]{background:linear-gradient(115deg,#D6608F,#8B5CF6);box-shadow:none;}
+.success-screen{background:rgba(255,255,255,.88);border-color:rgba(109,63,212,.18);}
+.success-screen p{color:var(--text-dim);}
+.success-screen .order-no{color:var(--violet-deep);}
+.success-note{color:var(--text-faint);border-top-color:rgba(109,63,212,.12);}
+.success-note strong{color:var(--violet-deep);}
+
+/* צ'אט */
+.chat-panel,.support-panel{
+  background:linear-gradient(180deg,#FFFFFF 0%,#FDF3F8 100%);
+  border-color:rgba(109,63,212,.18);
+  box-shadow:0 24px 60px rgba(46,26,62,.2);
+}
+.chat-head{background:linear-gradient(135deg,#D6608F,#8B5CF6);}
+.support-panel .chat-head{background:linear-gradient(135deg,#6D8FD6,#5B6FC6);}
+.chat-head h4,.chat-head span{color:#fff;}
+.msg.bot{background:rgba(253,232,242,.75);border-color:rgba(109,63,212,.14);color:var(--plum);}
+.msg.user{background:linear-gradient(135deg,#8B5CF6,#6D3FD4);color:#fff;}
+.chat-input-row{background:rgba(255,255,255,.8);border-top-color:rgba(109,63,212,.12);}
+.chat-input-row input{background:#fff;border-color:rgba(109,63,212,.2);color:var(--plum);}
+.chat-input-row input::placeholder{color:var(--text-faint);}
+.chat-menu button,.chat-chips button{
+  background:rgba(255,255,255,.9);border-color:rgba(109,63,212,.2);color:var(--violet-deep);
+}
+.chat-menu button:hover,.chat-chips button:hover{background:rgba(139,92,246,.1);border-color:var(--violet);}
+.chat-card{background:rgba(255,255,255,.9);border-color:rgba(109,63,212,.16);}
+.chat-card:hover{border-color:var(--violet);box-shadow:0 4px 14px rgba(109,63,212,.14);}
+.chat-card .cc-info b{color:var(--plum);}
+.chat-card .cc-info small{color:var(--text-faint);}
+.chat-card .cc-price{color:var(--violet-deep);}
+.chat-card .cc-actions button{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;}
+.chat-card .cc-actions button.alt{background:transparent;border-color:rgba(109,63,212,.3);color:var(--violet-deep);}
+.chat-cards .cards-note{color:var(--text-faint);}
+.chat-launcher{background:linear-gradient(135deg,#D6608F,#8B5CF6);box-shadow:0 10px 26px rgba(214,96,143,.3);}
+.support-launcher{background:linear-gradient(140deg,#6D8FD6,#5B6FC6);border-color:rgba(109,143,214,.4);box-shadow:0 10px 26px rgba(91,111,198,.28);}
+.agent-tip{background:rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(46,26,62,.15);}
+.chat-launcher .agent-tip{color:var(--rose);border-color:rgba(214,96,143,.35);}
+.support-launcher .agent-tip{color:#3E5BA8;border-color:rgba(109,143,214,.4);background:rgba(255,255,255,.95);}
+
+/* ============================================================
+   11. עזרה, דירוגים, ביקור, פוטר
+   ============================================================ */
+.help-card h4{color:var(--plum);}
+.help-card .role{color:var(--text-faint);}
+.help-card p,.help-card ul{color:var(--text-dim);}
+.help-card li::before{background:var(--rose);box-shadow:none;}
+.help-card.support h4{color:#3E5BA8;}
+.help-card.support li::before{background:#5B8FD6;}
+.rating-score .num{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.rating-score .meta,.rate-me span{color:var(--text-dim);}
+.stars svg{fill:var(--gold);filter:none;}
+.stars svg.empty{fill:rgba(46,26,62,.15);}
+.rate-stars svg{fill:rgba(46,26,62,.18);}
+.rate-stars button:hover svg,.rate-stars button.lit svg{fill:var(--rose);filter:none;}
+.rate-thanks{color:var(--ok);}
+.rating-top{border-bottom-color:rgba(109,63,212,.12);}
+.review{background:rgba(253,232,242,.5);border-color:rgba(109,63,212,.12);}
+.review p{color:var(--text-dim);}
+.review .by{color:var(--violet-deep);}
+.review .by small{color:var(--text-faint);}
+.visit-card h3{color:var(--plum);}
+.visit-card p{color:var(--text-dim);}
+.visit-card .addr{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.contact-row{color:var(--text-dim);border-bottom-color:rgba(109,63,212,.1);}
+.contact-row .ico{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.2);}
+.contact-row a{color:var(--violet-deep);}
+.visit-map{border-color:rgba(109,63,212,.16);}
+.visit-map iframe{filter:none;}
+
+footer{
+  background:linear-gradient(180deg,rgba(233,222,252,.5),rgba(253,214,232,.7));
+  border-top-color:rgba(109,63,212,.16);
+}
+footer::before{box-shadow:none;}
+footer p,footer li,footer a{color:var(--text-dim);}
+footer h5{color:var(--rose);}
+footer a:hover{color:var(--violet-deep);}
+.footer-bottom{color:var(--text-faint);border-top-color:rgba(109,63,212,.12);}
+.footer-brand .name{color:var(--plum);}
+.footer-brand .sub{color:var(--text-faint);}
+
+.page-head{color:var(--plum);}
+.page-head::before,.page-head::after{
+  background:linear-gradient(to top,rgba(253,232,242,.95),rgba(233,222,252,.85));
+}
+.page-head p{color:var(--text-dim);}
+.panel h3{color:var(--plum);}
+.panel p{color:var(--text-dim);}
+.order-line{color:var(--text-dim);border-bottom-color:rgba(109,63,212,.12);}
+.story-text p{color:var(--text-dim);}
+.a11y-statement li{color:var(--text-dim);}
+.a11y-statement h3{color:var(--plum);}
+
+/* ============================================================
+   12. כפתורים צפים
+   ============================================================ */
+.to-top{
+  background:rgba(255,255,255,.9);border-color:rgba(109,63,212,.25);
+  color:var(--violet-deep);box-shadow:0 8px 22px rgba(46,26,62,.15);
+}
+.to-top:hover{border-color:var(--violet);color:var(--rose);box-shadow:0 10px 26px rgba(46,26,62,.2);}
+.skip-link{background:linear-gradient(115deg,#D6608F,#8B5CF6);color:#fff;}
+
+/* מיקוד — סגול כהה במקום טורקיז זוהר */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,[tabindex]:focus-visible{outline-color:var(--violet-deep);}
+.product-card:focus-visible{outline-color:var(--violet-deep);}
+
+/* ============================================================
+   13. נייד
+   ============================================================ */
+@media(max-width:620px){
+  body::before{filter:blur(30px);}
+}
