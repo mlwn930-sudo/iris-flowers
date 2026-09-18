@@ -75,6 +75,33 @@
 }
 
 /* ============================================================
+   0. תיקון גלילה — חייב לבוא לפני הכול
+   ------------------------------------------------------------
+   ב-style.css מוגדר body{overflow-x:hidden}. זה נראה תמים אבל
+   הוא הופך את ה-body לתיבת גלילה עצמאית (overflow-y מחושב
+   ל-auto), וכתוצאה מכך:
+     · html.scrollTop נשאר 0 לנצח
+     · scrollIntoView() לא עושה כלום
+     · כל קישור עוגן (#visit, #accessibility, #seasonal,
+       catalog.html#roses) פשוט לא זז — בשקט, בלי שגיאה
+
+   הפתרון: overflow-x:clip על ה-body בלבד. clip חוסם גלילה
+   אופקית בדיוק כמו hidden, אבל *לא* יוצר תיבת גלילה — ולכן
+   ה-html נשאר תיבת הגלילה של הדף והעוגנים חוזרים לעבוד.
+
+   חשוב: אסור לשים clip גם על html. ב-CSS, כש-overflow על ציר
+   אחד הוא clip, הציר השני מחושב ל-clip גם הוא — ואז ה-html
+   מפסיק לגלול בכלל והדף נתקע.
+   ============================================================ */
+body{overflow-x:clip;}
+
+/* מרווח לעוגנים, כדי שהכותרת לא תתחבא מתחת לניווט הדביק */
+:target,
+section[id],
+[id]:not(body):not(html){scroll-margin-top:110px;}
+@media(max-width:620px){[id]:not(body):not(html){scroll-margin-top:96px;}}
+
+/* ============================================================
    1. הרקע החי
    ============================================================ */
 body{
@@ -807,7 +834,79 @@ textarea:focus-visible,[tabindex]:focus-visible{
 .chat-card .cc-actions button:focus-visible{outline:2px solid var(--neon-cyan);outline-offset:2px;}
 
 /* ============================================================
-   20. התאמות נייד
+   20. הסתרת הסוכנים כשחלון פתוח
+   ------------------------------------------------------------
+   אגם ומיכאל יושבים בפינות התחתונות. כשנפתחת מגירת העגלה או
+   חלון מוצר הם נופלים בדיוק על כפתור "מעבר לתשלום" ועל שורת
+   הסה"כ — כלומר מסתירים את המחיר ברגע הקריטי של הקנייה.
+   הפתרון: הם מתקפלים החוצה בזמן שהחלון פתוח וחוזרים בסגירה.
+   ============================================================ */
+.chat-launcher,
+.support-launcher,
+.a11y-fab{
+  transition:transform .32s cubic-bezier(.22,1,.36,1), opacity .24s;
+}
+
+body.overlay-open .chat-launcher,
+body.overlay-open .support-launcher{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(130%) scale(.8);
+}
+body.overlay-open .chat-launcher .agent-tip,
+body.overlay-open .support-launcher .agent-tip{opacity:0;}
+
+/* כפתור הנגישות יושב על השוליים ומכסה את המגירה — מוזז החוצה,
+   אבל נשאר זמין בתוך החלון עצמו דרך המקלדת (Alt+Shift+A) */
+body.overlay-open .a11y-fab{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-50%) translateX(-130%);
+}
+
+/* כשהפאנל של הנגישות עצמו פתוח — הוא כן צריך להישאר */
+body.a11y-open .a11y-fab{opacity:1;pointer-events:auto;transform:translateY(-50%);}
+
+/* ============================================================
+   21. חזרה למעלה
+   ------------------------------------------------------------
+   בנייד עמוד הבית הוא מעל 10,000 פיקסלים. בלי הכפתור הזה
+   הדרך חזרה לראש העמוד היא גלילה של עשרים שניות.
+   ============================================================ */
+.to-top{
+  position:fixed;bottom:26px;inset-inline-start:50%;transform:translateX(50%) translateY(140%);
+  z-index:90;width:46px;height:46px;border-radius:50%;
+  background:rgba(20,4,48,.82);backdrop-filter:blur(12px);
+  border:1px solid rgba(168,85,247,.5);color:#E9D5FF;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 28px rgba(0,0,0,.5), 0 0 22px rgba(168,85,247,.3);
+  opacity:0;pointer-events:none;
+  transition:opacity .28s, transform .34s cubic-bezier(.22,1,.36,1), box-shadow .25s;
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:translateX(50%) translateY(0);}
+.to-top:hover{border-color:var(--neon-cyan);color:#fff;box-shadow:0 12px 32px rgba(0,0,0,.55), 0 0 30px rgba(34,211,238,.5);}
+.to-top:focus-visible{outline:3px solid var(--neon-cyan);outline-offset:4px;}
+.to-top svg{width:20px;height:20px;}
+body.overlay-open .to-top{opacity:0;pointer-events:none;}
+@media(max-width:620px){.to-top{bottom:20px;width:42px;height:42px;}}
+
+/* ============================================================
+   22. וידאו בהירו
+   ------------------------------------------------------------
+   מתנגן פעם אחת מתחת ללוגו, ואז נמוג בחזרה לרקע הקבוע.
+   הרקע הקבוע נשאר תמיד מתחתיו, כך שאם הווידאו לא נטען
+   (חיבור איטי, חוסם, פורמט לא נתמך) שום דבר לא נשבר.
+   ============================================================ */
+.hero-video{
+  position:absolute;inset:0;z-index:-2;width:100%;height:100%;
+  object-fit:cover;pointer-events:none;
+  opacity:0;transition:opacity 1.1s ease;
+}
+.hero-video.playing{opacity:1;}
+.hero-video.done{opacity:0;}
+
+/* ============================================================
+   23. התאמות נייד
    ============================================================ */
 @media(max-width:980px){
   .hero h1{font-size:2.9rem;}

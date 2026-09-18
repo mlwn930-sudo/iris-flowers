@@ -207,6 +207,8 @@ function openCart() {
   drawer?.classList.add("open");
   document.getElementById("cartOverlay")?.classList.add("open");
   drawer?.setAttribute("aria-hidden", "false");
+  // מקפל את אגם ומיכאל החוצה — אחרת הם יושבים על כפתור התשלום
+  document.body.classList.add("overlay-open");
   renderCartDrawer();
 
   // נגישות: המקלדת נשארת בתוך המגירה, ו-Escape סוגר
@@ -222,6 +224,7 @@ function closeCart() {
   drawer?.classList.remove("open");
   document.getElementById("cartOverlay")?.classList.remove("open");
   drawer?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("overlay-open");
   if (cartReleaseTrap) {
     cartReleaseTrap();
     cartReleaseTrap = null;

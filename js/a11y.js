@@ -338,6 +338,7 @@
   function open() {
     panel.classList.add("open");
     backdrop.classList.add("open");
+    document.body.classList.add("a11y-open");
     fab.setAttribute("aria-expanded", "true");
     releaseTrap = trapFocus(panel, close);
   }
@@ -345,6 +346,7 @@
   function close() {
     panel.classList.remove("open");
     backdrop.classList.remove("open");
+    document.body.classList.remove("a11y-open");
     fab.setAttribute("aria-expanded", "false");
     if (releaseTrap) { releaseTrap(); releaseTrap = null; }
   }

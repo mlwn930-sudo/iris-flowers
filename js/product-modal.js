@@ -135,6 +135,7 @@ function openProductModal(id, size) {
 
   el.classList.add("open");
   document.body.style.overflow = "hidden";
+  document.body.classList.add("overlay-open");
   document.addEventListener("keydown", pmEscHandler);
 
   // מלכודת פוקוס — המקלדת לא "בורחת" מהחלון אל הדף שמאחור
@@ -161,6 +162,7 @@ function pmSyncUrl() {
 function closeProductModal() {
   document.getElementById("pmOverlay")?.classList.remove("open");
   document.body.style.overflow = "";
+  document.body.classList.remove("overlay-open");
   document.removeEventListener("keydown", pmEscHandler);
   if (pmReleaseTrap) {
     pmReleaseTrap();

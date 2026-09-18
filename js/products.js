@@ -574,7 +574,7 @@ PRODUCTS.push(
    ============================================================ */
 const PRODUCT_OCCASIONS = {
   "iris-signature": ["love", "birthday", "congrats", "thanks", "home"],
-  "iris-white-rose": ["love", "wedding", "congrats", "birthday"],
+  "iris-white-rose": ["love", "wedding", "congrats", "birthday", "sympathy"],
   "red-roses-classic": ["love", "birthday"],
   "pastel-roses": ["birthday", "newborn", "thanks", "recovery", "love"],
   "seasonal-mix": ["birthday", "thanks", "recovery", "home", "congrats"],
@@ -582,7 +582,8 @@ const PRODUCT_OCCASIONS = {
   "event-luxury": ["wedding", "congrats", "birthday"],
   "thank-you-small": ["thanks", "recovery", "home"],
   "sympathy-white": ["sympathy"],
-  "orchid-plant": ["home", "congrats", "thanks"],
+  // סחלב לבית האבלים הוא בחירה נפוצה ונכונה — הוא נשאר אחרי שהזרים נבלו
+  "orchid-plant": ["home", "congrats", "thanks", "sympathy"],
   "peony-romance": ["love", "birthday", "wedding", "newborn"],
   "tulip-spring": ["birthday", "thanks", "recovery", "home"],
   "teddy-roses": ["love", "birthday", "newborn"],
